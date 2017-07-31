@@ -1,0 +1,59 @@
+﻿@model OpenSourceCooking.BugReport
+
+@{
+    ViewBag.Title = "Confirmation";
+}
+<br/>
+
+<h2>Confirmation</h2>
+
+<div>
+    <h4 style="color:green;">The bug report submitted Successfully.</h4>
+    <h5>We'll get on it ASAP. Thanks for letting us know.</h5>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Link or URL with the bug
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BuggedUrl)
+        </dd>
+
+        <dt>
+            Message
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+
+        <dt>
+            Browser Info
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrowserInfo)
+        </dd>
+
+        <dt>
+            Create Date (In UTC time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            Reporting Chef
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AspNetUser.UserName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Home", "Index", "Home")
+</p>

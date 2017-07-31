@@ -1,0 +1,28 @@
+﻿ <!--Recipe Viewable Type Modal-->
+<div class="modal" id="RecipeViewableTypeModal" tabindex="-1" role="dialog" aria-labelledby="RecipeViewableTypeModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header text-center">
+                <h4 class="modal-title" id="RecipeViewableTypeModalHeader"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <!--Body-->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6" style="padding:4px;">
+                        <button type="button" class="btn btn-block btn-success" aria-label="Set recipe to public" id="SetRecipeViewableTypePublic">Public!</button>
+                    </div>
+                    @*  Hook this back up when followers are a thing. Also set the colums to col-sm-4 again
+                        <div class="col-sm-4" style="padding:4px;">
+                            <button type="button" class="btn btn-block btn-warning" aria-label="Set recipe to public" id="SetRecipeViewableTypeFollowers">Followers</button>
+                        </div>
+                    *@
+                    <div class="col-sm-6" style="padding:4px;">
+                        <button type="button" class="btn btn-block btn-secondary" aria-label="Set recipe to public" id="SetRecipeViewableTypeSecret">Secret</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

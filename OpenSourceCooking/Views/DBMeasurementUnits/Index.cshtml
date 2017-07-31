@@ -1,0 +1,28 @@
+﻿@model IEnumerable<OpenSourceCooking.MeasurementUnit>
+
+@{
+    ViewBag.Title = "Measurement Units";
+}
+
+<h2>Measurement Units</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MeasurementUnitName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MeasurementType.MeasurementTypeName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { MeasurementUnitName = item.MeasurementUnitName, MeasurementTypeName = item.MeasurementTypeName }) |
+            @Html.ActionLink("Details", "Details", new { MeasurementUnitName = item.MeasurementUnitName, MeasurementTypeName = item.MeasurementTypeName }) |
+            @Html.ActionLink("Delete", "Delete", new { MeasurementUnitName = item.MeasurementUnitName, MeasurementTypeName = item.MeasurementTypeName })
+        </td>
+    </tr>
+}
+</table>

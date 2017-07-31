@@ -1,0 +1,58 @@
+﻿@model OpenSourceCooking.BugReport
+
+@{
+    ViewBag.Title = "Details";
+}
+<br />
+<h2>Details</h2>
+
+<div>
+    <h4>BugReport</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BuggedUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BuggedUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrowserInfo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrowserInfo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AspNetUser.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AspNetUser.Email)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

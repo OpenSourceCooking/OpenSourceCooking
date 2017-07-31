@@ -1,0 +1,27 @@
+﻿<script>
+    var FullscreenDiv = null;
+    var FullscreenDivImg = null;
+    $(document).ready(function () {
+        FullscreenDiv = $('#FullscreenDiv');
+        FullscreenDivImg = $('#FullscreenDivImg');
+        RefreshFullScreenImages();        
+    });
+    function RefreshFullScreenImages()
+    {       
+        FullscreenDiv.off("click");       
+        FullscreenDiv.on("click", function () {
+            $(this).hide();
+        });
+        var FullscreenableImages = $('.FullscreenableImg');
+        FullscreenableImages.off("click");
+        FullscreenableImages.on("click", function () {
+            FullscreenDivImg.css('background-image', 'url(' + $(this).prop('src') + ')');
+            FullscreenDiv.show();
+        });
+    }
+</script>
+<!--FullScreen Image Previewer-->
+<div id="FullscreenDiv" style="z-index:99999;display:none;position:fixed;background-color:black;top:0px;bottom:0;left:0;right:0">
+    <div id="FullscreenDivImg" style="position:fixed;background-color:black;background:url(../Content/Images/OpenSourceCooking4096x2160.png) center center no-repeat;background-size:contain;top:10px;bottom:10px;left:10px;right:10px">
+    </div>
+</div>

@@ -1,0 +1,184 @@
+﻿@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="~/Content/Images/OpenSourceCooking4096x2160.png">
+    <link href='//fonts.googleapis.com/css?family=Handlee' rel='stylesheet'> <!--Google Font-->
+    <title>OSC-@ViewBag.Title</title>
+    @Html.Partial("~/Views/Shared/_JavaScriptConfig.cshtml")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/OpenSourceCooking") 
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>    <!--Google Ad Sense-->
+    <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-2501733207374862", enable_page_level_ads: true });</script>    <!--Google Ad Sense-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Highlight the correct nav bar button
+            var url = window.location.href;
+            if (url.indexOf("/Ingredients") >= 0)
+                $('#NavbarIngredietnsButton').removeClass('btn-outline-info').addClass('btn-info');
+            if (url.indexOf("/Recipes") >= 0)
+                $('#NavbarRecipesButton').removeClass('btn-outline-success').addClass('btn-success');
+            if (url.indexOf("DB_") >= 0)
+                $('#NavbarDatabaseButton').removeClass('btn-outline-warning').addClass('btn-warning');
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+    <script type='text/javascript'>
+        var appInsights = window.appInsights || function (config) {
+            function r(config) { t[config] = function () { var i = arguments; t.queue.push(function () { t[config].apply(t, i) }) } }
+            var t = { config: config }, u = document, e = window, o = 'script', s = u.createElement(o), i, f; for (s.src = config.url || '//az416426.vo.msecnd.net/scripts/a/ai.0.js', u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Ajax']; i.length;)r('track' + i.pop()); return r('setAuthenticatedUserContext'), r('clearAuthenticatedUserContext'), config.disableExceptionTracking || (i = 'onerror', r('_' + i), f = e[i], e[i] = function (config, r, u, e, o) { var s = f && f(config, r, u, e, o); return s !== !0 && t['_' + i](config, r, u, e, o), s }), t
+        }({
+            instrumentationKey: '7baf0ec4-8404-441a-b45f-a67a449c3a9b'
+        });
+        window.appInsights = appInsights;
+        appInsights.trackPageView();
+    </script>
+</head>
+<body style="font-family:'Handlee';">
+    <!--Navbar-->
+    <nav class="navbar navbar-toggleable-md navbar-light bg-inverse fixed-top" role="navigation">
+        <button class="navbar-toggler navbar-toggler-right bg-faded" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href=@Url.Action("Index", "Home")>
+            <img class="rounded" src="~/Content/Images/OpenSourceCooking4096x2160.png" style="height:42px;" />
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @if (true) //This is only here to keep spacing nice in code. It doesnt do anything
+                {
+                    @*
+                        <li>
+                            <div class="nav-link  btn-group">
+                                <a class="btn btn-outline-info" href="@Url.Action("Index", "Ingredients")" id="NavbarIngredietnsButton">Ingredients</a>
+                                <button class="btn btn-outline-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <ul class="dropdown-menu bg-inverse" style="max-height:280px;overflow-y:auto;">
+                                    <li><a class="dropdown-item" style="color:#5bc0de;" href="@Url.Action("Create", "Ingredients")">Add Ingredient</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    *@
+                    <li>
+                        <div class="nav-link btn-group">
+                            <a class="btn btn-outline-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
+                            <button class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <ul class="dropdown-menu bg-inverse" style="max-height:280px;overflow-y:auto;">
+                                <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("CreateOrEdit", "Recipes")">Add Recipe</a></li>
+                                @if (Request.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes", new { RecipeOwnersFilter = 1 })">My Recipes</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link">
+                            <a class="btn btn-outline-info" href="#" onclick="ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link">
+                            <a class="btn btn-outline-danger" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
+                        </div>
+                    </li>                 
+                }
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <div class="nav-link  dropdown">
+                            <button type="button" class="btn btn-outline-warning dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Database
+                            </button>
+                            <ul class="dropdown-menu bg-inverse" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;">
+                                <li class="dropdown-header">Database</li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBBugReports")">Bug Reports</a></li>   
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCloudFiles")">Cloud Files</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBComments")">Comments</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCommentVotes")">Comment Votes</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBDietaryRestrictions")">Dietary Restrictions</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBFlags")">Flags</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBIngredients")">Ingredients</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementTypes")">Measurement Types</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementUnits")">Measurement Units</a></li>                                
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipes")">Recipes</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeFlags")">Recipe Flags</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeSteps")">Recipe Steps</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeStepsCloudFile")">Recipe Steps Cloud Files</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeStepsIngredients")">Recipe Steps Ingredients</a></li>
+                                <li class="dropdown-header">Security</li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "GroupsAdmin")">Groups</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "RolesAdmin")">Roles</a></li>
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "UsersAdmin")">Users</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </nav>
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+    <!-- pleaseWaitDialog -->
+    <div class="modal" id="pleaseWaitDialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="pleaseWaitDialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1>Working...</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 40%" id="UploadProgressBar">
+                            <span class="sr-only">50% Complete (success)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Confirm Email Modal (Used in Login Partial)-->
+    <div id="ConfirmEmailModal" class="modal" role="dialog" data-backdrop="static" data-keyboard="false" style="overflow-y:auto;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Resend a confirmation email to <span id="EmailConfirmationSpan" style="font-weight:bold;"></span>?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    If this email is wrong, you need to re-register with the correct email.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="EditNumberModalSaveButton" onclick="AjaxSendEmailConfirmation();">Send Confirm Email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Symbols Legend Modal-->
+    <div class="modal" id="SymbolsLegendModal" tabindex="-1" role="dialog" aria-labelledby="SymbolsLegendModal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <!--Header-->
+                <div class="modal-header text-center">
+                    <h4 class="modal-title">Symbols Legend</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <!--Body-->
+                <div class="modal-body">
+                    <table class="table" style="width:100%;" id="SymbolsLegendModalSymbolsTable">
+                        <!--Populated by ShowDietaryRestrictionsSymbolLegend(Table) found in the JavaScriptConfig.cshtml-->
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+</body>
+</html>

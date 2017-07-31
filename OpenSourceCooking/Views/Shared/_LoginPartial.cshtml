@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNet.Identity
+
+
+<script type="text/javascript">
+    function AjaxSendEmailConfirmation() {
+        $('#ConfirmEmailModal').modal('hide');
+        $.ajax({
+            url: '@Url.Action("AjaxSendEmailConfirmation", "Account")',
+            type: "GET",
+            cache: false,
+            data: {},
+            success: function (bool) {
+                ShowPopUpModal("PopUp","Check your email and spam folder for a confirmation email");
+            },
+            error: function (Error) {
+                ShowPopUpModal("Error","Oops something bad happened.. " + Error);
+            }
+        });
+    }
+    function AjaxGetUserEmail()
+    {
+        $.ajax({
+            url: '@Url.Action("AjaxGetUserEmail", "Account")',
+            type: "GET",
+            cache: false,
+            data: {},
+            success: function (Email) {
+                $('#EmailConfirmationSpan').text(Email);
+                $('#ConfirmEmailModal').modal('show');
+            },
+            error: function (Error) {
+                ShowPopUpModal("Error","Oops something bad happened.. " + Error);
+            }
+        });
+    }
+</script>
+
+@{
+    OpenSourceCookingEntities db = new OpenSourceCookingEntities();
+    var AspNetUser = db.AspNetUsers.Find(User.Identity.GetUserId());
+    if (Request.IsAuthenticated && AspNetUser != null)
+    {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-link">
+                    @{
+                        if (!AspNetUser.EmailConfirmed)
+                        {
+                            <a href="#" style="color:red; font-weight:bold; text-decoration:underline;" onclick="AjaxGetUserEmail()">Confirm Email To Enable Account Recovery!</a>
+                        }
+                    }
+                </li>
+                <li class="nav-link">
+                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @Style = "color:white;" })
+                </li>
+                <li class="nav-link">
+                    <a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log off</a>
+                </li>
+            </ul>
+        }
+    }
+    else
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-link">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @Style = "color:white;" })</li>
+            <li class="nav-link">@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @Style = "color:white;" })</li>
+        </ul>
+    }
+}

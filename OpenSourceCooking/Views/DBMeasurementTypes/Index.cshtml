@@ -1,0 +1,27 @@
+﻿@model IEnumerable<OpenSourceCooking.MeasurementType>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Measurement Types</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MeasurementTypeName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MeasurementTypeName }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MeasurementTypeName }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MeasurementTypeName })
+        </td>
+    </tr>
+}
+
+</table>

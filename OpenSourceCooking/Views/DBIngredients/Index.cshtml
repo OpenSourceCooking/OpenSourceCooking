@@ -1,0 +1,36 @@
+﻿@model IEnumerable<OpenSourceCooking.Ingredient>
+
+@{
+    ViewBag.Title = "DB_Ingredients";
+}
+<br />
+<h2>Database Ingredients</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IngredientName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AspNetUser.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CloudFile.FileType)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IngredientName }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IngredientName }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IngredientName })
+        </td>
+    </tr>
+}
+
+</table>

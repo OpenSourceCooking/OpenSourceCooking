@@ -1,0 +1,58 @@
+﻿@model IEnumerable<OpenSourceCooking.RecipeStepsIngredient>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br />
+<h2>Recipe Steps Ingredients</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ToAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ingredient.CreatorId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MeasurementUnit.MeasurementUnitName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipeStep.Comment)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ToAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ingredient.CreatorId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MeasurementUnit.MeasurementUnitName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipeStep.Comment)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

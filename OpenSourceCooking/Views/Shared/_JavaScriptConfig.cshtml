@@ -1,0 +1,77 @@
+﻿<script type="text/javascript">
+    //This is done so constant variables can be in a central location and Javascript functions
+    //with Razor Syntax cannot be collapsed by visual studio for some dumb reason.
+    var Config = {
+        AjaxUrls:
+        {
+            //Comments Controller
+            AjaxCreateRecipeComment: '@Url.Action("AjaxCreateRecipeComment", "Comments")',
+            AjaxDeleteComment: '@Url.Action("AjaxDeleteComment", "Comments")',
+            AjaxEditComment: '@Url.Action("AjaxEditComment", "Comments")',
+            AjaxGetRecipeComments: '@Url.Action("AjaxGetRecipeComments", "Comments")',
+
+            //CommentVotesController
+            AjaxCreateCommentVote: '@Url.Action("AjaxCreateCommentVote", "CommentVotes")',
+            AjaxDeleteCommentVote: '@Url.Action("AjaxDeleteCommentVote", "CommentVotes")',
+            AjaxUpdateCommentVote: '@Url.Action("AjaxUpdateCommentVote", "CommentVotes")',
+
+            //CloudFilesController
+            AjaxDeleteUnreferencedCloudFilesIfExist:'@Url.Action("AjaxDeleteUnreferencedCloudFilesIfExist", "CloudFiles")',
+
+            //DietaryRestrictionsController
+            AjaxGetDietaryRestrictions: '@Url.Action("AjaxGetDietaryRestrictions", "DietaryRestrictions")',
+
+            //Flags Controller
+            AjaxGetFlags: '@Url.Action("AjaxGetFlags", "Flags")',
+
+            //Ingredients Controller
+            AjaxIngredientsAutoComplete: '@Url.Action("AjaxIngredientsAutoComplete", "Ingredients")',
+
+            //Recipes Controller
+            AjaxCreateRecipe: '@Url.Action("AjaxCreateRecipe", "Recipes")',
+            AjaxCreateRecipeStep: '@Url.Action("AjaxCreateRecipeStep", "Recipes")',
+            AjaxDeleteRecipe:'@Url.Action("AjaxDeleteRecipe", "Recipes")',
+            AjaxDeleteRecipeStep: '@Url.Action("AjaxDeleteRecipeStep", "Recipes")',
+            AjaxDeleteImageCloudFile: '@Url.Action("AjaxDeleteImageCloudFile", "Recipes")',
+            AjaxDeleteVideoCloudFile: '@Url.Action("AjaxDeleteVideoCloudFile", "Recipes")',
+            AjaxGetRecipe: '@Url.Action("AjaxGetRecipe", "Recipes")',
+            AjaxGetRecipeStep: '@Url.Action("AjaxGetRecipeStep", "Recipes")',
+            AjaxGetRecipeSteps: '@Url.Action("AjaxGetRecipeSteps", "Recipes")',
+            AjaxGetRecipeStepsIngredients: '@Url.Action("AjaxGetRecipeStepsIngredients", "Recipes")',
+            AjaxGetUnits: '@Url.Action("AjaxGetUnits", "Recipes")',
+            AjaxIncrementCreationStep: '@Url.Action("AjaxIncrementCreationStep", "Recipes")',
+            AjaxMoveRecipeStep: '@Url.Action("AjaxMoveRecipeStep", "Recipes")',
+            AjaxUpdateDescription:'@Url.Action("AjaxUpdateDescription", "Recipes")',
+            AjaxUpdateDietaryRestrictions: '@Url.Action("AjaxUpdateDietaryRestrictions", "Recipes")',
+            AjaxUpdateName: '@Url.Action("AjaxUpdateName", "Recipes")',
+            AjaxUpdateServingSize: '@Url.Action("AjaxUpdateServingSize", "Recipes")',
+            AjaxUpdateRecipeStep: '@Url.Action("AjaxUpdateRecipeStep", "Recipes")',
+            AjaxUpdateViewableType: '@Url.Action("AjaxUpdateViewableType", "Recipes")',
+            AjaxUploadRecipeImage: '@Url.Action("AjaxUploadRecipeImage", "Recipes")',
+            AjaxUploadRecipeStepImage: '@Url.Action("AjaxUploadRecipeStepImage", "Recipes")',
+            AjaxUploadRecipeVideo:'@Url.Action("AjaxUploadRecipeVideo", "Recipes")',
+            AjaxValidateAmountsThisShouldBeDoneClientSide: '@Url.Action("AjaxValidateAmountsThisShouldBeDoneClientSide", "Recipes")',
+
+            //Recipe Flags Controller
+            AjaxCreateRecipeFlag: '@Url.Action("AjaxCreateRecipeFlag", "RecipeFlags")'
+        },
+        Icons:
+        {
+            ErrorIconUrl: '/Content/Images/Icons/Error.png',
+            LoadingIconUrl: '/Content/Gifs/Icons/Loading.gif',
+            TypingIconUrl: '/Content/Gifs/Icons/Typing.gif'
+        },
+        Images:
+        {
+            AddPhotoImageUrl: '/Content/Images/AddPhoto.svg',
+            AddVideoImageUrl: '/Content/Images/AddVideo.svg',
+            OpenSourceCookingImageUrl: '/Content/Images/OpenSourceCooking4096x2160.png'
+        },
+        Urls:
+        {
+            RecipeCreateOrEdit: window.location.protocol + '//' + window.location.host +'/Recipes/CreateOrEdit',
+            RecipeDelete: window.location.protocol + '//' + window.location.host + '/Recipes/Delete',
+            RecipesIndex: '@Url.Action("Index", "Recipes", new { RecipeOwnersFilter = 1 })'
+        }
+    };
+</script>

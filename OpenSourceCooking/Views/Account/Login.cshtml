@@ -1,0 +1,75 @@
+﻿@using OpenSourceCooking.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+<br />
+<span><span style="font-size:24px;">@ViewBag.Title</span> or <span style="text-decoration:underline; font-weight:bold;"> @Html.ActionLink("Sign up as a new prep cook!", "Register")</span> </span>
+<span style="color:red;">The site is still in development and not everything is built yet, but sign up early if you want.</span>
+
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="">
+                        <input type="submit" value="Log in" class="btn btn-secondary" />
+                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                    </div>
+                </div>
+                <p>                   
+                    -Unlockable Chef Abilites-
+                </p>
+                <div style="color:red">(Rankings system is still in development and not working yet)</div>
+                <ul>    
+                    <li>Chef Titles</li>
+                    <li>Up/Down Voting</li>     
+                    <li>Your Own Public & Private Recipes</li>
+                    <li>Posting Comments</li>
+                    <li>No Ads</li>  
+                    <li>And More...</li>
+                </ul>
+                <!--
+                <p>
+                    -Sign up to see all 30 Ranking Unlocks-
+                </p>
+                    -->
+            }
+        </section>
+    </div>
+    <div class="col-md-4">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

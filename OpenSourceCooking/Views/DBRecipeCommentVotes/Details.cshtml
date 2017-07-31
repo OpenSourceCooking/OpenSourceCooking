@@ -1,0 +1,42 @@
+﻿@model OpenSourceCooking.RecipeCommentVote
+
+@{
+    ViewBag.Title = "Details";
+}
+<br />
+<h2>Details</h2>
+
+<div>
+    <h4>RecipeCommentVote</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.VoteValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VoteValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AspNetUser.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AspNetUser.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipeComment.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecipeComment.Comment)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

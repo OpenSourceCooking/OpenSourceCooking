@@ -1,0 +1,28 @@
+﻿@model OpenSourceCooking.Ingredient
+@{
+    ViewBag.Title = "Create";
+}
+<br />
+<h2>Add Ingredient</h2>
+<h6>- Try to use images <span style="color:red;font-weight:bold;">without </span>brand names</h6>
+@using (Html.BeginForm("Create", "Ingredients", FormMethod.Post, new { enctype = "multipart/form-data", id = "Form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-md-12 text-center">
+        @Html.EditorFor(model => model.IngredientName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Ingedient Name" } })
+    </div>
+    if (ViewBag.FileWasTooBig != null && ViewBag.FileWasTooBig == true)
+    {
+        <div class="col-12 text-center">
+            <span style="color:red;font-size:20px;font-weight:bold;">File Size Too Big</span>
+        </div>
+    }
+    <div class="col-12 text-center" style="font-size:18px;">
+        Ingredient Image
+        <img type="image" class="UploadPhotoButton rounded mx-auto d-block img-fluid" src="" style="max-width:30%; max-height:30%;" id="IngredientImgButton" onclick="$('#httpPostedFileBase').click();" />
+        <input type="file" accept="image/*" multiple style="display:none;" id="httpPostedFileBase" name="httpPostedFileBase" onchange="if(!IsFileTypeAllowed($('#httpPostedFileBase').get(0).files[0], 'Image')){return;} SetSrcFromLocalFile($('#httpPostedFileBase').get(0).files[0], $('#IngredientImgButton'));Img.fadeIn();" />
+    </div>
+    <div class="col-12 text-center">
+        <input class="btn btn-info btn-block" type="submit" value="Complete & Publish" style="cursor:pointer; margin:8px;">
+    </div>
+}

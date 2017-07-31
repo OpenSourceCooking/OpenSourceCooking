@@ -1,0 +1,78 @@
+﻿body {padding-top: 50px;}
+.RecipesSearchBar{ position:fixed; top:58px; left:0; right:0;}
+@media (min-width: 576px) { }
+@media (min-width: 768px) { }
+@media (min-width: 992px) {
+    body{padding-top:60px;}
+    .RecipesSearchBar{top:72px;}
+}
+@media (min-width: 1200px) {}
+
+.imageZoomed {
+    -webkit-transform: scale(1.04);
+    -moz-transform: scale(1.04);
+    -ms-transform: scale(1.04);
+    -o-transform: scale(1.04);
+    transform: scale(1.04);
+}
+
+.zoomImage {
+    -webkit-transition: all .4s ease-in-out;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+}
+
+/*Justified Button Group*/
+.btn {
+    font-size: 18px;
+    cursor: pointer;
+}
+.btn-group-justified {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+}
+    .btn-group-justified .btn,
+    .btn-group-justified .btn-group {
+        float: none;
+        display: table-cell;
+        width: 1%;
+    }
+        .btn-group-justified .btn .btn,
+        .btn-group-justified .btn-group .btn {
+            width: 100%;
+        }
+        .btn-group-justified .btn .dropdown-menu,
+        .btn-group-justified .btn-group .dropdown-menu {
+            left: auto;
+        }
+/*Bootstrap Overrides*/
+button, input, optgroup, select, textarea {
+    font-family: inherit;
+}
+.ui-autocomplete {
+    position: fixed;
+    z-index: 1100;
+    max-width: 90%;
+}
+.borderless td, .borderless th {
+    border: none;
+}
+.modal-open {
+    padding-right: inherit;
+    overflow: hidden; /*Prevents body scrolling*/
+}
+
+/*Isotope Styles*/
+#RecipesDiv {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+    padding-top: 56px;
+}
+.box {
+    width: 260px;
+    margin: 4px;
+}

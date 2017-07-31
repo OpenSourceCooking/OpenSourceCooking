@@ -1,0 +1,30 @@
+﻿@model IEnumerable<OpenSourceCooking.Flag>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>FlagName</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.FlagName
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.FlagName }) |
+            @Html.ActionLink("Details", "Details", new { id=item.FlagName }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.FlagName })
+        </td>
+    </tr>
+}
+
+</table>

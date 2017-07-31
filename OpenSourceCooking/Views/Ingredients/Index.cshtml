@@ -1,0 +1,45 @@
+﻿@{ViewBag.Title = "Ingredients";}
+
+<script type="text/javascript">
+    var pageSize = 32;
+    var pageIndex = 0;
+    $(document).ready(function () {
+        AjaxGetIngredients();
+        window.onscroll = function (ev) {
+            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+                AjaxGetIngredients();
+            }
+        };
+    });
+
+    function AjaxGetIngredients() {
+        $('#pleaseWaitDialog').modal('show');
+        ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", CompleteHandler, false);
+        ajax.open("GET", "/Ingredients/AjaxGetIngredients?pageindex=" + pageIndex + "&pagesize=" + pageSize);
+        ajax.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var Ingredients = JSON.parse(this.responseText);
+                for (var i = 0; i < Ingredients.length; i++) {
+                    var back = /*White & Pastels*/["#ffffff", "#E3FBE9", "#F3F8F4", "#F1FEED", "#E7FFDF", "#F2FFEA", "#FFFFE3", "#FCFCE9", "#EEEEFF", "#ECF4FF", "#F9FDFF", "#E6FCFF", "#F2FFFE", "#CFFEF0", "#EAFFEF", "#FFECFF", "#F4D2F4", "#F9EEFF", "#F5EEFD", "#EFEDFC", "#EAF1FB", "#DBF0F7", "#FFECEC", "#FFEEFB", "#FFECF5", "#FFEEFD", "#FDF2FF", "#FAECFF", "#F1ECFF",/*Bold&Bright*/"#66ffff", "#6666ff", "#ff66ff", "#ff6666", "#ffff66", "#66ff66", "#ffb366", "#cccccc"];
+                    var randomColor = back[Math.floor(Math.random() * back.length)];
+                    $('#IngredientsDiv').append('<div class="col-xl-2 col-md-3 col-sm-4 col-6 zoomImage" style="padding:0"><div class="text-center" style="height:100%; width:100%; padding:3%;"><div class="rounded" style="padding:2%; height: 100%; background-color:' + randomColor + ';"><img class="rounded img-fluid" src="' + Ingredients[i].ImageUrl + '" style="max-height:172px;"><div class="text-center">' + Ingredients[i].IngredientName + '</div></div></div></div>');
+                }
+                pageIndex++;
+                $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
+            }
+        };
+        ajax.send(null);
+    }
+    function progressHandler(event) {
+        var percent = (event.loaded / event.total) * 100;
+        $('#UploadProgressBar').attr('style', 'width: ' + Math.round(percent) + '%');
+    }
+    function CompleteHandler() {
+        $('#pleaseWaitDialog').modal('hide');
+    }
+</script>
+<div class="row bg-inverse" id="IngredientsDiv">
+    <!--Infinite scrolling Ingredients-->
+</div>

@@ -1,0 +1,208 @@
+﻿@{ViewBag.Title = "Recipes";}
+
+<script>
+    var ViewBagRecipeId = '@(ViewBag.RecipeId)';
+    var ViewBagRecipeOwnersFilter = '@(ViewBag.RecipeOwnersFilter)';
+    var ViewBagSearchText = '@(ViewBag.SearchText)';
+</script>
+@section Scripts{
+    <script src="@Url.Content("~/Scripts/recipeIndex.js")"></script>
+    <script src="@Url.Content("~/Scripts/date-functions.js")"></script>
+}
+<!--Infinite scrolling recipes-->
+<div id="RecipesDiv"></div>
+<div class="row bg-inverse">
+    <div class="col-12 text-center" style="color:white; font-size:24px; font-weight:bold; padding:100px;" id="NoMoreDiv"> Loading...</div>
+</div>
+<!--Nav Bar Addition-->
+<div class="row bg-inverse RecipesSearchBar">
+    <div class="col-12 text-center" style="padding-bottom:4px;">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-success" style="font-size:18px;" href="@Url.Action("CreateOrEdit","Recipes")">+</a>
+            <input type="text" class="form-control" placeholder="Part of name" style="border-radius:0; text-align:center; padding-bottom:4px;" id="SearchTextInput">
+            <a class="btn btn-sm btn-info" style="font-size:18px;" href="#" onclick="OnClick_FilterModalApplyButton()">Search</a>
+            <a class="btn btn-sm btn-primary" style="font-size:18px;" href="#" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
+        </div>
+    </div>
+</div>
+<!--MODALS                 MODALS                  MODALS                    MODALS                 MODALS                MODALS              MODALS-->
+<!--Search Modal-->
+<div class="modal" id="FilterModal" tabindex="-1" role="dialog" aria-labelledby="FilterModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header text-center">
+                <h5>Optional Filters</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <!--Body-->
+            <div class="modal-body text-center">
+                <div class="row" style="padding-bottom:10px;">
+                    <div class="col-12 text-center">
+                        <button type="button" class="btn btn-secondary btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="SortingByButton">
+                            Sorting
+                        </button>
+                        <div class="dropdown-menu text-right" aria-labelledby="dropdownMenuLink" id="SortingByDropDown" style="left:50%;right:auto;transform:translate(-50%, 0); padding-right:6px;">
+                            <div class="btn-group btn-group-sm recipe" style="padding-bottom:4px;width:100%;">
+                                <label class="dropdown-item" href="#">Create Date</label>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(1,0);">
+                                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(1,1);">
+                                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">
+                                <label class="dropdown-item" href="#">Edit Date</label>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(0,0);">
+                                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(0,1);">
+                                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">
+                                <label class="dropdown-item" href="#">Name</label>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(2,0);">
+                                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(2,1);">
+                                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group btn-group-sm" style="width:100%;">
+                                <label class="dropdown-item" href="#">Username</label>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(3,0);">
+                                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(3,1);">
+                                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom:10px;">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-outline-danger btn-block" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Clear Filters</button>
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom:10px;">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary btn-block" onclick="OnClick_FilterModalApplyButton()" id="FilterModalFilterButton">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--RecipePreviewer Modal-->
+<div class="modal" id="RecipePreviewer" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="RecipePreviewer" style="overflow-y:scroll;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header text-center">
+                <h4 class="modal-title" id="ModalRecipeHeader"></h4>
+                <button type="button" class="close" aria-label="Close" onclick="$('#RecipePreviewer').modal('hide');"><span style="color:red;" aria-hidden="true">&times;</span></button>
+            </div>
+            <!--Body-->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <video controls class="img-fluid" style="display:none;max-height:172px;" id="ModalMainRecipeVideo" poster="~/Content/Images/OpenSourceCooking4096x2160.png"></video>
+                        <img class="zoomImage FullscreenableImg rounded img-fluid" style="display:none;max-height:172px;" id="ModalMainRecipeImg">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <span id="RecipePreviewerEstMinutes"></span> to make
+                            </div>
+                            <div class="col-12 text-center" style="padding:2px;" id="RecipePreviewerSymbolsDiv">
+                                <!--Jquery Populates-->
+                            </div>
+                        </div>
+                        <span id="ModalRecipeDescriptionSpan"></span>
+                    </div>
+                    <div class="col-12" style="padding:1%;" id="RecipeIngredientSummary">
+                        <ul id="RecipePreviewerIngredientSummaryList">
+                            <!--Jquery Populates-->
+                        </ul>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowRecipeSteps()" id="ShowRecipeStepsButton"></button>
+                    </div>
+                    <div class="col-12" id="RecipeStepsDiv"style="display:none;">
+                        <!--Recipes Steps-->
+                    </div>
+                    <div class="col-12" style="padding-top:3px;">
+                        <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowComments()" id="ShowRecipeCommentsButton"></button>
+                    </div>
+                    <div class="col-12 text-center" style="display:none;margin-top:4px;" id="RecipeCommentTextAreaDiv">
+                        <textarea class="form-control" rows="3" placeholder="Add public comment (300 character limit)" id="RecipeCommentTextArea"></textarea>
+                        <button type="button" class="pull-right btn btn-sm btn-primary" style="margin-top:4px;" onclick="Onclick_SubmitComment()" id="SubmitCommentButton">Submit Comment</button>
+                    </div>
+                    <div class="col-12" id="RecipeComments">
+                        <!--Jquery Populates-->
+                    </div>
+                    <div class="col-12" style="display:none;padding-top:4px;" id="ShowMoreRecipeCommentsButtonDiv">
+                        <button  id="ShowMoreRecipeCommentsButton" class="btn btn-block btn-sm btn-secondary" onclick="ShowMoreRecipeComments()">Show More Comments</button>
+                    </div>
+                </div>
+            </div>
+            <!--Footer-->
+            <div class="col-12" style="padding-bottom:2%;">
+                <div class="row text-center">
+                    <div class="col-lg-3">
+                        <span class="modal-title" id="ModalCreatorName"></span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span class="modal-title" id="ModalCreateDate"></span>
+                    </div>
+                    <div class="col-lg-3">
+                        <span class="modal-title" id="ModalEditDate"></span>
+                    </div>
+                    <div class="col-lg-3">
+                        <button type="button" class="btn btn-danger btn-block" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ConfirmRecipeDelete Modal-->
+<div class="modal" id="ConfirmRecipeDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmRecipeDelete" style="overflow-y:scroll;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span style="font-size:20px; color:red; font-weight:bold;">Permanently delete this recipe?</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-danger" id="ConfirmRecipeDeleteModalDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal" id="ReportModal" tabindex="-1" role="dialog" aria-labelledby="ReportModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Why are you reporting?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body text-center" style="padding-bottom:0px;">
+                <span style="color:red;">Abusing the report function will result with an account ban and all report flags deleted. Don't be a troll.</span>
+            </div>
+             <div class="modal-body" id="ReportModalBody">                 
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/PartialViews/_FullScreenMediaElementDiv.cshtml"/*, model*/)
+@Html.Partial("~/Views/PartialViews/Modals/_PopUpModal.cshtml"/*, model*/)
+@Html.Partial("~/Views/PartialViews/Modals/_RecipeViewableTypeModal.cshtml"/*, model*/)

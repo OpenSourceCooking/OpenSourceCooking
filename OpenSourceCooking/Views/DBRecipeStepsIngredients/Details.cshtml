@@ -1,0 +1,58 @@
+﻿@model OpenSourceCooking.RecipeStepsIngredient
+
+@{
+    ViewBag.Title = "Details";
+}
+<br />
+<h2>Details</h2>
+
+<div>
+    <h4>RecipeStepsIngredient</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ToAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ToAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ingredient.CreatorId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingredient.CreatorId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MeasurementUnit.MeasurementUnitName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MeasurementUnit.MeasurementUnitName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipeStep.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecipeStep.Comment)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

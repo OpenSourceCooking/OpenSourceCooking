@@ -1,0 +1,26 @@
+﻿@model OpenSourceCooking.DietaryRestriction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DietaryRestriction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IconUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IconUrl)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Name }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
