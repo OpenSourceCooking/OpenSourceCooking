@@ -142,12 +142,14 @@ namespace OpenSourceCooking.Models
     }
     public class RecipeStepDataTransferObject
     {
+        int recipeId;
         int stepNumber;
         long estimatedTimeInSeconds;
         string comment;
         ICollection<RecipeStepsCloudFileDataTransferObject> recipeStepsCloudFileDataTransferObjects;
         ICollection<RecipeStepsIngredientsDataTransferObject> recipeStepsIngredientsDataTransferObjects;
 
+        public int RecipeId { get { return recipeId; } set { recipeId = value; } }
         public int StepNumber { get { return stepNumber; } set { stepNumber = value; } }
         public long EstimatedTimeInSeconds { get { return estimatedTimeInSeconds; } set { estimatedTimeInSeconds = value; } }
         public string Comment { get { return comment; } set { comment = value; } }

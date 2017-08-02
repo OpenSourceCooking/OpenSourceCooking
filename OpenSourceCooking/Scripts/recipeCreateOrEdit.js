@@ -316,6 +316,7 @@ function CreateOrEditRecipeName() {
         });
     }
     else {
+        IsNextButtonBusy = true;
         $.ajax({
             url: Config.AjaxUrls.AjaxUpdateName,
             type: "GET",
@@ -325,15 +326,15 @@ function CreateOrEditRecipeName() {
                 RecipeNameSaveTimer = null;
                 RecipeNameInput.val(recipeName);                
                 RecipeNameInputImage.attr("src", "/Content/Images/Icons/Checkmark.png");
-                recipeName
+                IsNextButtonBusy = false;
             },
             error: function (xhr, ajaxOptions, error) {
                 ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
                 RecipeNameInputImage.attr("src", Config.Icons.ErrorIconUrl);
+                IsNextButtonBusy = false;
                 return;
             }
         });
-
     }
 }
 function DeleteStep(StepNum, RecipeId) {
@@ -605,10 +606,12 @@ function PopulateStepsTable(RecipeId) {
                     + '<label style="font-size:24px;">Step ' + (i + 1) + '</label>'
                     + '</div>'
                     + '<div class="col-8 text-right" style="padding-top:6px;">'
-                    + '<div class="btn-group btn-group-sm">'
-                    + '<button class="btn btn-sm btn-primary MoveStepUpButton" id="MoveStepUp' + (i + 1) + '"><i class="fa fa-arrow-up"></i></button>'
-                    + '<button class="btn btn-sm btn-primary MoveStepDownButton" id="MoveStepDown' + (i + 1) + '"><i class="fa fa-arrow-down"></i></button>'
-                    + '<button class="btn btn-sm btn-info StepEditButton" id="Edit' + (i + 1) + '">Edit</button>'
+                    + '<div class="btn-group btn-group-sm">';
+                if (RecipeStep.StepNumber > 1)
+                    AppendString += '<button class="btn btn-sm btn-primary" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', -1)"><i class="fa fa-arrow-up"></i></button>';
+                if (RecipeStep.StepNumber != RecipeSteps.length)
+                    AppendString += '<button class="btn btn-sm btn-primary" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', 1)"><i class="fa fa-arrow-down"></i></button>';
+                AppendString += '<button class="btn btn-sm btn-info StepEditButton" id="Edit' + (i + 1) + '">Edit</button>'
                     + '<button class="btn btn-sm btn-danger StepDeleteButton" id="Delete' + (i + 1) + '">Delete</button>'
                     + '</div>'
                     + '</div>'
@@ -616,10 +619,12 @@ function PopulateStepsTable(RecipeId) {
                     + '<label>' + RecipeStep.Comment + '</label>'
                     + '</div>'
                     + '<div class="col-6">'
-                    + '<div class="row">'
-                    + '<div class="col-12 text-right" style="font-size:20px;">' + RecipeStep.EstimatedTimeInSeconds / 60 + ' Min(s)</div>'
-                    + '<div class="col-12 text-right" style="font-size:20px;">Ingredients</div>'
-                    + '<table style="width:100%;" id="JustAddedStepIngredientTable">'
+                    + '<div class="row">';
+                if (RecipeStep.EstimatedTimeInSeconds > 0)
+                    AppendString += '<div class="col-12 text-right" style="font-size:20px;">' + RecipeStep.EstimatedTimeInSeconds / 60 + ' Min(s)</div>';
+                if (RecipeStep.RecipeStepsIngredientsDataTransferObjects > 0)
+                    AppendString += '<div class="col-12 text-right" style="font-size:20px;">Ingredients</div>';
+                AppendString += '<table style="width:100%;" id="JustAddedStepIngredientTable">'
                     + '<tbody></tbody>'
                     + '</table>'
                     + '</div>'
@@ -629,9 +634,9 @@ function PopulateStepsTable(RecipeId) {
                 //Step Photos
                 $.each(RecipeStep.RecipeStepsCloudFileDataTransferObjects, function (i, RecipeStepsCloudFileDataTransferObject) {
                     $('#OptionalPhotoVideoSpan').fadeIn('slow');
-                    AppendString = AppendString + '<div class="col-6" style="padding-left:4px;padding-right:4px;"><img src="' + RecipeStepsCloudFileDataTransferObject.Url + '" class="mx-auto img-fluid" style="border-radius:28px;max-height:180px;"></div>';
+                    AppendString += '<div class="col-6" style="padding-left:4px;padding-right:4px;"><img src="' + RecipeStepsCloudFileDataTransferObject.Url + '" class="mx-auto img-fluid" style="border-radius:28px;max-height:180px;"></div>';
                 });
-                AppendString = AppendString + '</div>'
+                AppendString += '</div>'
                     + '</div>';
                 RecipeStepsDiv.append(AppendString);
                 $.each(RecipeStep.RecipeStepsIngredientsDataTransferObjects, function (i, RecipeStepsIngredientsDataTransferObject) {
@@ -646,14 +651,6 @@ function PopulateStepsTable(RecipeId) {
             $('.StepDeleteButton').on('click', function () {
                 var StepNum = $(this).attr('id').replace("Delete", "");
                 DeleteStep(StepNum, RecipeId);
-            });
-            $('.MoveStepUpButton').on('click', function () {
-                var StepNum = $(this).attr('id').replace("MoveStepUp", "");
-                MoveRecipeStep(RecipeId, StepNum, -1);
-            });
-            $('.MoveStepDownButton').on('click', function () {
-                var StepNum = $(this).attr('id').replace("MoveStepDown", "");
-                MoveRecipeStep(RecipeId, StepNum, 1);
             });
             $('.StepEditButton').on('click', function () {
                 var StepNum = $(this).attr('id').replace("Edit", "");
@@ -922,6 +919,7 @@ function UpdateServingSize() {
         }
     }
     ServingSizeInputImage.attr("src", Config.Icons.LoadingIconUrl);
+    IsNextButtonBusy = true;
     $.ajax({
         url: Config.AjaxUrls.AjaxUpdateServingSize,
         type: "GET",
@@ -936,11 +934,12 @@ function UpdateServingSize() {
             $('#DietaryRestrictionsSliderDiv').fadeIn('slow');
             $('#dietary-restrictions-div').fadeIn('slow');
             ServingSizeInputImage.attr("src", "/Content/Images/Icons/Checkmark.png");
-
+            IsNextButtonBusy = false;
         },
         error: function (xhr, ajaxOptions, error) {
             ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
             ServingSizeInputImage.attr("src", "/Content/Images/Icons/Error.png");
+            IsNextButtonBusy = false;
         }
     });
 }

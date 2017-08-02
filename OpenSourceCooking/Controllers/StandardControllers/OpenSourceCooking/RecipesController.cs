@@ -163,10 +163,11 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     RecipeId = cf.RecipeId,
                     SlotNumber = cf.SlotNumber,
                     StepNumber = cf.StepNumber,
-                    Url = cf.CloudFile.CloudFilesThumbnail == null? cf.CloudFile.Url : cf.CloudFile.CloudFilesThumbnail.Url
+                    Url = cf.CloudFile.CloudFilesThumbnail == null ? cf.CloudFile.Url : cf.CloudFile.CloudFilesThumbnail.Url
                 }).ToList(),
+                RecipeId = RecipeStep.RecipeId,
                 Comment = RecipeStep.Comment ?? "",
-                StepNumber = RecipeStep.StepNumber,
+                StepNumber = RecipeStep.StepNumber,                
                 EstimatedTimeInSeconds = RecipeStep.EstimatedTimeInSeconds
             };
             return Json(RecipeStepDataTransferObject, JsonRequestBehavior.AllowGet);
@@ -310,6 +311,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 }).ToList(),
                 RecipeStepDataTransferObjects = Recipe.RecipeSteps.Select(x => new RecipeStepDataTransferObject
                 {
+                    RecipeId = x.RecipeId,
                     RecipeStepsCloudFileDataTransferObjects = x.RecipeStepsCloudFiles.OrderBy(y => y.SlotNumber).Select(cf => new RecipeStepsCloudFileDataTransferObject
                     {
                         CloudFileId = cf.CloudFileId,
@@ -426,6 +428,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             List<RecipeStepDataTransferObject> RecipeStepDataTransferObjects = Recipe.RecipeSteps.OrderBy(x => x.StepNumber).Select(x => new RecipeStepDataTransferObject()
             {
+                RecipeId = x.RecipeId,
                 Comment = x.Comment ?? "",
                 EstimatedTimeInSeconds = x.EstimatedTimeInSeconds,
                 StepNumber = x.StepNumber,
@@ -454,6 +457,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             RecipeStep RecipeStep = await db.RecipeSteps.FindAsync(recipeId, stepNumber);
             RecipeStepDataTransferObject RecipeStepDataTransferObject = new RecipeStepDataTransferObject
             {
+                RecipeId = RecipeStep.RecipeId,
                 Comment = RecipeStep.Comment ?? "",
                 RecipeStepsCloudFileDataTransferObjects = RecipeStep.RecipeStepsCloudFiles.Select(cf => new RecipeStepsCloudFileDataTransferObject
                 {
