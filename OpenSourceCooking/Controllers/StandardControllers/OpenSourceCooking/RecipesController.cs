@@ -652,6 +652,19 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             OldRecipeStep.RecipeStepsIngredients.Clear();
             foreach (RecipeStepsIngredient RecipeStepsIngredient in recipeStep.RecipeStepsIngredients)
             {
+                //Create Ingredient if it doesnt exist
+                Ingredient Ingredient = await db.Ingredients.FindAsync(RecipeStepsIngredient.IngredientName);
+                if (Ingredient == null)
+                {
+                    Ingredient = new Ingredient
+                    {
+                        IngredientName = RecipeStepsIngredient.IngredientName,
+                        CreatorId = AspNetId,
+                        CreateDate = DateTime.UtcNow
+                    };                   
+                    db.Ingredients.Add(Ingredient);
+                }
+
                 //Remove Leading 0s
                 if (RecipeStepsIngredient.Amount != null)
                 {
@@ -662,7 +675,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 {
                     RecipeStepsIngredient.ToAmount = RecipeStepsIngredient.ToAmount.TrimStart('0');
                     RecipeStepsIngredient.ToAmount = RecipeStepsIngredient.ToAmount.Length > 0 ? RecipeStepsIngredient.ToAmount : "0";
-                }
+                }           
                 OldRecipeStep.RecipeStepsIngredients.Add(RecipeStepsIngredient);
             }
             await db.SaveChangesAsync();

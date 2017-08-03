@@ -253,11 +253,11 @@
     <Compile Include="Controllers\StandardControllers\Database\DBCommentsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBDietaryRestrictionsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBFlagsController.cs" />
+    <Compile Include="Controllers\StandardControllers\Database\DBIngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBRecipeFlagsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBRecipesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBRecipeStepsIngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\BugReportsController.cs" />
-    <Compile Include="Controllers\StandardControllers\Database\DBIngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBMeasurementTypesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBMeasurementUnitsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBRecipeStepsController.cs" />
@@ -539,11 +539,6 @@
     <Content Include="Views\DBMeasurementUnits\Details.cshtml" />
     <Content Include="Views\DBMeasurementUnits\Edit.cshtml" />
     <Content Include="Views\DBMeasurementUnits\Index.cshtml" />
-    <Content Include="Views\DBIngredients\Create.cshtml" />
-    <Content Include="Views\DBIngredients\Delete.cshtml" />
-    <Content Include="Views\DBIngredients\Details.cshtml" />
-    <Content Include="Views\DBIngredients\Edit.cshtml" />
-    <Content Include="Views\DBIngredients\Index.cshtml" />
     <Content Include="Views\DBRecipeSteps\Create.cshtml" />
     <Content Include="Views\DBRecipeSteps\Delete.cshtml" />
     <Content Include="Views\DBRecipeSteps\Details.cshtml" />
@@ -638,6 +633,11 @@
     <Content Include="Views\DBRecipes\Details.cshtml" />
     <Content Include="Views\DBRecipes\Edit.cshtml" />
     <Content Include="Views\DBRecipes\Index.cshtml" />
+    <Content Include="Views\DBIngredients\Create.cshtml" />
+    <Content Include="Views\DBIngredients\Delete.cshtml" />
+    <Content Include="Views\DBIngredients\Details.cshtml" />
+    <Content Include="Views\DBIngredients\Edit.cshtml" />
+    <Content Include="Views\DBIngredients\Index.cshtml" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

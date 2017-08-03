@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Delete";
 }
-<br />
+
 <h2>Delete</h2>
 
 <h3>Are you sure you want to delete this?</h3>
@@ -28,11 +28,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CloudFile.FileType)
+            @Html.DisplayNameFor(model => model.CloudFile.Url)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CloudFile.FileType)
+            @Html.DisplayFor(model => model.CloudFile.Url)
         </dd>
 
     </dl>
@@ -41,7 +41,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-secondary" /> |
+            <input type="submit" value="Delete" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

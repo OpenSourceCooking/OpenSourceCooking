@@ -80,19 +80,16 @@ namespace OpenSourceCooking.Models
     }
     public class IngredientDataTransferObject
     {
-        int id;
         string ingredientName;
         string imageUrl;
         string creatorId;
         DateTime createDate;
-
-        public int Id { get { return id; } set { id = value; } }
+        
         public string IngredientName { get { return ingredientName; } set { ingredientName = value; } }
         public string ImageUrl { get { return imageUrl; } set { imageUrl = value; } }
         public string CreatorId { get { return creatorId; } set { creatorId = value; } }
         public DateTime CreateDate { get { return createDate; } set { createDate = value; } }
     }
-
     public class RecipeCloudFileDataTransferObject
     {
         int recipeId;
@@ -105,7 +102,6 @@ namespace OpenSourceCooking.Models
         public string RecipeCloudFileTypeName { get { return recipeCloudFileTypeName; } set { recipeCloudFileTypeName = value; } }
         public CloudFileDataTransferObject CloudFileDataTransferObject { get { return cloudFileDataTransferObject; } set { cloudFileDataTransferObject = value; } }
     }
-
     public class RecipeDataTransferObject
     {
         int id;       

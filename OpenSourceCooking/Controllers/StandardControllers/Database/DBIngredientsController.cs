@@ -5,41 +5,46 @@ using System.Web.Mvc;
 
 namespace OpenSourceCooking.Controllers.StandardControllers.Database
 {
-    [Authorize(Roles = "Admin")]
     public class DBIngredientsController : Controller
     {
         private OpenSourceCookingEntities db = new OpenSourceCookingEntities();
 
-        // GET: DB_Ingredients
+        // GET: DBIngredients
         public async Task<ActionResult> Index()
         {
             var ingredients = db.Ingredients.Include(i => i.AspNetUser).Include(i => i.CloudFile);
             return View(await ingredients.ToListAsync());
         }
 
-        // GET: DB_Ingredients/Details/5
+        // GET: DBIngredients/Details/5
         public async Task<ActionResult> Details(string id)
         {
-            if (id == null)            
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);            
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             Ingredient ingredient = await db.Ingredients.FindAsync(id);
-            if (ingredient == null)            
-                return HttpNotFound();            
+            if (ingredient == null)
+            {
+                return HttpNotFound();
+            }
             return View(ingredient);
         }
 
-        // GET: DB_Ingredients/Create
+        // GET: DBIngredients/Create
         public ActionResult Create()
         {
             ViewBag.CreatorId = new SelectList(db.AspNetUsers, "Id", "Email");
-            ViewBag.CloudFilePicId = new SelectList(db.CloudFiles, "Id", "FileType");
+            ViewBag.CloudFileId = new SelectList(db.CloudFiles, "Id", "Url");
             return View();
         }
 
-        // POST: DB_Ingredients/Create
+        // POST: DBIngredients/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "IngredientName,CloudFilePicId,CreatorId,CreateDate")] Ingredient ingredient)
+        public async Task<ActionResult> Create([Bind(Include = "IngredientName,CloudFileId,CreatorId,CreateDate")] Ingredient ingredient)
         {
             if (ModelState.IsValid)
             {
@@ -49,27 +54,33 @@ namespace OpenSourceCooking.Controllers.StandardControllers.Database
             }
 
             ViewBag.CreatorId = new SelectList(db.AspNetUsers, "Id", "Email", ingredient.CreatorId);
-            ViewBag.CloudFilePicId = new SelectList(db.CloudFiles, "Id", "FileType", ingredient.CloudFileId);
+            ViewBag.CloudFileId = new SelectList(db.CloudFiles, "Id", "Url", ingredient.CloudFileId);
             return View(ingredient);
         }
 
-        // GET: DB_Ingredients/Edit/5
+        // GET: DBIngredients/Edit/5
         public async Task<ActionResult> Edit(string id)
         {
-            if (id == null)            
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);            
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             Ingredient ingredient = await db.Ingredients.FindAsync(id);
-            if (ingredient == null)            
+            if (ingredient == null)
+            {
                 return HttpNotFound();
+            }
             ViewBag.CreatorId = new SelectList(db.AspNetUsers, "Id", "Email", ingredient.CreatorId);
-            ViewBag.CloudFilePicId = new SelectList(db.CloudFiles, "Id", "FileType", ingredient.CloudFileId);
+            ViewBag.CloudFileId = new SelectList(db.CloudFiles, "Id", "Url", ingredient.CloudFileId);
             return View(ingredient);
         }
 
-        // POST: DB_Ingredients/Edit/5
+        // POST: DBIngredients/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "IngredientName,CloudFilePicId,CreatorId,CreateDate")] Ingredient ingredient)
+        public async Task<ActionResult> Edit([Bind(Include = "IngredientName,CloudFileId,CreatorId,CreateDate")] Ingredient ingredient)
         {
             if (ModelState.IsValid)
             {
@@ -78,28 +89,31 @@ namespace OpenSourceCooking.Controllers.StandardControllers.Database
                 return RedirectToAction("Index");
             }
             ViewBag.CreatorId = new SelectList(db.AspNetUsers, "Id", "Email", ingredient.CreatorId);
-            ViewBag.CloudFilePicId = new SelectList(db.CloudFiles, "Id", "FileType", ingredient.CloudFileId);
+            ViewBag.CloudFileId = new SelectList(db.CloudFiles, "Id", "Url", ingredient.CloudFileId);
             return View(ingredient);
         }
 
-        // GET: DB_Ingredients/Delete/5
+        // GET: DBIngredients/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
-            if (id == null)            
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);            
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             Ingredient ingredient = await db.Ingredients.FindAsync(id);
-            if (ingredient == null)            
-                return HttpNotFound();            
+            if (ingredient == null)
+            {
+                return HttpNotFound();
+            }
             return View(ingredient);
         }
 
-        // POST: DB_Ingredients/Delete/5
+        // POST: DBIngredients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             Ingredient ingredient = await db.Ingredients.FindAsync(id);
-            AzureCloudStorageWrapper.DeleteIngredientCloudFileIfExist(ingredient);
             db.Ingredients.Remove(ingredient);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -107,8 +121,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers.Database
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)            
-                db.Dispose();            
+            if (disposing)
+            {
+                db.Dispose();
+            }
             base.Dispose(disposing);
         }
     }
