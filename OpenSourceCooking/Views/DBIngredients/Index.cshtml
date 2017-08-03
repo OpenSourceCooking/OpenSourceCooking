@@ -12,13 +12,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
+            @Html.DisplayNameFor(model => model.IngredientName)
+        </th>       
+        <th>
+            @Html.DisplayNameFor(model => model.CloudFile.Url)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.AspNetUser.Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CloudFile.Url)
+            @Html.DisplayNameFor(model => model.CreateDate)
         </th>
         <th></th>
     </tr>
@@ -26,14 +29,17 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
+            @Html.DisplayFor(modelItem => item.IngredientName)
         </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CloudFile.Url)
+        </td>      
         <td>
             @Html.DisplayFor(modelItem => item.AspNetUser.Email)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.CloudFile.Url)
-        </td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>       
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.IngredientName }) |
             @Html.ActionLink("Details", "Details", new { id=item.IngredientName }) |
