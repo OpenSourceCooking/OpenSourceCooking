@@ -221,9 +221,9 @@ function AjaxGetRecipes() {
                                 break;
                         }
                     if (!isDraft)
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeCreateOrEdit + '?RecipeId=' + Recipes[i].Id + '">Edit</a>';
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + Recipes[i].Id + '">Edit</a>';
                     else
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeCreateOrEdit + '?RecipeId=' + Recipes[i].Id + '">Continue</a>';
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + Recipes[i].Id + '">Continue</a>';
                     RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="ConfirmAndDeleteRecipe(' + Recipes[i].Id + ');">Delete</a>'
                         + '</div >'
                         + '</div >';
@@ -665,7 +665,7 @@ function ShowRecipeSteps() {
             $('#ShowRecipeStepsButton').removeClass('btn-outline-info').addClass('btn-info');
             var RecipeStepsDiv = $('#RecipeStepsDiv');
             RecipeStepsDiv.empty();
-            $.each(RecipeSteps, function (i, RecipeStep) { //Its easiest to change the RecipeStepsDiv in CreateOrEdit and copy over here
+            $.each(RecipeSteps, function (i, RecipeStep) {
                 var AppendString = '<div class="row RecipeStep" style="padding-top:4px;margin:6px;border-radius:12px;background-color:' + GetRandomColor() + '">'
                     + '<div class="col-12">'
                     + '<label style="font-size:20px;font-weight:bold;">Step ' + (i + 1) + '</label>'

@@ -104,7 +104,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         }
 
         [Authorize]
-        public async Task<ActionResult> CreateOrEdit(int? recipeId)
+        public async Task<ActionResult> RecipeEditor(int? recipeId)
         {
             ViewBag.RecipeId = recipeId ?? 0;
             if (ViewBag.RecipeId > 0)
