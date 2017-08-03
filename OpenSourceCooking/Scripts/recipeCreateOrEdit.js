@@ -55,6 +55,19 @@ $(document).ready(function () {
             cache: false,
             data: { RecipeId: EditingRecipe.Id },
             success: function (Recipe) {
+                var MainCloudFileUrl = null;
+                var MainCloudFileThumbUrl = null;
+                var MainVideoUrl = null;
+                $.each(Recipe.RecipeCloudFileDataTransferObjects, function (i, RecipeCloudFileDataTransferObject) {
+                    if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainImage") {
+                        MainCloudFileUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
+                        if (RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.CloudFileThumbnailsDataTransferObject !== null)
+                            MainCloudFileThumbUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.CloudFileThumbnailsDataTransferObject.Url;
+                    }
+                    else if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainVideo")
+                        MainVideoUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
+                }); 
+
                 EditingRecipe.Id = Recipe.Id;
                 EditingRecipe.CreationStep = Recipe.CreationStep;
                 EditingRecipe.VideoCloudFileId = Recipe.VideoCloudFileId;
@@ -113,14 +126,14 @@ $(document).ready(function () {
                 }
                 if (Recipe.CreationStep > 4) {
                 }
-                if (Recipe.PosterImageCloudFileUrl) {
-                    $('#PosterImageUploadButton').attr('src', Recipe.PosterImageCloudFileUrl);
+                if (MainCloudFileUrl) {                   
+                    $('#PosterImageUploadButton').attr('src', MainCloudFileUrl);
                     $('#PosterImageUploadButton').fadeIn('slow');
                 }
                 else
                     $('#PosterImageUploadButton').attr('src', Config.Images.AddPhotoImageUrl);
-                if (Recipe.VideoCloudFileUrl) {
-                    $('#MainVideo').attr('src', Recipe.VideoCloudFileUrl);
+                if (MainVideoUrl) {
+                    $('#MainVideo').attr('src', MainVideoUrl);
                     $('#VideoUploadButton').hide();
                     $('#MainVideo').fadeIn('slow');
                 }
