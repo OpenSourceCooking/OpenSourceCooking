@@ -1,6 +1,5 @@
 ﻿var DietaryRestrictions = [];
-var IsAddingRecipeStep = false; //Prevents spamining the AddStep button errors
-var IsMovingRecipeStep = false;
+var IsAddDeleteMoveRecipeStepBusy = false; //Prevents spamining the AddStep button errors
 var IsNextButtonBusy = false;
 var MaxRecipeDescriptionLength = 300;
 var SelectedMeasurementType = null;
@@ -350,22 +349,6 @@ function CreateOrEditRecipeName() {
         });
     }
 }
-function DeleteStep(StepNum, RecipeId) {
-    $.ajax({
-        url: Config.AjaxUrls.AjaxDeleteRecipeStep,
-        type: "GET",
-        cache: false,
-        data: { RecipeId: RecipeId, StepNumber: StepNum },
-        success: function (RecipeStep) {
-            ChangeStepNumber(0);
-            PopulateStepsTable(RecipeId);
-            $('#AddStepModal').modal('hide');
-        },
-        error: function (xhr, ajaxOptions, error) {
-            ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
-        }
-    });
-}
 function FileUploadInput_Changed(Input, Img, RecipeId, StepNum, SlotNum) {
     var files = Input.get(0).files;
     if (!IsFileTypeAllowed(files[0], 'Image'))
@@ -506,9 +489,9 @@ function MainVideoClicked(recipeId, imageButton) {
     });
 }
 function MoveRecipeStep(RecipeId, StepNum, MoveByCount) {
-    if (IsMovingRecipeStep === true)
+    if (IsAddDeleteMoveRecipeStepBusy === true)
         return;
-    IsMovingRecipeStep = true;
+    IsAddDeleteMoveRecipeStepBusy = true;
     $.ajax({
         url: Config.AjaxUrls.AjaxMoveRecipeStep,
         type: "GET",
@@ -526,29 +509,31 @@ function OnClicked_AddIngredientToStepModalClose() {
     $('#AddStepModal').modal('show');
     $('#AddIngredientToStepModal').modal('hide');
 }
-function OnClicked_AddStep(RecipeId) {
-    if (IsAddingRecipeStep === true)
+function OnClicked_AddStep(RecipeId) {    
+    if (IsAddDeleteMoveRecipeStepBusy === true)
         return;
-    else {
-        IsAddingRecipeStep = true;
-        $('#AddRecipeStepButton').fadeOut('fast');
-        var rowCount = $('.RecipeStep').length;
-        ChangeStepNumber(rowCount + 1);
-        $.ajax({
-            url: Config.AjaxUrls.AjaxCreateRecipeStep,
-            type: "GET",
-            cache: false,
-            data: { RecipeId: RecipeId, StepNumber: StepNumber },
-            success: function (RecipeStep) {
-                PopulateStepsTable(RecipeId);
-                $('#AddRecipeStepButton').fadeIn('fast');
-            },
-            error: function (xhr, ajaxOptions, error) {
-                ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
-            }
-        });
-        ClearAddStepModal();
-    }
+    IsAddDeleteMoveRecipeStepBusy = true;
+    $(this).hide();
+    console.log(IsAddDeleteMoveRecipeStepBusy);
+    $('#AddRecipeStepButton').fadeOut('fast');
+    var rowCount = $('.RecipeStep').length;
+    ChangeStepNumber(rowCount + 1);
+    $.ajax({
+        url: Config.AjaxUrls.AjaxCreateRecipeStep,
+        type: "GET",
+        cache: false,
+        data: { RecipeId: RecipeId, StepNumber: StepNumber },
+        success: function (RecipeStep) {
+            PopulateStepsTable(RecipeId);
+            $('#AddRecipeStepButton').fadeIn('fast');
+            $(this).fadeIn('fast');           
+        },
+        error: function (xhr, ajaxOptions, error) {
+            ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
+            $(this).fadeIn('fast');
+            IsAddDeleteMoveRecipeStepBusy = false;
+        }
+    });
 }
 function OnClick_CompleteRecipe(RecipeId) {
     if (DescriptionSaveTimer !== null || DietaryRangeSliderSaveTimer !== null || RecipeNameSaveTimer !== null || ServingSizeSaveTimer !== null) {
@@ -602,13 +587,13 @@ function OnClick_UnitTypeButton(UnitTypeButton) {
     }
 }
 function PopulateStepsTable(RecipeId) {
+    RecipeStepsDiv = $('#RecipeStepsDiv')   
     $.ajax({
         url: Config.AjaxUrls.AjaxGetRecipeSteps,
         type: "GET",
         cache: false,
         data: { recipeId: RecipeId },
         success: function (RecipeSteps) {
-            RecipeStepsDiv = $('#RecipeStepsDiv')
             RecipeStepsDiv.empty();
             RecipeStepsDiv.fadeIn('slow');
             var TotalEstimatedTime = 0;
@@ -662,8 +647,24 @@ function PopulateStepsTable(RecipeId) {
             $('#TotalEstimatedTimeDiv').html(GetEstimatedTimeString(TotalEstimatedTime) + ' to make');
             ChangeStepNumber(0);
             $('.StepDeleteButton').on('click', function () {
+                if (IsAddDeleteMoveRecipeStepBusy === true)
+                    return;
+                IsAddDeleteMoveRecipeStepBusy = true;
                 var StepNum = $(this).attr('id').replace("Delete", "");
-                DeleteStep(StepNum, RecipeId);
+                $.ajax({
+                    url: Config.AjaxUrls.AjaxDeleteRecipeStep,
+                    type: "GET",
+                    cache: false,
+                    data: { RecipeId: RecipeId, StepNumber: StepNum },
+                    success: function (RecipeStep) {
+                        ChangeStepNumber(0);
+                        PopulateStepsTable(RecipeId);
+                        $('#AddStepModal').modal('hide');
+                    },
+                    error: function (xhr, ajaxOptions, error) {
+                        ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
+                    }
+                });
             });
             $('.StepEditButton').on('click', function () {
                 var StepNum = $(this).attr('id').replace("Edit", "");
@@ -693,8 +694,7 @@ function PopulateStepsTable(RecipeId) {
                 ChangeStepNumber(StepNum);
                 $('#AddStepModal').modal('show');
             });
-            IsAddingRecipeStep = false;
-            IsMovingRecipeStep = false;
+            IsAddDeleteMoveRecipeStepBusy = false;
         },
         error: function (xhr, ajaxOptions, error) {
             ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
@@ -878,7 +878,7 @@ function UpdateIngredientToStep(RecipeId) {
         }
     });
 }
-function UpdateRecipeStep(RecipeId) {
+function UpdateRecipeStep(RecipeId) { 
     var RecipeStepsIngredients = new Array();
     $('#RecipeStepIngredientsTable tr').each(function () {
         var tds = $(this).find("td");
