@@ -605,6 +605,7 @@ function PopulateStepsTable(RecipeId) {
                     + '</div>'
                     + '<div class="col-8 text-right" style="padding-top:6px;">'
                     + '<div class="btn-group btn-group-sm">';
+                //Move Edit Delete Buttons
                 if (RecipeStep.StepNumber > 1)
                     AppendString += '<button class="btn btn-sm btn-primary" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', -1)"><i class="fa fa-arrow-up"></i></button>';
                 if (RecipeStep.StepNumber != RecipeSteps.length)
@@ -619,16 +620,18 @@ function PopulateStepsTable(RecipeId) {
                     + '<div class="col-6">'
                     + '<div class="row">';
                 if (RecipeStep.EstimatedTimeInSeconds > 0)
-                    AppendString += '<div class="col-12 text-right" style="font-size:20px;">' + RecipeStep.EstimatedTimeInSeconds / 60 + ' Min(s)</div>';
-                if (RecipeStep.RecipeStepsIngredientsDataTransferObjects > 0)
+                    AppendString += '<div class="col-12 text-right" style="font-size:20px;">' + GetEstimatedTimeString(RecipeStep.EstimatedTimeInSeconds) + '</div>';
+                if (RecipeStep.RecipeStepsIngredientsDataTransferObjects.length > 0)
                     AppendString += '<div class="col-12 text-right" style="font-size:20px;">Ingredients</div>';
-                AppendString += '<table style="width:100%;" id="JustAddedStepIngredientTable">'
+                AppendString += '<div class="col-12">'
+                    + '<table style="width:100%;" id="JustAddedStepIngredientTable">'
                     + '<tbody></tbody>'
                     + '</table>'
                     + '</div>'
                     + '</div>'
+                    + '</div>'
                     + '<div class="col-12 text-center" style="padding-bottom:6px;">'
-                    + '<div class="row">';
+                    + '<div class="row">';   
                 //Step Photos
                 $.each(RecipeStep.RecipeStepsCloudFileDataTransferObjects, function (i, RecipeStepsCloudFileDataTransferObject) {
                     $('#OptionalPhotoVideoSpan').fadeIn('slow');

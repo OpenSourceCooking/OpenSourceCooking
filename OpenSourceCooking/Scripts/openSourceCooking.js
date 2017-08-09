@@ -6,12 +6,12 @@ $(document).ready(function () {
     $('.UploadVideoButton').attr('src', Config.Images.AddVideoImageUrl);
     RefreshZoomImages();
 });
-function GetEstimatedTimeString(EstimatedTime) {
-    EstimatedTime = EstimatedTime / 60;//Convert Sec to Min
-    if (EstimatedTime > 59)
-        return parseFloat((EstimatedTime / 60).toFixed(2)).toString() + " Hr(s)";
+function GetEstimatedTimeString(EstimatedTimeInSeconds) {
+    EstimatedTimeInSeconds = EstimatedTimeInSeconds / 60;//Convert Sec to Min
+    if (EstimatedTimeInSeconds > 59)
+        return parseFloat((EstimatedTimeInSeconds / 60).toFixed(2)).toString() + " Hr(s)";
     else
-        return parseFloat(EstimatedTime.toFixed(2)).toString() + " Min(s)";
+        return parseFloat(EstimatedTimeInSeconds.toFixed(2)).toString() + " Min(s)";
 }
 function GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) {
     var IngredientAmountString = recipeStepsIngredientsDataTransferObject.Amount + ' ';
@@ -65,10 +65,10 @@ function RefreshZoomImages()
 {
     $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
 }
-function SetSrcFromLocalFile(file, imgOrVideo)
+function SetSrcFromLocalFile(file, HTMLElement)
 {
     var URL = window.URL.createObjectURL(file);
-    imgOrVideo.attr('src', URL);
+    HTMLElement.attr('src', URL);
 }
 function ShowDietaryRestrictionsSymbolLegend(Table) {
     Table.empty();

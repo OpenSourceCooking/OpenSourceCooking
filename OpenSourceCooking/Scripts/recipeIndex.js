@@ -145,14 +145,13 @@ function AjaxGetRecipes() {
                     CreateDate = ConvertJSONDateToString(CreateDate);
                     randomColor = GetRandomColor();
                 }
-                else {
+                else
+                {
                     isDraft = true;
                     randomColor = '#ff2b2b';
                     RecipeName = '(Draft) ' + Recipes[i].Name;
                 }
-                if (LastEditDate !== undefined && LastEditDate !== null) {//This should never be null and this might be pointless logic
-                    LastEditDate = ConvertJSONDateToString(LastEditDate);
-                }
+                LastEditDate = ConvertJSONDateToString(LastEditDate);                
                 var RecipeDivHTMLString = '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + Recipes[i].Id + '">'
                     + '<div class="zoomImage" style="padding-bottom:15px;border:10px solid;border-radius:20px;border-color:' + GetRandomColor() + ';background-color:' + randomColor + ';">'
                     + '<h3 class="text-center" id="RecipeNameDiv' + Recipes[i].Id + '" style="padding-top:4px;padding-bottom:2px;margin:10px;border-radius:12px;font-weight:bold;background-color:white;">' + RecipeName + '</h3>';
@@ -674,12 +673,16 @@ function ShowRecipeSteps() {
                     + '<label>' + RecipeStep.Comment + '</label>'
                     + '</div>'
                     + '<div class="col-6">'
-                    + '<div class="row">'
-                    + '<div class="col-12 text-right" style="font-size:20px;">' + RecipeStep.EstimatedTimeInSeconds / 60 + ' Min(s)</div>'
-                    + '<div class="col-12 text-right" style="font-size:20px;">Ingredients</div>'
+                    + '<div class="row">';
+                if (RecipeStep.EstimatedTimeInSeconds > 0)
+                    AppendString += '<div class="col-12 text-right" style="font-size:20px;">' + GetEstimatedTimeString(RecipeStep.EstimatedTimeInSeconds) + '</div>';
+                if (RecipeStep.RecipeStepsIngredientsDataTransferObjects.length > 0)
+                    AppendString += '<div class="col-12 text-right" style="font-size:20px;">Ingredients</div>';
+                AppendString += '<div class="col-12">'
                     + '<table style="width:100%;" id="JustAddedStepIngredientTable">'
                     + '<tbody></tbody>'
                     + '</table>'
+                    + '</div>'
                     + '</div>'
                     + '</div>'
                     + '<div class="col-12 text-center" style="padding-bottom:6px;">'
