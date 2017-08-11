@@ -238,8 +238,9 @@ $(document).ready(function () {
 function AddIngredientButtonClicked() {
     $('#AddStepModal').modal('hide');
     $('#AddIngredientToStepModal').modal('show');
+    GetUnits();
 }
-function AddIngredientToRecipeStepIngredientsTable(recipeStepsIngredientsDataTransferObject) {
+function AddIngredientToRecipeStepIngredientsTable(recipeStepsIngredientsDataTransferObject) {    
     var IngredientRow = '<tr id="' + recipeStepsIngredientsDataTransferObject.IngredientName + '+">'; //Adding a plus symbol to guarantee Unique HTML ID
     IngredientRow = IngredientRow + '<td>' + GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) + '</td>'
         + '<td class="AddedIngredientRow"><a class="fa fa-minus-square-o fa-lg" style="color:red;" aria-hidden="true"></a></td>'
@@ -266,13 +267,11 @@ function ChangeStepNumber(StepNum) {
     });
 }
 function ClearAddIngredientToStepModal() {
-    $('.IngredientAmountDiv').hide();
     SelectedMeasurementType = null;
     $('.UnitTypeButton').removeClass('btn-success');
     $('.UnitTypeButton').addClass('btn-info');
     $('#IngredientSearch').val('');
     $('#MeasurementTypeDropDown').val('');
-    $('#MeasurementUnitDropDown').hide();
     $('#SelectMeasurementTypeToShowUnitsSpan').fadeIn();
     $('#MeasurementAmount').val('');
     $('#OptionalToAmount').val('');
@@ -382,6 +381,29 @@ function FileUploadInput_Changed(Input, Img, RecipeId, StepNum, SlotNum) {
         ajax.open("POST", Config.AjaxUrls.AjaxUploadRecipeStepImage);
         ajax.send(formData);
     }
+}
+function GetUnits() {
+    var UnitType = "Volume";
+    var MeasurementUnitDropDown = $('#MeasurementUnitDropDown');
+    SelectedMeasurementType = UnitType;
+    $.ajax({
+        url: Config.AjaxUrls.AjaxGetUnits,
+        data: {},
+        dataType: "json",
+        type: "GET",
+        cache: false,
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            MeasurementUnitDropDown.empty();
+            $('#SelectMeasurementTypeToShowUnitsSpan').hide();
+            $.each(data, function (i, MeasurementUnit) {
+                MeasurementUnitDropDown.append($('<option>', { value: MeasurementUnit.Text }).text(MeasurementUnit.Text));
+            });
+        },
+        error: function (xhr, ajaxOptions, error) {
+            ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
+        }
+    });
 }
 function IncrementCreationStep() {
     if (IsNextButtonBusy)
@@ -550,41 +572,6 @@ function OnClick_CompleteRecipe(RecipeId) {
     }
     else //Still a draft
         window.location.href = Config.Urls.RecipesIndex;
-}
-function OnClick_UnitTypeButton(UnitTypeButton) {
-    $('.UnitTypeButton').removeClass('btn-success');
-    $('.UnitTypeButton').addClass('btn-info');
-    var UnitType = UnitTypeButton.html();
-    var MeasurementUnitDropDown = $('#MeasurementUnitDropDown');
-    SelectedMeasurementType = UnitType;
-    if (UnitType === '') {
-        MeasurementUnitDropDown.hide();
-        $('#SelectMeasurementTypeToShowUnitsSpan').fadeIn('slow');
-        return;
-    }
-    else {
-        $.ajax({
-            url: Config.AjaxUrls.AjaxGetUnits,
-            data: { unitType: UnitType },
-            dataType: "json",
-            type: "GET",
-            cache: false,
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                UnitTypeButton.removeClass('btn-info');
-                UnitTypeButton.addClass('btn-success');
-                MeasurementUnitDropDown.empty();
-                $('#SelectMeasurementTypeToShowUnitsSpan').hide();
-                MeasurementUnitDropDown.fadeIn('slow');
-                $.each(data, function (i, MeasurementUnit) {
-                    MeasurementUnitDropDown.append($('<option>', { value: MeasurementUnit.Text }).text(MeasurementUnit.Text));
-                });
-            },
-            error: function (xhr, ajaxOptions, error) {
-                ShowPopUpModal("Error", "Oops something bad happened.. " + xhr.status + ' ' + xhr.responseText);
-            }
-        });
-    }
 }
 function PopulateStepsTable(RecipeId) {
     RecipeStepsDiv = $('#RecipeStepsDiv')   

@@ -493,9 +493,9 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 }).ToListAsync();
             return Json(RecipeStepsIngredientsDataTransferObjects, JsonRequestBehavior.AllowGet);
         }
-        public async Task<JsonResult> AjaxGetUnits(string unitType)
+        public async Task<JsonResult> AjaxGetUnits()
         {
-            var MeasurementUnits = await db.MeasurementUnits.Where(x => x.MeasurementTypeName == unitType).OrderBy(x => x.MeasurementTypeName).ThenBy(x => x.MeasurementUnitName).Select(x => new
+            var MeasurementUnits = await db.MeasurementUnits.OrderBy(x => x.MeasurementUnitName).Select(x => new
             {
                 Text = x.MeasurementUnitName,
                 Value = x.MeasurementTypeName
