@@ -147,7 +147,7 @@ $(document).ready(function () {
     $('.AutoSaveInput').keyup(function (event) {
         InputId = $(this).attr('id');        
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode === 13) {
+        if (keycode === 13) {//User Pressed Enter
             switch (InputId) {
                 case 'DescriptionInput':
                     $('#RecipeDescriptionCharactersLeftSpan').text(MaxRecipeDescriptionLength - $('#DescriptionInput').val().length);

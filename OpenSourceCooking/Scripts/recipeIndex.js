@@ -9,6 +9,7 @@ var FiltersKeyValueList = [
 ];
 var IsGettingRecipes = false;
 var IsVoteOnCommentBusy = false;
+var MaxRecipeCommentLength = 300;
 var RecipeCommentsPageIndex = 0;
 var RecipeCommentsSkipAdjust = 0;
 var RecipesPageIndex = 0;
@@ -32,6 +33,14 @@ $(document).ready(function () {
             isFitWidth: true
         }
     });
+
+    var RecipeCommentTextArea = $('#RecipeCommentTextArea');
+    RecipeCommentTextArea.attr('maxlength', MaxRecipeCommentLength);
+    $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength);
+    RecipeCommentTextArea.keyup(function (event) {
+        $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
+    }); 
+
     GetFilterByKey('RecipeOwnersFilter').Value = ViewBagRecipeOwnersFilter;    
     SearchText = ViewBagSearchText;
     if (SearchText === undefined)
@@ -505,6 +514,7 @@ function Onclick_SubmitComment() {
             ShowPopUpModal("Error", "Oops something bad happend :( Try again later..." + er);
         }
     });
+    $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength);
 }
 function PopulateSymbolsDiv(Div, DietaryRestrictions, OnClickOpensSymbolsLegend) {
     Div.empty();

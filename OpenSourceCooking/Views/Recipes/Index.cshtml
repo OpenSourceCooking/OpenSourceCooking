@@ -139,7 +139,12 @@
                         <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowComments()" id="ShowRecipeCommentsButton"></button>
                     </div>
                     <div class="col-12 text-center" style="display:none;margin-top:4px;" id="RecipeCommentTextAreaDiv">
-                        <textarea class="form-control" rows="3" placeholder="Add public comment (300 character limit)" id="RecipeCommentTextArea"></textarea>
+                        <textarea class="form-control" rows="3" placeholder="Add public comment" id="RecipeCommentTextArea"></textarea>
+                    </div>
+                    <div class="col-12 text-right" style="font-size:16px;">
+                        <span id="RecipeCommentCharactersLeftSpan"></span><span> characters left </span><img id="DescriptionInputImage" src="~/Content/Images/Icons/Checkmark.png" class="img-fluid" style="vertical-align:middle; width:16px;height:16px;" />
+                    </div>
+                    <div class="col-12 text-right" style="font-size:16px;">
                         <button type="button" class="pull-right btn btn-sm btn-primary" style="margin-top:4px;" onclick="Onclick_SubmitComment()" id="SubmitCommentButton">Submit Comment</button>
                     </div>
                     <div class="col-12" id="RecipeComments">
