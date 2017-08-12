@@ -246,7 +246,7 @@
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\StandardControllers\AccountController.cs" />
-    <Compile Include="Controllers\StandardControllers\CommentVotesController.cs" />
+    <Compile Include="Controllers\StandardControllers\OpenSourceCooking\CommentVotesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBCloudFilesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBCommentVotesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBBugReportsController.cs" />
