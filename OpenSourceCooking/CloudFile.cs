@@ -17,9 +17,9 @@ namespace OpenSourceCooking
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CloudFile()
         {
+            this.RecipeStepsCloudFiles = new HashSet<RecipeStepsCloudFile>();
             this.Ingredients = new HashSet<Ingredient>();
             this.RecipeCloudFiles = new HashSet<RecipeCloudFile>();
-            this.RecipeStepsCloudFiles = new HashSet<RecipeStepsCloudFile>();
         }
     
         public int Id { get; set; }
@@ -30,10 +30,10 @@ namespace OpenSourceCooking
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual CloudFilesThumbnail CloudFilesThumbnail { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RecipeStepsCloudFile> RecipeStepsCloudFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Ingredient> Ingredients { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeCloudFile> RecipeCloudFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RecipeStepsCloudFile> RecipeStepsCloudFiles { get; set; }
     }
 }

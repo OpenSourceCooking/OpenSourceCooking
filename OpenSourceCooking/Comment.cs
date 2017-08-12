@@ -24,16 +24,16 @@ namespace OpenSourceCooking
         public long Id { get; set; }
         public string Text { get; set; }
         public string CreatorId { get; set; }
-        public System.DateTime CreateDate { get; set; }
-        public Nullable<System.DateTime> EditDate { get; set; }
+        public System.DateTime CreateDateUtc { get; set; }
+        public Nullable<System.DateTime> EditDateUtc { get; set; }
         public Nullable<long> ParentCommentId { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments1 { get; set; }
         public virtual Comment Comment1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommentVote> CommentVotes { get; set; }
-        public virtual AspNetUser AspNetUser { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }

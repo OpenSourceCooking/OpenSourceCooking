@@ -32,70 +32,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             return View();
         }
 
-        /*
-        [Authorize]
-        public async Task<ActionResult> Edit(int? id)
-        {
-            string AspNetId = User.Identity.GetUserId();
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Recipe recipe = await db.Recipes.FindAsync(id);
-            if (recipe == null)
-                return HttpNotFound();
-            if (recipe.CreatorId != AspNetId)
-                return RedirectToAction("Index");
-            ViewBag.CreatorId = new SelectList(db.AspNetUsers, "Id", "Email", recipe.CreatorId);
-            ViewBag.PosterImageCloudFileId = new SelectList(db.CloudFiles, "Id", "FileType", recipe.PosterImageCloudFileId);
-            return View(recipe);
-        }
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,PosterImageCloudFileId,CreatorId,CreateDate,LastEditDate")] Recipe recipe)
-        {
-            string AspNetId = User.Identity.GetUserId();
-            if (recipe.CreatorId != AspNetId)
-                return RedirectToAction("Index");
-            if (ModelState.IsValid)
-            {
-                recipe.LastEditDate = DateTime.UtcNow;
-                db.Entry(recipe).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.CreatorId = new SelectList(db.AspNetUsers, "Id", "Email", recipe.CreatorId);
-            ViewBag.PosterImageCloudFileId = new SelectList(db.CloudFiles, "Id", "FileType", recipe.PosterImageCloudFileId);
-            return View(recipe);
-        }
-        [Authorize]
-        public async Task<ActionResult> Delete(int? id)
-        {
-            string AspNetId = User.Identity.GetUserId();
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Recipe recipe = await db.Recipes.FindAsync(id);
-            if (recipe == null)
-                return HttpNotFound();
-            if (recipe.CreatorId != AspNetId)
-                return RedirectToAction("Index");
-            return View(recipe);
-        }
-        [Authorize]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {
-            string AspNetId = User.Identity.GetUserId();
-            Recipe recipe = await db.Recipes.FindAsync(id);
-            if (recipe.CreatorId != AspNetId)
-                return RedirectToAction("Index");
-            AzureCloudStorageWrapper.DeleteRecipeCloudFilesIfExist(recipe);
-            db.Recipes.Remove(recipe);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-        */
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -126,9 +62,9 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             string AspNetId = User.Identity.GetUserId();
             Recipe Recipe = new Recipe()
             {
-                CreateDate = null, //This indicates that its a recipe draft
+                CreateDateUtc = null, //This indicates that its a recipe draft
                 CreatorId = AspNetId,
-                LastEditDate = DateTime.UtcNow,
+                LastEditDateUtc = DateTime.UtcNow,
                 Name = recipeName,
                 ViewableType = "Secret",
                 CreationStep = 1
@@ -143,13 +79,12 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             if (Recipe.CreatorId != User.Identity.GetUserId())
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             RecipeStep RecipeStep = new RecipeStep()
             {
                 RecipeId = recipeId,
                 Comment = null,
-                CreateDate = DateTime.UtcNow,
                 StepNumber = stepNumber,
                 EstimatedTimeInSeconds = 0,
             };
@@ -203,7 +138,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 RecipeStep RecipeStep = new RecipeStep()
                 {
                     Comment = CurrentRecipeStep.Comment,
-                    CreateDate = CurrentRecipeStep.CreateDate,
                     EstimatedTimeInSeconds = CurrentRecipeStep.EstimatedTimeInSeconds,
                     RecipeId = recipeId,
                     StepNumber = NewStepNum,
@@ -220,7 +154,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 NewStepNum++;
                 Recipe.RecipeSteps.Add(RecipeStep);
             }
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             int RecipeStepNumber = 1;
@@ -247,7 +181,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 AzureCloudStorageWrapper.DeleteCloudFile(RecipeStepsCloudFile.CloudFile);
                 db.CloudFiles.Remove(RecipeStepsCloudFile.CloudFile);
             }
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -262,7 +196,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             CloudFile CloudFile = Recipe.RecipeCloudFiles.Where(x => x.RecipeCloudFileTypeName == "MainVideo").First().CloudFile;
             AzureCloudStorageWrapper.DeleteCloudFile(CloudFile);
             db.CloudFiles.Remove(CloudFile);
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -275,11 +209,11 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             RecipeDataTransferObject RecipeDataTransferObject = new RecipeDataTransferObject()
             {
-                CreateDate = Recipe.CreateDate,
+                CreateDateUtc = Recipe.CreateDateUtc,
                 CreationStep = Recipe.CreationStep,
                 CreatorName = Recipe.AspNetUser.Email,
                 Id = Recipe.Id,
-                LastEditDate = Recipe.LastEditDate,
+                LastEditDateUtc = Recipe.LastEditDateUtc,
                 Name = Recipe.Name,
                 Description = Recipe.Description ?? "",
                 ServingSize = Recipe.ServingSize,
@@ -335,10 +269,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 switch (sortingBy)
                 {
                     case 0:
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.LastEditDate);
+                        RecipesQuery = db.Recipes.OrderByDescending(r => r.LastEditDateUtc);
                         break;
                     case 1:
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.CreateDate);
+                        RecipesQuery = db.Recipes.OrderByDescending(r => r.CreateDateUtc);
                         break;
                     case 2:
                         RecipesQuery = db.Recipes.OrderByDescending(r => r.Name);
@@ -351,10 +285,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 switch (sortingBy)
                 {
                     case 0:
-                        RecipesQuery = db.Recipes.OrderBy(r => r.LastEditDate);
+                        RecipesQuery = db.Recipes.OrderBy(r => r.LastEditDateUtc);
                         break;
                     case 1:
-                        RecipesQuery = db.Recipes.OrderBy(r => r.CreateDate);
+                        RecipesQuery = db.Recipes.OrderBy(r => r.CreateDateUtc);
                         break;
                     case 2:
                         RecipesQuery = db.Recipes.OrderBy(r => r.Name);
@@ -380,10 +314,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             }
             List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(r => new RecipeDataTransferObject()
             {
-                CreateDate = r.CreateDate,
+                CreateDateUtc = r.CreateDateUtc,
                 CreatorName = r.AspNetUser.UserName,
                 Id = r.Id,
-                LastEditDate = r.LastEditDate,
+                LastEditDateUtc = r.LastEditDateUtc,
                 Name = r.Name,
                 Description = r.Description ?? "",
                 ServingSize = r.ServingSize,
@@ -537,7 +471,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 RecipeStep NewRecipeStep = new RecipeStep()
                 {
                     Comment = OldStep.Comment,
-                    CreateDate = OldStep.CreateDate,
                     EstimatedTimeInSeconds = OldStep.EstimatedTimeInSeconds,
                     RecipeId = OldStep.RecipeId,
                     Recipe = OldStep.Recipe,
@@ -570,7 +503,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 NewStepNumber++;
             }
             db.RecipeSteps.RemoveRange(CurrentSteps);
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -643,11 +576,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeStep.RecipeId);
             if (Recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             RecipeStep OldRecipeStep = Recipe.RecipeSteps.Where(x => x.RecipeId == recipeStep.RecipeId && x.StepNumber == recipeStep.StepNumber).First();
             OldRecipeStep.Comment = String.IsNullOrEmpty(recipeStep.Comment) ? null : recipeStep.Comment;
-            OldRecipeStep.CreateDate = DateTime.UtcNow;
             OldRecipeStep.EstimatedTimeInSeconds = recipeStep.EstimatedTimeInSeconds;
             OldRecipeStep.RecipeStepsIngredients.Clear();
             foreach (RecipeStepsIngredient RecipeStepsIngredient in recipeStep.RecipeStepsIngredients)
@@ -660,7 +592,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     {
                         IngredientName = RecipeStepsIngredient.IngredientName,
                         CreatorId = AspNetId,
-                        CreateDate = DateTime.UtcNow
+                        CreateDateUtc = DateTime.UtcNow
                     };                   
                     db.Ingredients.Add(Ingredient);
                 }
@@ -688,10 +620,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             if (Recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
-            if (Recipe.CreateDate == null)
+            if (Recipe.CreateDateUtc == null)
             {
                 Recipe.CreationStep = 5;
-                Recipe.CreateDate = DateTime.UtcNow;
+                Recipe.CreateDateUtc = DateTime.UtcNow;
             }
             Recipe.ViewableType = viewableTypeName;
             db.Entry(Recipe).State = EntityState.Modified;
@@ -727,7 +659,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (UploadedCloudFileId == -1)//File size too big            
                 return Json(-1, JsonRequestBehavior.AllowGet);       
             Recipe.RecipeCloudFiles.Add(new RecipeCloudFile {RecipeId = recipeId, CloudFileId = UploadedCloudFileId, RecipeCloudFileTypeName= "MainImage" });
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -748,7 +680,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             RecipeStep RecipeStep = Recipe.RecipeSteps.Where(x => x.StepNumber == stepNumber).First();
             RecipeStepsCloudFile RecipeStepsCloudFiles = new RecipeStepsCloudFile() { RecipeId = recipeId, StepNumber = stepNumber, SlotNumber = slotNumber, CloudFileId = UploadedCloudFileId };
             RecipeStep.RecipeStepsCloudFiles.Add(RecipeStepsCloudFiles);
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -767,7 +699,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (UploadedCloudFileId == -1)//File size too big            
                 return Json(-1, JsonRequestBehavior.AllowGet);            
             Recipe.RecipeCloudFiles.Add(new RecipeCloudFile { RecipeId = recipeId, CloudFileId = UploadedCloudFileId, RecipeCloudFileTypeName = "MainVideo" });
-            Recipe.LastEditDate = DateTime.UtcNow;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);

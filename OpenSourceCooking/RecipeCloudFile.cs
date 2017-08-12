@@ -18,8 +18,8 @@ namespace OpenSourceCooking
         public int CloudFileId { get; set; }
         public string RecipeCloudFileTypeName { get; set; }
     
+        public virtual CloudFile CloudFile { get; set; }
         public virtual CloudFileType CloudFileType { get; set; }
         public virtual Recipe Recipe { get; set; }
-        public virtual CloudFile CloudFile { get; set; }
     }
 }

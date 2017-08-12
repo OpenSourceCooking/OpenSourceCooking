@@ -19,7 +19,7 @@ namespace OpenSourceCooking
         public string BuggedUrl { get; set; }
         public string Message { get; set; }
         public string BrowserInfo { get; set; }
-        public System.DateTime CreateDate { get; set; }
+        public System.DateTime CreateDateUtc { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
     }

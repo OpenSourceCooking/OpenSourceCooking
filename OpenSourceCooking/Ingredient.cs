@@ -23,11 +23,11 @@ namespace OpenSourceCooking
         public string IngredientName { get; set; }
         public Nullable<int> CloudFileId { get; set; }
         public string CreatorId { get; set; }
-        public System.DateTime CreateDate { get; set; }
+        public System.DateTime CreateDateUtc { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual CloudFile CloudFile { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
-        public virtual CloudFile CloudFile { get; set; }
     }
 }

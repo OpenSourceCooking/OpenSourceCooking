@@ -9,7 +9,7 @@ namespace OpenSourceCooking.Models
         long id;
         string text;
         string creatorId;
-        DateTime createDate;
+        DateTime createDateUtc;
         DateTime? editDate;
         long? parentCommentId;
         ICollection<CommentVoteDataTransferObject> commentVotes;
@@ -19,8 +19,8 @@ namespace OpenSourceCooking.Models
         public long Id { get { return id; } set { id = value; } }
         public string Text { get { return text; } set { text = value; } }
         public string CreatorId { get { return creatorId; } set { creatorId = value; } }
-        public DateTime CreateDate { get { return createDate; } set { createDate = value; } }
-        public DateTime? EditDate { get { return editDate; } set { editDate = value; } }
+        public DateTime CreateDateUtc { get { return createDateUtc; } set { createDateUtc = value; } }
+        public DateTime? EditDateUtc { get { return editDate; } set { editDate = value; } }
         public long? ParentCommentId { get { return parentCommentId; } set { parentCommentId = value; } }
         public ICollection<CommentVoteDataTransferObject> CommentVotes { get { return commentVotes; } set { commentVotes = value; } }
         public ICollection<CommentDataTransferObject> ChildComments { get { return childComments; } set { childComments = value; } }
@@ -83,12 +83,12 @@ namespace OpenSourceCooking.Models
         string ingredientName;
         string imageUrl;
         string creatorId;
-        DateTime createDate;
+        DateTime createDateUtc;
         
         public string IngredientName { get { return ingredientName; } set { ingredientName = value; } }
         public string ImageUrl { get { return imageUrl; } set { imageUrl = value; } }
         public string CreatorId { get { return creatorId; } set { creatorId = value; } }
-        public DateTime CreateDate { get { return createDate; } set { createDate = value; } }
+        public DateTime CreateDateUtc { get { return createDateUtc; } set { createDateUtc = value; } }
     }
     public class RecipeCloudFileDataTransferObject
     {
@@ -111,8 +111,8 @@ namespace OpenSourceCooking.Models
         string description;
         string creatorName;
         string viewableType;
-        DateTime? createDate;
-        DateTime lastEditDate;
+        DateTime? createDateUtc;
+        DateTime lastEditDateUtc;
         ICollection<RecipeStepDataTransferObject> recipeStepDataTransferObjects;
         ICollection<DietaryRestrictionDataTransferObject> dietaryRestrictionDataTransferObjects;
         ICollection<RecipeCloudFileDataTransferObject> recipeCloudFileDataTransferObjects;
@@ -124,8 +124,8 @@ namespace OpenSourceCooking.Models
         public string CreatorName { get { return creatorName; } set { creatorName = value; } }
         public string Description { get { return description; } set { description = value; } }
         public string ViewableType { get { return viewableType; } set { viewableType = value; } }
-        public DateTime? CreateDate { get { return createDate; } set { createDate = value; } }
-        public DateTime LastEditDate { get { return lastEditDate; } set { lastEditDate = value; } }
+        public DateTime? CreateDateUtc { get { return createDateUtc; } set { createDateUtc = value; } }
+        public DateTime LastEditDateUtc { get { return lastEditDateUtc; } set { lastEditDateUtc = value; } }
         public ICollection<RecipeStepDataTransferObject> RecipeStepDataTransferObjects { get { return recipeStepDataTransferObjects; } set { recipeStepDataTransferObjects = value; } }
         public ICollection<DietaryRestrictionDataTransferObject> DietaryRestrictionDataTransferObjects { get { return dietaryRestrictionDataTransferObjects; } set { dietaryRestrictionDataTransferObjects = value; } }
         public ICollection<RecipeCloudFileDataTransferObject> RecipeCloudFileDataTransferObjects { get { return recipeCloudFileDataTransferObjects; } set { recipeCloudFileDataTransferObjects = value; } }

@@ -24,7 +24,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Comment Comment = new Comment()
             {
                 CreatorId = AspNetId,
-                CreateDate = DateTime.UtcNow,
+                CreateDateUtc = DateTime.UtcNow,
                 Text = ConvertLineBrakes(text),
             };
             Recipe.Comments.Add(Comment);
@@ -47,9 +47,9 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             CommentDataTransferObject RecipeCommentDataTransferObject = new CommentDataTransferObject()
             {
                 Id = Comment.Id,
-                CreateDate = Comment.CreateDate,
+                CreateDateUtc = Comment.CreateDateUtc,
                 CreatorId = Comment.CreatorId,
-                EditDate = Comment.EditDate,
+                EditDateUtc = Comment.EditDateUtc,
                 Text = Comment.Text,
                 PostedByChefName = AspNetUser.UserName,
                 IsMyRecipe = true
@@ -59,12 +59,12 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         public async Task<JsonResult> AjaxGetRecipeComments(int recipeId, int commentsPageIndex, int recipeCommentsSkipAdjust)
         {
             string AspNetId = User.Identity.GetUserId();
-            List<CommentDataTransferObject> RecipeCommentDataTransferObjects = await db.Comments.Where(x => x.Recipe.Id == recipeId).OrderByDescending(x => x.CreateDate).Skip((commentsPageIndex * CommentsPageSize) + recipeCommentsSkipAdjust).Take(CommentsPageSize).Select(x => new CommentDataTransferObject
+            List<CommentDataTransferObject> RecipeCommentDataTransferObjects = await db.Comments.Where(x => x.Recipe.Id == recipeId).OrderByDescending(x => x.CreateDateUtc).Skip((commentsPageIndex * CommentsPageSize) + recipeCommentsSkipAdjust).Take(CommentsPageSize).Select(x => new CommentDataTransferObject
             {
                 Id = x.Id,
-                CreateDate = x.CreateDate,
+                CreateDateUtc = x.CreateDateUtc,
                 CreatorId = x.CreatorId,
-                EditDate = x.EditDate,
+                EditDateUtc = x.EditDateUtc,
                 Text = x.Text,
                 ParentCommentId = x.ParentCommentId,
                 CommentVotes = x.CommentVotes.Select(v => new CommentVoteDataTransferObject

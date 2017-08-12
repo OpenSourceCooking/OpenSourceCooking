@@ -51,7 +51,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers.Database
             if (ModelState.IsValid)
             {
                 bugReport.ReportingAspNetUserId = User.Identity.GetUserId();
-                bugReport.CreateDate = DateTime.UtcNow;
+                bugReport.CreateDateUtc = DateTime.UtcNow;
                 db.BugReports.Add(bugReport);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Confirmation",new {id= bugReport.Id });

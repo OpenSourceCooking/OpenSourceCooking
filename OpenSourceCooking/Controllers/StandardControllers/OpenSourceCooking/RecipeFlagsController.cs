@@ -151,7 +151,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers.OpenSourceCooking
                 return Json("Already Reported", JsonRequestBehavior.AllowGet);            
             //Create the flag
             Flag Flag = await db.Flags.FindAsync(flagName);
-            db.RecipeFlags.Add(new RecipeFlag {CreateDate = DateTime.UtcNow, FlagName = flagName, RecipeId = recipeId, ReportingAspNetUserId = AspNetId });
+            db.RecipeFlags.Add(new RecipeFlag {CreateDateUtc = DateTime.UtcNow, FlagName = flagName, RecipeId = recipeId, ReportingAspNetUserId = AspNetId });
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
         }       

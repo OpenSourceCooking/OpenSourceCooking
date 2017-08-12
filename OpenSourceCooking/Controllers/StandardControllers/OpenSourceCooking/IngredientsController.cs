@@ -28,7 +28,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                                                    IngredientName = i.IngredientName,
                                                    ImageUrl = i.CloudFile != null ? i.CloudFile.Url : "",
                                                    CreatorId = i.CreatorId,
-                                                   CreateDate = i.CreateDate
+                                                   CreateDateUtc = i.CreateDateUtc
                                                }).Skip(pageIndex * pageSize).Take(pageSize).ToList();
             return Json(Ingredients, JsonRequestBehavior.AllowGet);
         }        

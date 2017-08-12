@@ -17,13 +17,13 @@ namespace OpenSourceCooking
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AspNetUser()
         {
-            this.BugReports = new HashSet<BugReport>();
-            this.Comments = new HashSet<Comment>();
             this.CommentVotes = new HashSet<CommentVote>();
-            this.RecipeFlags = new HashSet<RecipeFlag>();
+            this.CloudFiles = new HashSet<CloudFile>();
+            this.BugReports = new HashSet<BugReport>();
             this.Recipes = new HashSet<Recipe>();
             this.Ingredients = new HashSet<Ingredient>();
-            this.CloudFiles = new HashSet<CloudFile>();
+            this.RecipeFlags = new HashSet<RecipeFlag>();
+            this.Comments = new HashSet<Comment>();
         }
     
         public string Id { get; set; }
@@ -40,19 +40,19 @@ namespace OpenSourceCooking
         public string UserName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BugReport> BugReports { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Comment> Comments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommentVote> CommentVotes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RecipeFlag> RecipeFlags { get; set; }
         public virtual UserSetting UserSetting { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CloudFile> CloudFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BugReport> BugReports { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Recipe> Recipes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Ingredient> Ingredients { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CloudFile> CloudFiles { get; set; }
+        public virtual ICollection<RecipeFlag> RecipeFlags { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

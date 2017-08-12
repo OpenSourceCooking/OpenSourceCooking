@@ -31,7 +31,7 @@
           <Property Name="BuggedUrl" Type="nvarchar" MaxLength="3000" Nullable="false" />
           <Property Name="Message" Type="nvarchar(max)" Nullable="false" />
           <Property Name="BrowserInfo" Type="nvarchar" MaxLength="3000" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CreateDateUtc" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="CloudFiles">
           <Key>
@@ -61,10 +61,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Text" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="CreatorId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
-          <Property Name="EditDate" Type="datetime2" Precision="7" />
+          <Property Name="CreateDateUtc" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="EditDateUtc" Type="datetime2" Precision="7" />
           <Property Name="ParentCommentId" Type="bigint" />
         </EntityType>
         <EntityType Name="CommentVotes">
@@ -96,7 +96,7 @@
           <Property Name="IngredientName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="CloudFileId" Type="int" />
           <Property Name="CreatorId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CreateDateUtc" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="MeasurementTypes">
           <Key>
@@ -137,7 +137,7 @@
           <Property Name="RecipeId" Type="int" Nullable="false" />
           <Property Name="ReportingAspNetUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="FlagName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CreateDateUtc" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Recipes">
           <Key>
@@ -149,8 +149,8 @@
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="ServingSize" Type="int" Nullable="false" />
           <Property Name="CreatorId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" />
-          <Property Name="LastEditDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CreateDateUtc" Type="datetime2" Precision="7" />
+          <Property Name="LastEditDateUtc" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="ViewableType" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="RecipesDietaryRestrictions">
@@ -170,7 +170,6 @@
           <Property Name="StepNumber" Type="int" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="500" />
           <Property Name="EstimatedTimeInSeconds" Type="bigint" Nullable="false" />
-          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="RecipeStepsCloudFiles">
           <Key>
@@ -745,104 +744,25 @@
           </AssociationSet>
           <EntitySet Name="RecipeStepsCloudFiles" EntityType="OpenSourceCookingModel.RecipeStepsCloudFile" />
           <EntitySet Name="RecipeViewableTypes" EntityType="OpenSourceCookingModel.RecipeViewableType" />
-          <EntitySet Name="RecipeSteps" EntityType="OpenSourceCookingModel.RecipeStep" />
-          <AssociationSet Name="FK_RecipeSteps_CloudFiles_RecipeSteps" Association="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps">
-            <End Role="RecipeStep" EntitySet="RecipeSteps" />
-            <End Role="RecipeStepsCloudFile" EntitySet="RecipeStepsCloudFiles" />
-          </AssociationSet>
           <EntitySet Name="Flags" EntityType="OpenSourceCookingModel.Flag" />
-          <EntitySet Name="RecipeFlags" EntityType="OpenSourceCookingModel.RecipeFlag" />
-          <AssociationSet Name="FK_RecipeFlags_Flags" Association="OpenSourceCookingModel.FK_RecipeFlags_Flags">
-            <End Role="Flag" EntitySet="Flags" />
-            <End Role="RecipeFlag" EntitySet="RecipeFlags" />
-          </AssociationSet>
-          <EntitySet Name="BugReports" EntityType="OpenSourceCookingModel.BugReport" />
           <EntitySet Name="RecipeStepsIngredients" EntityType="OpenSourceCookingModel.RecipeStepsIngredient" />
           <AssociationSet Name="FK_RecipeStepsIngredients_MeasurementUnits" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementUnits">
             <End Role="MeasurementUnit" EntitySet="MeasurementUnits" />
             <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
           </AssociationSet>
-          <AssociationSet Name="FK_RecipeStepsIngredients_RecipeSteps" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps">
-            <End Role="RecipeStep" EntitySet="RecipeSteps" />
-            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
-          </AssociationSet>
-          <EntitySet Name="Comments" EntityType="OpenSourceCookingModel.Comment" />
           <EntitySet Name="CommentVotes" EntityType="OpenSourceCookingModel.CommentVote" />
-          <AssociationSet Name="FK_Comments_Comments" Association="OpenSourceCookingModel.FK_Comments_Comments">
-            <End Role="Comment" EntitySet="Comments" />
-            <End Role="Comment1" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeCommentVotes_RecipeComments" Association="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments">
-            <End Role="Comment" EntitySet="Comments" />
-            <End Role="CommentVote" EntitySet="CommentVotes" />
-          </AssociationSet>
           <EntitySet Name="AspNetUsers" EntityType="OpenSourceCookingModel.AspNetUser" />
           <EntitySet Name="UserSettings" EntityType="OpenSourceCookingModel.UserSetting" />
-          <AssociationSet Name="FK_BugReports_AspNetUsers" Association="OpenSourceCookingModel.FK_BugReports_AspNetUsers">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="BugReport" EntitySet="BugReports" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comments_ASPNetUsers" Association="OpenSourceCookingModel.FK_Comments_ASPNetUsers">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
           <AssociationSet Name="FK_RecipeCommentVotes_AspNetUsers" Association="OpenSourceCookingModel.FK_RecipeCommentVotes_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="CommentVote" EntitySet="CommentVotes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeFlags_AspNetUsers" Association="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="RecipeFlag" EntitySet="RecipeFlags" />
           </AssociationSet>
           <AssociationSet Name="FK_UserSettings_AspNetUsers" Association="OpenSourceCookingModel.FK_UserSettings_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="UserSetting" EntitySet="UserSettings" />
           </AssociationSet>
           <EntitySet Name="DietaryRestrictions" EntityType="OpenSourceCookingModel.DietaryRestriction" />
-          <EntitySet Name="Recipes" EntityType="OpenSourceCookingModel.Recipe" />
-          <AssociationSet Name="FK_Recipes_ASPNetUsers" Association="OpenSourceCookingModel.FK_Recipes_ASPNetUsers">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Recipe" EntitySet="Recipes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeFlags_Recipes" Association="OpenSourceCookingModel.FK_RecipeFlags_Recipes">
-            <End Role="Recipe" EntitySet="Recipes" />
-            <End Role="RecipeFlag" EntitySet="RecipeFlags" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recipes_RecipeViewableTypes" Association="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes">
-            <End Role="RecipeViewableType" EntitySet="RecipeViewableTypes" />
-            <End Role="Recipe" EntitySet="Recipes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeSteps_RecipeID" Association="OpenSourceCookingModel.FK_RecipeSteps_RecipeID">
-            <End Role="Recipe" EntitySet="Recipes" />
-            <End Role="RecipeStep" EntitySet="RecipeSteps" />
-          </AssociationSet>
-          <AssociationSet Name="RecipeComments" Association="OpenSourceCookingModel.RecipeComments">
-            <End Role="Comment" EntitySet="Comments" />
-            <End Role="Recipe" EntitySet="Recipes" />
-          </AssociationSet>
-          <AssociationSet Name="RecipesDietaryRestrictions" Association="OpenSourceCookingModel.RecipesDietaryRestrictions">
-            <End Role="DietaryRestriction" EntitySet="DietaryRestrictions" />
-            <End Role="Recipe" EntitySet="Recipes" />
-          </AssociationSet>
-          <EntitySet Name="Ingredients" EntityType="OpenSourceCookingModel.Ingredient" />
-          <AssociationSet Name="FK_Ingredients_ASPNetUsers" Association="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="Ingredient" EntitySet="Ingredients" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeStepsIngredients_Ingredients" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients">
-            <End Role="Ingredient" EntitySet="Ingredients" />
-            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
-          </AssociationSet>
           <EntitySet Name="CloudFileTypes" EntityType="OpenSourceCookingModel.CloudFileType" />
-          <EntitySet Name="RecipeCloudFiles" EntityType="OpenSourceCookingModel.RecipeCloudFile" />
-          <AssociationSet Name="FK_RecipeCloudFiles_RecipeCloudFileTypes" Association="OpenSourceCookingModel.FK_RecipeCloudFiles_RecipeCloudFileTypes">
-            <End Role="CloudFileType" EntitySet="CloudFileTypes" />
-            <End Role="RecipeCloudFile" EntitySet="RecipeCloudFiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeCloudFiles_Recipes" Association="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes">
-            <End Role="Recipe" EntitySet="Recipes" />
-            <End Role="RecipeCloudFile" EntitySet="RecipeCloudFiles" />
-          </AssociationSet>
           <EntitySet Name="CloudFiles" EntityType="OpenSourceCookingModel.CloudFile" />
           <EntitySet Name="CloudFilesThumbnails" EntityType="OpenSourceCookingModel.CloudFilesThumbnail" />
           <AssociationSet Name="FK_CloudFiles_ASPNetUsers" Association="OpenSourceCookingModel.FK_CloudFiles_ASPNetUsers">
@@ -853,6 +773,52 @@
             <End Role="CloudFile" EntitySet="CloudFiles" />
             <End Role="CloudFilesThumbnail" EntitySet="CloudFilesThumbnails" />
           </AssociationSet>
+          <AssociationSet Name="FK_RecipeSteps_CloudFiles_CloudFiles" Association="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_CloudFiles">
+            <End Role="CloudFile" EntitySet="CloudFiles" />
+            <End Role="RecipeStepsCloudFile" EntitySet="RecipeStepsCloudFiles" />
+          </AssociationSet>
+          <EntitySet Name="BugReports" EntityType="OpenSourceCookingModel.BugReport" />
+          <AssociationSet Name="FK_BugReports_AspNetUsers" Association="OpenSourceCookingModel.FK_BugReports_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="BugReport" EntitySet="BugReports" />
+          </AssociationSet>
+          <EntitySet Name="Recipes" EntityType="OpenSourceCookingModel.Recipe" />
+          <AssociationSet Name="FK_Recipes_ASPNetUsers" Association="OpenSourceCookingModel.FK_Recipes_ASPNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipes_RecipeViewableTypes" Association="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes">
+            <End Role="RecipeViewableType" EntitySet="RecipeViewableTypes" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="RecipesDietaryRestrictions" Association="OpenSourceCookingModel.RecipesDietaryRestrictions">
+            <End Role="DietaryRestriction" EntitySet="DietaryRestrictions" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <EntitySet Name="RecipeSteps" EntityType="OpenSourceCookingModel.RecipeStep" />
+          <AssociationSet Name="FK_RecipeSteps_RecipeID" Association="OpenSourceCookingModel.FK_RecipeSteps_RecipeID">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeStep" EntitySet="RecipeSteps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeSteps_CloudFiles_RecipeSteps" Association="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps">
+            <End Role="RecipeStep" EntitySet="RecipeSteps" />
+            <End Role="RecipeStepsCloudFile" EntitySet="RecipeStepsCloudFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeStepsIngredients_RecipeSteps" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps">
+            <End Role="RecipeStep" EntitySet="RecipeSteps" />
+            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
+          </AssociationSet>
+          <EntitySet Name="Ingredients" EntityType="OpenSourceCookingModel.Ingredient" />
+          <EntitySet Name="RecipeCloudFiles" EntityType="OpenSourceCookingModel.RecipeCloudFile" />
+          <EntitySet Name="RecipeFlags" EntityType="OpenSourceCookingModel.RecipeFlag" />
+          <AssociationSet Name="FK_Ingredients_ASPNetUsers" Association="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Ingredient" EntitySet="Ingredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFlags_AspNetUsers" Association="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="RecipeFlag" EntitySet="RecipeFlags" />
+          </AssociationSet>
           <AssociationSet Name="FK_Ingredients_CloudFiles" Association="OpenSourceCookingModel.FK_Ingredients_CloudFiles">
             <End Role="CloudFile" EntitySet="CloudFiles" />
             <End Role="Ingredient" EntitySet="Ingredients" />
@@ -861,9 +827,42 @@
             <End Role="CloudFile" EntitySet="CloudFiles" />
             <End Role="RecipeCloudFile" EntitySet="RecipeCloudFiles" />
           </AssociationSet>
-          <AssociationSet Name="FK_RecipeSteps_CloudFiles_CloudFiles" Association="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_CloudFiles">
-            <End Role="CloudFile" EntitySet="CloudFiles" />
-            <End Role="RecipeStepsCloudFile" EntitySet="RecipeStepsCloudFiles" />
+          <AssociationSet Name="FK_RecipeCloudFiles_RecipeCloudFileTypes" Association="OpenSourceCookingModel.FK_RecipeCloudFiles_RecipeCloudFileTypes">
+            <End Role="CloudFileType" EntitySet="CloudFileTypes" />
+            <End Role="RecipeCloudFile" EntitySet="RecipeCloudFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFlags_Flags" Association="OpenSourceCookingModel.FK_RecipeFlags_Flags">
+            <End Role="Flag" EntitySet="Flags" />
+            <End Role="RecipeFlag" EntitySet="RecipeFlags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeStepsIngredients_Ingredients" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients">
+            <End Role="Ingredient" EntitySet="Ingredients" />
+            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeCloudFiles_Recipes" Association="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeCloudFile" EntitySet="RecipeCloudFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFlags_Recipes" Association="OpenSourceCookingModel.FK_RecipeFlags_Recipes">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeFlag" EntitySet="RecipeFlags" />
+          </AssociationSet>
+          <EntitySet Name="Comments" EntityType="OpenSourceCookingModel.Comment" />
+          <AssociationSet Name="FK_Comments_ASPNetUsers" Association="OpenSourceCookingModel.FK_Comments_ASPNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_Comments" Association="OpenSourceCookingModel.FK_Comments_Comments">
+            <End Role="Comment" EntitySet="Comments" />
+            <End Role="Comment1" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeCommentVotes_RecipeComments" Association="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments">
+            <End Role="Comment" EntitySet="Comments" />
+            <End Role="CommentVote" EntitySet="CommentVotes" />
+          </AssociationSet>
+          <AssociationSet Name="RecipeComments" Association="OpenSourceCookingModel.RecipeComments">
+            <End Role="Comment" EntitySet="Comments" />
+            <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="MeasurementType">
@@ -905,8 +904,8 @@
           <Property Name="StepNumber" Type="Int32" Nullable="false" />
           <Property Name="SlotNumber" Type="Int32" Nullable="false" />
           <Property Name="CloudFileId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="RecipeStep" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps" FromRole="RecipeStepsCloudFile" ToRole="RecipeStep" />
           <NavigationProperty Name="CloudFile" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_CloudFiles" FromRole="RecipeStepsCloudFile" ToRole="CloudFile" />
+          <NavigationProperty Name="RecipeStep" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps" FromRole="RecipeStepsCloudFile" ToRole="RecipeStep" />
         </EntityType>
         <EntityType Name="RecipeViewableType">
           <Key>
@@ -915,80 +914,12 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Recipes" Relationship="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes" FromRole="RecipeViewableType" ToRole="Recipe" />
         </EntityType>
-        <EntityType Name="RecipeStep">
-          <Key>
-            <PropertyRef Name="RecipeId" />
-            <PropertyRef Name="StepNumber" />
-          </Key>
-          <Property Name="RecipeId" Type="Int32" Nullable="false" />
-          <Property Name="StepNumber" Type="Int32" Nullable="false" />
-          <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="EstimatedTimeInSeconds" Type="Int64" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="RecipeStepsCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsCloudFile" />
-          <NavigationProperty Name="RecipeStepsIngredients" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsIngredient" />
-          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" FromRole="RecipeStep" ToRole="Recipe" />
-        </EntityType>
-        <Association Name="FK_RecipeSteps_CloudFiles_RecipeSteps">
-          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeStepsCloudFile" Role="RecipeStepsCloudFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeStep">
-              <PropertyRef Name="RecipeId" />
-              <PropertyRef Name="StepNumber" />
-            </Principal>
-            <Dependent Role="RecipeStepsCloudFile">
-              <PropertyRef Name="RecipeId" />
-              <PropertyRef Name="StepNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Flag">
           <Key>
             <PropertyRef Name="FlagName" />
           </Key>
           <Property Name="FlagName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="RecipeFlags" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Flags" FromRole="Flag" ToRole="RecipeFlag" />
-        </EntityType>
-        <EntityType Name="RecipeFlag">
-          <Key>
-            <PropertyRef Name="RecipeId" />
-            <PropertyRef Name="ReportingAspNetUserId" />
-            <PropertyRef Name="FlagName" />
-          </Key>
-          <Property Name="RecipeId" Type="Int32" Nullable="false" />
-          <Property Name="ReportingAspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="FlagName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="Flag" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Flags" FromRole="RecipeFlag" ToRole="Flag" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers" FromRole="RecipeFlag" ToRole="AspNetUser" />
-          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Recipes" FromRole="RecipeFlag" ToRole="Recipe" />
-        </EntityType>
-        <Association Name="FK_RecipeFlags_Flags">
-          <End Type="OpenSourceCookingModel.Flag" Role="Flag" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.RecipeFlag" Role="RecipeFlag" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Flag">
-              <PropertyRef Name="FlagName" />
-            </Principal>
-            <Dependent Role="RecipeFlag">
-              <PropertyRef Name="FlagName" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="BugReport">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ReportingAspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="BuggedUrl" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="true" />
-          <Property Name="Message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="BrowserInfo" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_BugReports_AspNetUsers" FromRole="BugReport" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="RecipeStepsIngredient">
           <Key>
@@ -1021,38 +952,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RecipeStepsIngredients_RecipeSteps">
-          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeStep">
-              <PropertyRef Name="RecipeId" />
-              <PropertyRef Name="StepNumber" />
-            </Principal>
-            <Dependent Role="RecipeStepsIngredient">
-              <PropertyRef Name="RecipeId" />
-              <PropertyRef Name="StepNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Comment">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="EditDate" Type="DateTime" Precision="7" />
-          <Property Name="ParentCommentId" Type="Int64" />
-          <NavigationProperty Name="Comments1" Relationship="OpenSourceCookingModel.FK_Comments_Comments" FromRole="Comment" ToRole="Comment1" />
-          <NavigationProperty Name="Comment1" Relationship="OpenSourceCookingModel.FK_Comments_Comments" FromRole="Comment1" ToRole="Comment" />
-          <NavigationProperty Name="CommentVotes" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments" FromRole="Comment" ToRole="CommentVote" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_Comments_ASPNetUsers" FromRole="Comment" ToRole="AspNetUser" />
-          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.RecipeComments" FromRole="Comment" ToRole="Recipe" />
-        </EntityType>
         <EntityType Name="CommentVote">
           <Key>
             <PropertyRef Name="CommentId" />
@@ -1061,35 +960,9 @@
           <Property Name="CommentId" Type="Int64" Nullable="false" />
           <Property Name="VoteValue" Type="Int16" Nullable="false" />
           <Property Name="VoterId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Comment" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments" FromRole="CommentVote" ToRole="Comment" />
           <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_AspNetUsers" FromRole="CommentVote" ToRole="AspNetUser" />
+          <NavigationProperty Name="Comment" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments" FromRole="CommentVote" ToRole="Comment" />
         </EntityType>
-        <Association Name="FK_Comments_Comments">
-          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="0..1" />
-          <End Type="OpenSourceCookingModel.Comment" Role="Comment1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Comment">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comment1">
-              <PropertyRef Name="ParentCommentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeCommentVotes_RecipeComments">
-          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.CommentVote" Role="CommentVote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Comment">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CommentVote">
-              <PropertyRef Name="CommentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="AspNetUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -1106,14 +979,14 @@
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="BugReports" Relationship="OpenSourceCookingModel.FK_BugReports_AspNetUsers" FromRole="AspNetUser" ToRole="BugReport" />
-          <NavigationProperty Name="Comments" Relationship="OpenSourceCookingModel.FK_Comments_ASPNetUsers" FromRole="AspNetUser" ToRole="Comment" />
           <NavigationProperty Name="CommentVotes" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_AspNetUsers" FromRole="AspNetUser" ToRole="CommentVote" />
-          <NavigationProperty Name="RecipeFlags" Relationship="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers" FromRole="AspNetUser" ToRole="RecipeFlag" />
           <NavigationProperty Name="UserSetting" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="AspNetUser" ToRole="UserSetting" />
+          <NavigationProperty Name="CloudFiles" Relationship="OpenSourceCookingModel.FK_CloudFiles_ASPNetUsers" FromRole="AspNetUser" ToRole="CloudFile" />
+          <NavigationProperty Name="BugReports" Relationship="OpenSourceCookingModel.FK_BugReports_AspNetUsers" FromRole="AspNetUser" ToRole="BugReport" />
           <NavigationProperty Name="Recipes" Relationship="OpenSourceCookingModel.FK_Recipes_ASPNetUsers" FromRole="AspNetUser" ToRole="Recipe" />
           <NavigationProperty Name="Ingredients" Relationship="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers" FromRole="AspNetUser" ToRole="Ingredient" />
-          <NavigationProperty Name="CloudFiles" Relationship="OpenSourceCookingModel.FK_CloudFiles_ASPNetUsers" FromRole="AspNetUser" ToRole="CloudFile" />
+          <NavigationProperty Name="RecipeFlags" Relationship="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers" FromRole="AspNetUser" ToRole="RecipeFlag" />
+          <NavigationProperty Name="Comments" Relationship="OpenSourceCookingModel.FK_Comments_ASPNetUsers" FromRole="AspNetUser" ToRole="Comment" />
         </EntityType>
         <EntityType Name="UserSetting">
           <Key>
@@ -1123,32 +996,6 @@
           <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="UserSetting" ToRole="AspNetUser" />
         </EntityType>
-        <Association Name="FK_BugReports_AspNetUsers">
-          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.BugReport" Role="BugReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BugReport">
-              <PropertyRef Name="ReportingAspNetUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comments_ASPNetUsers">
-          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comment">
-              <PropertyRef Name="CreatorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_RecipeCommentVotes_AspNetUsers">
           <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
           <End Type="OpenSourceCookingModel.CommentVote" Role="CommentVote" Multiplicity="*" />
@@ -1158,18 +1005,6 @@
             </Principal>
             <Dependent Role="CommentVote">
               <PropertyRef Name="VoterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeFlags_AspNetUsers">
-          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.RecipeFlag" Role="RecipeFlag" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="RecipeFlag">
-              <PropertyRef Name="ReportingAspNetUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1195,123 +1030,6 @@
           <Property Name="IconUrl" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Recipes" Relationship="OpenSourceCookingModel.RecipesDietaryRestrictions" FromRole="DietaryRestriction" ToRole="Recipe" />
         </EntityType>
-        <EntityType Name="Recipe">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
-          <Property Name="CreationStep" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ServingSize" Type="Int32" Nullable="false" />
-          <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Precision="7" />
-          <Property Name="LastEditDate" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="ViewableType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_Recipes_ASPNetUsers" FromRole="Recipe" ToRole="AspNetUser" />
-          <NavigationProperty Name="RecipeFlags" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Recipes" FromRole="Recipe" ToRole="RecipeFlag" />
-          <NavigationProperty Name="RecipeViewableType" Relationship="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes" FromRole="Recipe" ToRole="RecipeViewableType" />
-          <NavigationProperty Name="RecipeSteps" Relationship="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" FromRole="Recipe" ToRole="RecipeStep" />
-          <NavigationProperty Name="Comments" Relationship="OpenSourceCookingModel.RecipeComments" FromRole="Recipe" ToRole="Comment" />
-          <NavigationProperty Name="DietaryRestrictions" Relationship="OpenSourceCookingModel.RecipesDietaryRestrictions" FromRole="Recipe" ToRole="DietaryRestriction" />
-          <NavigationProperty Name="RecipeCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes" FromRole="Recipe" ToRole="RecipeCloudFile" />
-        </EntityType>
-        <Association Name="FK_Recipes_ASPNetUsers">
-          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Recipe">
-              <PropertyRef Name="CreatorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeFlags_Recipes">
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeFlag" Role="RecipeFlag" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Recipe">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="RecipeFlag">
-              <PropertyRef Name="RecipeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recipes_RecipeViewableTypes">
-          <End Type="OpenSourceCookingModel.RecipeViewableType" Role="RecipeViewableType" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeViewableType">
-              <PropertyRef Name="Name" />
-            </Principal>
-            <Dependent Role="Recipe">
-              <PropertyRef Name="ViewableType" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeSteps_RecipeID">
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Recipe">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="RecipeStep">
-              <PropertyRef Name="RecipeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="RecipeComments">
-          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="*" />
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="0..1" />
-        </Association>
-        <Association Name="RecipesDietaryRestrictions">
-          <End Type="OpenSourceCookingModel.DietaryRestriction" Role="DietaryRestriction" Multiplicity="*" />
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
-        </Association>
-        <EntityType Name="Ingredient">
-          <Key>
-            <PropertyRef Name="IngredientName" />
-          </Key>
-          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="CloudFileId" Type="Int32" />
-          <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers" FromRole="Ingredient" ToRole="AspNetUser" />
-          <NavigationProperty Name="RecipeStepsIngredients" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients" FromRole="Ingredient" ToRole="RecipeStepsIngredient" />
-          <NavigationProperty Name="CloudFile" Relationship="OpenSourceCookingModel.FK_Ingredients_CloudFiles" FromRole="Ingredient" ToRole="CloudFile" />
-        </EntityType>
-        <Association Name="FK_Ingredients_ASPNetUsers">
-          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Ingredient">
-              <PropertyRef Name="CreatorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeStepsIngredients_Ingredients">
-          <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Ingredient">
-              <PropertyRef Name="IngredientName" />
-            </Principal>
-            <Dependent Role="RecipeStepsIngredient">
-              <PropertyRef Name="IngredientName" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="CloudFileType">
           <Key>
             <PropertyRef Name="TypeName" />
@@ -1319,44 +1037,6 @@
           <Property Name="TypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="RecipeCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_RecipeCloudFileTypes" FromRole="CloudFileType" ToRole="RecipeCloudFile" />
         </EntityType>
-        <EntityType Name="RecipeCloudFile">
-          <Key>
-            <PropertyRef Name="RecipeId" />
-            <PropertyRef Name="RecipeCloudFileTypeName" />
-          </Key>
-          <Property Name="RecipeId" Type="Int32" Nullable="false" />
-          <Property Name="CloudFileId" Type="Int32" Nullable="false" />
-          <Property Name="RecipeCloudFileTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="CloudFileType" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_RecipeCloudFileTypes" FromRole="RecipeCloudFile" ToRole="CloudFileType" />
-          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes" FromRole="RecipeCloudFile" ToRole="Recipe" />
-          <NavigationProperty Name="CloudFile" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_CloudFiles" FromRole="RecipeCloudFile" ToRole="CloudFile" />
-        </EntityType>
-        <Association Name="FK_RecipeCloudFiles_RecipeCloudFileTypes">
-          <End Type="OpenSourceCookingModel.CloudFileType" Role="CloudFileType" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.RecipeCloudFile" Role="RecipeCloudFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CloudFileType">
-              <PropertyRef Name="TypeName" />
-            </Principal>
-            <Dependent Role="RecipeCloudFile">
-              <PropertyRef Name="RecipeCloudFileTypeName" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeCloudFiles_Recipes">
-          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeCloudFile" Role="RecipeCloudFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Recipe">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="RecipeCloudFile">
-              <PropertyRef Name="RecipeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="CloudFile">
           <Key>
             <PropertyRef Name="Id" />
@@ -1367,9 +1047,9 @@
           <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_CloudFiles_ASPNetUsers" FromRole="CloudFile" ToRole="AspNetUser" />
           <NavigationProperty Name="CloudFilesThumbnail" Relationship="OpenSourceCookingModel.FK_CloudFilesThumbnails_CloudFiles" FromRole="CloudFile" ToRole="CloudFilesThumbnail" />
+          <NavigationProperty Name="RecipeStepsCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_CloudFiles" FromRole="CloudFile" ToRole="RecipeStepsCloudFile" />
           <NavigationProperty Name="Ingredients" Relationship="OpenSourceCookingModel.FK_Ingredients_CloudFiles" FromRole="CloudFile" ToRole="Ingredient" />
           <NavigationProperty Name="RecipeCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_CloudFiles" FromRole="CloudFile" ToRole="RecipeCloudFile" />
-          <NavigationProperty Name="RecipeStepsCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_CloudFiles" FromRole="CloudFile" ToRole="RecipeStepsCloudFile" />
         </EntityType>
         <EntityType Name="CloudFilesThumbnail">
           <Key>
@@ -1406,6 +1086,214 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RecipeSteps_CloudFiles_CloudFiles">
+          <End Type="OpenSourceCookingModel.CloudFile" Role="CloudFile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeStepsCloudFile" Role="RecipeStepsCloudFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CloudFile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeStepsCloudFile">
+              <PropertyRef Name="CloudFileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BugReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportingAspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="BuggedUrl" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BrowserInfo" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_BugReports_AspNetUsers" FromRole="BugReport" ToRole="AspNetUser" />
+        </EntityType>
+        <Association Name="FK_BugReports_AspNetUsers">
+          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.BugReport" Role="BugReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BugReport">
+              <PropertyRef Name="ReportingAspNetUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CreationStep" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ServingSize" Type="Int32" Nullable="false" />
+          <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateUtc" Type="DateTime" Precision="7" />
+          <Property Name="LastEditDateUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="ViewableType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_Recipes_ASPNetUsers" FromRole="Recipe" ToRole="AspNetUser" />
+          <NavigationProperty Name="RecipeViewableType" Relationship="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes" FromRole="Recipe" ToRole="RecipeViewableType" />
+          <NavigationProperty Name="DietaryRestrictions" Relationship="OpenSourceCookingModel.RecipesDietaryRestrictions" FromRole="Recipe" ToRole="DietaryRestriction" />
+          <NavigationProperty Name="RecipeSteps" Relationship="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" FromRole="Recipe" ToRole="RecipeStep" />
+          <NavigationProperty Name="RecipeCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes" FromRole="Recipe" ToRole="RecipeCloudFile" />
+          <NavigationProperty Name="RecipeFlags" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Recipes" FromRole="Recipe" ToRole="RecipeFlag" />
+          <NavigationProperty Name="Comments" Relationship="OpenSourceCookingModel.RecipeComments" FromRole="Recipe" ToRole="Comment" />
+        </EntityType>
+        <Association Name="FK_Recipes_ASPNetUsers">
+          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipes_RecipeViewableTypes">
+          <End Type="OpenSourceCookingModel.RecipeViewableType" Role="RecipeViewableType" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeViewableType">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="ViewableType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RecipesDietaryRestrictions">
+          <End Type="OpenSourceCookingModel.DietaryRestriction" Role="DietaryRestriction" Multiplicity="*" />
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
+        </Association>
+        <EntityType Name="RecipeStep">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="StepNumber" />
+          </Key>
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="StepNumber" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EstimatedTimeInSeconds" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" FromRole="RecipeStep" ToRole="Recipe" />
+          <NavigationProperty Name="RecipeStepsCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsCloudFile" />
+          <NavigationProperty Name="RecipeStepsIngredients" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsIngredient" />
+        </EntityType>
+        <Association Name="FK_RecipeSteps_RecipeID">
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeStep">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeSteps_CloudFiles_RecipeSteps">
+          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeStepsCloudFile" Role="RecipeStepsCloudFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeStep">
+              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="StepNumber" />
+            </Principal>
+            <Dependent Role="RecipeStepsCloudFile">
+              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="StepNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeStepsIngredients_RecipeSteps">
+          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeStep">
+              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="StepNumber" />
+            </Principal>
+            <Dependent Role="RecipeStepsIngredient">
+              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="StepNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Ingredient">
+          <Key>
+            <PropertyRef Name="IngredientName" />
+          </Key>
+          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CloudFileId" Type="Int32" />
+          <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers" FromRole="Ingredient" ToRole="AspNetUser" />
+          <NavigationProperty Name="CloudFile" Relationship="OpenSourceCookingModel.FK_Ingredients_CloudFiles" FromRole="Ingredient" ToRole="CloudFile" />
+          <NavigationProperty Name="RecipeStepsIngredients" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients" FromRole="Ingredient" ToRole="RecipeStepsIngredient" />
+        </EntityType>
+        <EntityType Name="RecipeCloudFile">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="RecipeCloudFileTypeName" />
+          </Key>
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="CloudFileId" Type="Int32" Nullable="false" />
+          <Property Name="RecipeCloudFileTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CloudFile" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_CloudFiles" FromRole="RecipeCloudFile" ToRole="CloudFile" />
+          <NavigationProperty Name="CloudFileType" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_RecipeCloudFileTypes" FromRole="RecipeCloudFile" ToRole="CloudFileType" />
+          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes" FromRole="RecipeCloudFile" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="RecipeFlag">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="ReportingAspNetUserId" />
+            <PropertyRef Name="FlagName" />
+          </Key>
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="ReportingAspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FlagName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers" FromRole="RecipeFlag" ToRole="AspNetUser" />
+          <NavigationProperty Name="Flag" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Flags" FromRole="RecipeFlag" ToRole="Flag" />
+          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeFlags_Recipes" FromRole="RecipeFlag" ToRole="Recipe" />
+        </EntityType>
+        <Association Name="FK_Ingredients_ASPNetUsers">
+          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Ingredient">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFlags_AspNetUsers">
+          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.RecipeFlag" Role="RecipeFlag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeFlag">
+              <PropertyRef Name="ReportingAspNetUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Ingredients_CloudFiles">
           <End Type="OpenSourceCookingModel.CloudFile" Role="CloudFile" Multiplicity="0..1" />
           <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="*" />
@@ -1432,19 +1320,129 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RecipeSteps_CloudFiles_CloudFiles">
-          <End Type="OpenSourceCookingModel.CloudFile" Role="CloudFile" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeStepsCloudFile" Role="RecipeStepsCloudFile" Multiplicity="*" />
+        <Association Name="FK_RecipeCloudFiles_RecipeCloudFileTypes">
+          <End Type="OpenSourceCookingModel.CloudFileType" Role="CloudFileType" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.RecipeCloudFile" Role="RecipeCloudFile" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="CloudFile">
-              <PropertyRef Name="Id" />
+            <Principal Role="CloudFileType">
+              <PropertyRef Name="TypeName" />
             </Principal>
-            <Dependent Role="RecipeStepsCloudFile">
-              <PropertyRef Name="CloudFileId" />
+            <Dependent Role="RecipeCloudFile">
+              <PropertyRef Name="RecipeCloudFileTypeName" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFlags_Flags">
+          <End Type="OpenSourceCookingModel.Flag" Role="Flag" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.RecipeFlag" Role="RecipeFlag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Flag">
+              <PropertyRef Name="FlagName" />
+            </Principal>
+            <Dependent Role="RecipeFlag">
+              <PropertyRef Name="FlagName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeStepsIngredients_Ingredients">
+          <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ingredient">
+              <PropertyRef Name="IngredientName" />
+            </Principal>
+            <Dependent Role="RecipeStepsIngredient">
+              <PropertyRef Name="IngredientName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeCloudFiles_Recipes">
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeCloudFile" Role="RecipeCloudFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeCloudFile">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFlags_Recipes">
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeFlag" Role="RecipeFlag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeFlag">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDateUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="EditDateUtc" Type="DateTime" Precision="7" />
+          <Property Name="ParentCommentId" Type="Int64" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_Comments_ASPNetUsers" FromRole="Comment" ToRole="AspNetUser" />
+          <NavigationProperty Name="Comments1" Relationship="OpenSourceCookingModel.FK_Comments_Comments" FromRole="Comment" ToRole="Comment1" />
+          <NavigationProperty Name="Comment1" Relationship="OpenSourceCookingModel.FK_Comments_Comments" FromRole="Comment1" ToRole="Comment" />
+          <NavigationProperty Name="CommentVotes" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments" FromRole="Comment" ToRole="CommentVote" />
+          <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.RecipeComments" FromRole="Comment" ToRole="Recipe" />
+        </EntityType>
+        <Association Name="FK_Comments_ASPNetUsers">
+          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="CreatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_Comments">
+          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="0..1" />
+          <End Type="OpenSourceCookingModel.Comment" Role="Comment1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Comment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment1">
+              <PropertyRef Name="ParentCommentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeCommentVotes_RecipeComments">
+          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.CommentVote" Role="CommentVote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Comment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommentVote">
+              <PropertyRef Name="CommentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RecipeComments">
+          <End Type="OpenSourceCookingModel.Comment" Role="Comment" Multiplicity="*" />
+          <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="0..1" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1484,43 +1482,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RecipeSteps">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeStep">
-              <MappingFragment StoreEntitySet="RecipeSteps">
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="EstimatedTimeInSeconds" ColumnName="EstimatedTimeInSeconds" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
-                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Flags">
             <EntityTypeMapping TypeName="OpenSourceCookingModel.Flag">
               <MappingFragment StoreEntitySet="Flags">
                 <ScalarProperty Name="FlagName" ColumnName="FlagName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RecipeFlags">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeFlag">
-              <MappingFragment StoreEntitySet="RecipeFlags">
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="FlagName" ColumnName="FlagName" />
-                <ScalarProperty Name="ReportingAspNetUserId" ColumnName="ReportingAspNetUserId" />
-                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BugReports">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.BugReport">
-              <MappingFragment StoreEntitySet="BugReports">
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="BrowserInfo" ColumnName="BrowserInfo" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="BuggedUrl" ColumnName="BuggedUrl" />
-                <ScalarProperty Name="ReportingAspNetUserId" ColumnName="ReportingAspNetUserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1534,18 +1499,6 @@
                 <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
                 <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
                 <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Comments">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.Comment">
-              <MappingFragment StoreEntitySet="Comments">
-                <ScalarProperty Name="ParentCommentId" ColumnName="ParentCommentId" />
-                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1592,61 +1545,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Recipes">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.Recipe">
-              <MappingFragment StoreEntitySet="Recipes">
-                <ScalarProperty Name="ViewableType" ColumnName="ViewableType" />
-                <ScalarProperty Name="LastEditDate" ColumnName="LastEditDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
-                <ScalarProperty Name="ServingSize" ColumnName="ServingSize" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CreationStep" ColumnName="CreationStep" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="RecipeComments" TypeName="OpenSourceCookingModel.RecipeComments" StoreEntitySet="RecipeComments">
-            <EndProperty Name="Recipe">
-              <ScalarProperty Name="Id" ColumnName="RecipeId" />
-            </EndProperty>
-            <EndProperty Name="Comment">
-              <ScalarProperty Name="Id" ColumnName="CommentId" />
-            </EndProperty>
-            <Condition ColumnName="RecipeId" IsNull="false" />
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="RecipesDietaryRestrictions" TypeName="OpenSourceCookingModel.RecipesDietaryRestrictions" StoreEntitySet="RecipesDietaryRestrictions">
-            <EndProperty Name="Recipe">
-              <ScalarProperty Name="Id" ColumnName="RecipeId" />
-            </EndProperty>
-            <EndProperty Name="DietaryRestriction">
-              <ScalarProperty Name="Name" ColumnName="DietaryRestrictionName" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <EntitySetMapping Name="Ingredients">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.Ingredient">
-              <MappingFragment StoreEntitySet="Ingredients">
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
-                <ScalarProperty Name="CloudFileId" ColumnName="CloudFileId" />
-                <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="CloudFileTypes">
             <EntityTypeMapping TypeName="OpenSourceCookingModel.CloudFileType">
               <MappingFragment StoreEntitySet="CloudFileTypes">
                 <ScalarProperty Name="TypeName" ColumnName="TypeName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RecipeCloudFiles">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeCloudFile">
-              <MappingFragment StoreEntitySet="RecipeCloudFiles">
-                <ScalarProperty Name="RecipeCloudFileTypeName" ColumnName="RecipeCloudFileTypeName" />
-                <ScalarProperty Name="CloudFileId" ColumnName="CloudFileId" />
-                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1669,6 +1571,101 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BugReports">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.BugReport">
+              <MappingFragment StoreEntitySet="BugReports">
+                <ScalarProperty Name="CreateDateUtc" ColumnName="CreateDateUtc" />
+                <ScalarProperty Name="BrowserInfo" ColumnName="BrowserInfo" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="BuggedUrl" ColumnName="BuggedUrl" />
+                <ScalarProperty Name="ReportingAspNetUserId" ColumnName="ReportingAspNetUserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recipes">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.Recipe">
+              <MappingFragment StoreEntitySet="Recipes">
+                <ScalarProperty Name="ViewableType" ColumnName="ViewableType" />
+                <ScalarProperty Name="LastEditDateUtc" ColumnName="LastEditDateUtc" />
+                <ScalarProperty Name="CreateDateUtc" ColumnName="CreateDateUtc" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="ServingSize" ColumnName="ServingSize" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreationStep" ColumnName="CreationStep" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RecipesDietaryRestrictions" TypeName="OpenSourceCookingModel.RecipesDietaryRestrictions" StoreEntitySet="RecipesDietaryRestrictions">
+            <EndProperty Name="Recipe">
+              <ScalarProperty Name="Id" ColumnName="RecipeId" />
+            </EndProperty>
+            <EndProperty Name="DietaryRestriction">
+              <ScalarProperty Name="Name" ColumnName="DietaryRestrictionName" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="RecipeSteps">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeStep">
+              <MappingFragment StoreEntitySet="RecipeSteps">
+                <ScalarProperty Name="EstimatedTimeInSeconds" ColumnName="EstimatedTimeInSeconds" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ingredients">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.Ingredient">
+              <MappingFragment StoreEntitySet="Ingredients">
+                <ScalarProperty Name="CreateDateUtc" ColumnName="CreateDateUtc" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="CloudFileId" ColumnName="CloudFileId" />
+                <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeCloudFiles">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeCloudFile">
+              <MappingFragment StoreEntitySet="RecipeCloudFiles">
+                <ScalarProperty Name="RecipeCloudFileTypeName" ColumnName="RecipeCloudFileTypeName" />
+                <ScalarProperty Name="CloudFileId" ColumnName="CloudFileId" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeFlags">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeFlag">
+              <MappingFragment StoreEntitySet="RecipeFlags">
+                <ScalarProperty Name="CreateDateUtc" ColumnName="CreateDateUtc" />
+                <ScalarProperty Name="FlagName" ColumnName="FlagName" />
+                <ScalarProperty Name="ReportingAspNetUserId" ColumnName="ReportingAspNetUserId" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="ParentCommentId" ColumnName="ParentCommentId" />
+                <ScalarProperty Name="EditDateUtc" ColumnName="EditDateUtc" />
+                <ScalarProperty Name="CreateDateUtc" ColumnName="CreateDateUtc" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RecipeComments" TypeName="OpenSourceCookingModel.RecipeComments" StoreEntitySet="RecipeComments">
+            <EndProperty Name="Recipe">
+              <ScalarProperty Name="Id" ColumnName="RecipeId" />
+            </EndProperty>
+            <EndProperty Name="Comment">
+              <ScalarProperty Name="Id" ColumnName="CommentId" />
+            </EndProperty>
+            <Condition ColumnName="RecipeId" IsNull="false" />
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

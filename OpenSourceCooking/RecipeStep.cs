@@ -25,12 +25,11 @@ namespace OpenSourceCooking
         public int StepNumber { get; set; }
         public string Comment { get; set; }
         public long EstimatedTimeInSeconds { get; set; }
-        public System.DateTime CreateDate { get; set; }
     
+        public virtual Recipe Recipe { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStepsCloudFile> RecipeStepsCloudFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
-        public virtual Recipe Recipe { get; set; }
     }
 }

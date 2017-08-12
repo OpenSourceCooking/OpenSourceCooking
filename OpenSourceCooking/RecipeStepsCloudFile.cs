@@ -19,7 +19,7 @@ namespace OpenSourceCooking
         public int SlotNumber { get; set; }
         public int CloudFileId { get; set; }
     
-        public virtual RecipeStep RecipeStep { get; set; }
         public virtual CloudFile CloudFile { get; set; }
+        public virtual RecipeStep RecipeStep { get; set; }
     }
 }

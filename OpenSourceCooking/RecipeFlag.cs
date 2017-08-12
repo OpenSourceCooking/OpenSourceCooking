@@ -17,10 +17,10 @@ namespace OpenSourceCooking
         public int RecipeId { get; set; }
         public string ReportingAspNetUserId { get; set; }
         public string FlagName { get; set; }
-        public System.DateTime CreateDate { get; set; }
+        public System.DateTime CreateDateUtc { get; set; }
     
-        public virtual Flag Flag { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual Flag Flag { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }

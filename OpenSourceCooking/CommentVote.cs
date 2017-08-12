@@ -18,7 +18,7 @@ namespace OpenSourceCooking
         public short VoteValue { get; set; }
         public string VoterId { get; set; }
     
-        public virtual Comment Comment { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual Comment Comment { get; set; }
     }
 }
