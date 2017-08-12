@@ -39,11 +39,11 @@ namespace OpenSourceCooking
         public virtual DbSet<CloudFile> CloudFiles { get; set; }
         public virtual DbSet<CloudFilesThumbnail> CloudFilesThumbnails { get; set; }
         public virtual DbSet<BugReport> BugReports { get; set; }
-        public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<RecipeCloudFile> RecipeCloudFiles { get; set; }
         public virtual DbSet<RecipeFlag> RecipeFlags { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Recipe> Recipes { get; set; }
     }
 }

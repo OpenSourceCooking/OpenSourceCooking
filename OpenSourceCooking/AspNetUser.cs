@@ -20,10 +20,10 @@ namespace OpenSourceCooking
             this.CommentVotes = new HashSet<CommentVote>();
             this.CloudFiles = new HashSet<CloudFile>();
             this.BugReports = new HashSet<BugReport>();
-            this.Recipes = new HashSet<Recipe>();
             this.Ingredients = new HashSet<Ingredient>();
             this.RecipeFlags = new HashSet<RecipeFlag>();
             this.Comments = new HashSet<Comment>();
+            this.Recipes = new HashSet<Recipe>();
         }
     
         public string Id { get; set; }
@@ -47,12 +47,12 @@ namespace OpenSourceCooking
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BugReport> BugReports { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Recipe> Recipes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Ingredient> Ingredients { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeFlag> RecipeFlags { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

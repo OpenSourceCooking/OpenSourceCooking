@@ -5,42 +5,37 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="0f676f5e16144f4284f9b019e14775a3" Name="Diagram1" ZoomLevel="63">
-        <EntityTypeShape EntityType="OpenSourceCookingModel.MeasurementType" Width="1.5" PointX="12.5" PointY="15.25" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.MeasurementUnit" Width="1.5" PointX="14.5" PointY="15.25" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.MeasurementType" Width="1.5" PointX="12.5" PointY="12.75" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.MeasurementUnit" Width="1.5" PointX="14.5" PointY="12.75" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementTypes" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeStepsCloudFile" Width="1.5" PointX="10.5" PointY="15.25" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeStepsCloudFile" Width="1.5" PointX="10.5" PointY="12.75" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeStepsCloudFile_CloudFiles" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeSteps_RecipeId" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeStepsCloudFile_RecipeSteps" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeViewableType" Width="1.5" PointX="4.5" PointY="4.625" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.Flag" Width="1.5" PointX="8.5" PointY="10.125" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeStepsIngredient" Width="1.5" PointX="16.5" PointY="14.875" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeViewableType" Width="1.5" PointX="4.5" PointY="2.125" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.Flag" Width="1.5" PointX="8.5" PointY="7.625" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeStepsIngredient" Width="1.5" PointX="16.5" PointY="12.375" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementUnits" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.CommentVote" Width="1.5" PointX="10.5" PointY="8" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.CommentVote" Width="1.5" PointX="10.5" PointY="5.375" />
         <EntityTypeShape EntityType="OpenSourceCookingModel.AspNetUser" Width="1.5" PointX="0.5" PointY="0.5" />
         <EntityTypeShape EntityType="OpenSourceCookingModel.UserSetting" Width="1.5" PointX="2.5" PointY="0.5" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeCommentVotes_AspNetUsers" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.DietaryRestriction" Width="1.5" PointX="4.5" PointY="6.25" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.CloudFileType" Width="1.5" PointX="8.5" PointY="12.625" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.CloudFile" Width="1.5" PointX="4.5" PointY="14.25" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.CloudFilesThumbnail" Width="1.5" PointX="2.5" PointY="14.25" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.DietaryRestriction" Width="1.5" PointX="4.5" PointY="3.75" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.CloudFileType" Width="1.5" PointX="8.5" PointY="10.125" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.CloudFile" Width="1.5" PointX="4.5" PointY="11.75" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.CloudFilesThumbnail" Width="1.5" PointX="2.5" PointY="11.75" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_CloudFiles_ASPNetUsers" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_CloudFilesThumbnails_CloudFiles" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_CloudFiles" />
         <EntityTypeShape EntityType="OpenSourceCookingModel.BugReport" Width="1.5" PointX="2.5" PointY="2.125" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_BugReports_AspNetUsers" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.Recipe" Width="1.5" PointX="6.5" PointY="4.625" />
-        <AssociationConnector Association="OpenSourceCookingModel.FK_Recipes_ASPNetUsers" />
-        <AssociationConnector Association="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes" />
-        <AssociationConnector Association="OpenSourceCookingModel.RecipesDietaryRestrictions" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeStep" Width="1.5" PointX="8.5" PointY="14.875" />
-        <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeStep" Width="1.5" PointX="8.5" PointY="12.375" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.Ingredient" Width="1.5" PointX="10.5" PointY="17.5" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeCloudFile" Width="1.5" PointX="10.5" PointY="12.625" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeFlag" Width="1.5" PointX="10.5" PointY="10.125" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.Ingredient" Width="1.5" PointX="10.5" PointY="15" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeCloudFile" Width="1.5" PointX="10.5" PointY="10.125" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.RecipeFlag" Width="1.5" PointX="10.5" PointY="7.625" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeFlags_AspNetUsers" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_Ingredients_CloudFiles" />
@@ -48,13 +43,18 @@
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeCloudFiles_RecipeCloudFileTypes" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeFlags_Flags" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients" />
-        <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes" />
-        <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeFlags_Recipes" />
-        <EntityTypeShape EntityType="OpenSourceCookingModel.Comment" Width="1.5" PointX="8.5" PointY="6.125" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.Comment" Width="1.5" PointX="8.5" PointY="3.75" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_Comments_ASPNetUsers" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_Comments_Comments" />
         <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeCommentVotes_RecipeComments" />
+        <EntityTypeShape EntityType="OpenSourceCookingModel.Recipe" Width="1.5" PointX="6.5" PointY="2.125" />
+        <AssociationConnector Association="OpenSourceCookingModel.FK_Recipes_ASPNetUsers" />
+        <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeCloudFiles_Recipes" />
+        <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeFlags_Recipes" />
+        <AssociationConnector Association="OpenSourceCookingModel.FK_Recipes_RecipeViewableTypes" />
+        <AssociationConnector Association="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" />
         <AssociationConnector Association="OpenSourceCookingModel.RecipeComments" />
+        <AssociationConnector Association="OpenSourceCookingModel.RecipesDietaryRestrictions" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
