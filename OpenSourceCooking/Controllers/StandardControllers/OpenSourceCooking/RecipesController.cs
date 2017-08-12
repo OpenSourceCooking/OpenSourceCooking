@@ -495,7 +495,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         }
         public async Task<JsonResult> AjaxGetUnits()
         {
-            var MeasurementUnits = await db.MeasurementUnits.OrderBy(x => x.MeasurementUnitName).Select(x => new
+            var MeasurementUnits = await db.MeasurementUnits.OrderBy(x => x.MeasurementUnitName).ThenBy(x=>x.MeasurementTypeName).Select(x => new
             {
                 Text = x.MeasurementUnitName,
                 Value = x.MeasurementTypeName
