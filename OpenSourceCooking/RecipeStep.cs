@@ -28,8 +28,8 @@ namespace OpenSourceCooking
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStepsCloudFile> RecipeStepsCloudFiles { get; set; }
+        public virtual Recipe Recipe { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
-        public virtual Recipe Recipe { get; set; }
     }
 }

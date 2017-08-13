@@ -2,7 +2,6 @@
 var IsAddDeleteMoveRecipeStepBusy = false; //Prevents spamining the AddStep button errors
 var IsNextButtonBusy = false;
 var MaxRecipeDescriptionLength = 300;
-var SelectedMeasurementType = null;
 var StepNumber = 0;//Use ChangeStepNumber() to set
 var VideoUpload = null;
 
@@ -249,7 +248,6 @@ function AddIngredientToRecipeStepIngredientsTable(recipeStepsIngredientsDataTra
         + '<td style="display:none;">' + recipeStepsIngredientsDataTransferObject.ToAmount + '</td>'
         + '<td style="display:none;">' + recipeStepsIngredientsDataTransferObject.MeasurementUnitName + '</td>'
         + '<td style="display:none;" class="IngredientNameTD">' + recipeStepsIngredientsDataTransferObject.IngredientName + '</td>'
-        + '<td style="display:none;">' + recipeStepsIngredientsDataTransferObject.MeasurementTypeName + '</td>'
         + '</tr>';
     $('#RecipeStepIngredientsTable > tbody').append(IngredientRow);
     $('.AddedIngredientRow').off('click'); //Remove Event Handlers before adding another
@@ -267,7 +265,6 @@ function ChangeStepNumber(StepNum) {
     });
 }
 function ClearAddIngredientToStepModal() {
-    SelectedMeasurementType = null;
     $('.UnitTypeButton').removeClass('btn-success');
     $('.UnitTypeButton').addClass('btn-info');
     $('#IngredientSearch').val('');
@@ -383,9 +380,7 @@ function FileUploadInput_Changed(Input, Img, RecipeId, StepNum, SlotNum) {
     }
 }
 function GetUnits() {
-    var UnitType = "Volume";
     var MeasurementUnitDropDown = $('#MeasurementUnitDropDown');
-    SelectedMeasurementType = UnitType;
     $.ajax({
         url: Config.AjaxUrls.AjaxGetUnits,
         data: {},
@@ -820,10 +815,6 @@ function UpdateIngredientToStep(RecipeId) {
         ShowPopUpModal('Validation', 'Ingredient name missing');
         return;
     }
-    if (SelectedMeasurementType === null || SelectedMeasurementType === undefined || SelectedMeasurementType.length <= 0) {
-        ShowPopUpModal('Validation', 'Measurement type missing');
-        return;
-    }
     if (MeasurementUnit === null || MeasurementUnit === undefined || MeasurementUnit.length <= 0) {
         ShowPopUpModal('Validation', 'Measurement missing');
         return;
@@ -856,7 +847,6 @@ function UpdateIngredientToStep(RecipeId) {
                 RecipeStepsIngredientsDataTransferObject.StepNumber = StepNumber;
                 RecipeStepsIngredientsDataTransferObject.IngredientName = IngredientName;
                 RecipeStepsIngredientsDataTransferObject.MeasurementUnitName = MeasurementUnit;
-                RecipeStepsIngredientsDataTransferObject.MeasurementTypeName = SelectedMeasurementType;
                 $('#AddIngredientToStepModal').modal('hide');
                 AddIngredientToRecipeStepIngredientsTable(RecipeStepsIngredientsDataTransferObject);
                 ClearAddIngredientToStepModal();
@@ -872,7 +862,7 @@ function UpdateRecipeStep(RecipeId) {
     var RecipeStepsIngredients = new Array();
     $('#RecipeStepIngredientsTable tr').each(function () {
         var tds = $(this).find("td");
-        var RecipeStepIngredient = { 'RecipeId': RecipeId, 'StepNumber': StepNumber, 'IngredientName': $(tds[5]).html(), 'MeasurementTypeName': $(tds[6]).html(), 'MeasurementUnitName': $(tds[4]).html(), 'Amount': $(tds[2]).html(), 'ToAmount': $(tds[3]).html() };
+        var RecipeStepIngredient = { 'RecipeId': RecipeId, 'StepNumber': StepNumber, 'IngredientName': $(tds[5]).html(), 'MeasurementUnitName': $(tds[4]).html(), 'Amount': $(tds[2]).html(), 'ToAmount': $(tds[3]).html() };
         if (RecipeStepIngredient.ToAmount === null || RecipeStepIngredient.ToAmount === "null" || RecipeStepIngredient.ToAmount.length <= 0)
             RecipeStepIngredient.ToAmount = undefined;
         RecipeStepsIngredients.push(RecipeStepIngredient);

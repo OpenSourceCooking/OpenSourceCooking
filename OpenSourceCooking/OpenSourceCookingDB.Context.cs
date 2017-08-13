@@ -25,12 +25,9 @@ namespace OpenSourceCooking
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<MeasurementType> MeasurementTypes { get; set; }
-        public virtual DbSet<MeasurementUnit> MeasurementUnits { get; set; }
         public virtual DbSet<RecipeStepsCloudFile> RecipeStepsCloudFiles { get; set; }
         public virtual DbSet<RecipeViewableType> RecipeViewableTypes { get; set; }
         public virtual DbSet<Flag> Flags { get; set; }
-        public virtual DbSet<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
         public virtual DbSet<CommentVote> CommentVotes { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<UserSetting> UserSettings { get; set; }
@@ -45,5 +42,8 @@ namespace OpenSourceCooking
         public virtual DbSet<RecipeFlag> RecipeFlags { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<MeasurementType> MeasurementTypes { get; set; }
+        public virtual DbSet<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
+        public virtual DbSet<MeasurementUnit> MeasurementUnits { get; set; }
     }
 }

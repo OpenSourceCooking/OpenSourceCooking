@@ -141,15 +141,22 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     EstimatedTimeInSeconds = CurrentRecipeStep.EstimatedTimeInSeconds,
                     RecipeId = recipeId,
                     StepNumber = NewStepNum,
-                    RecipeStepsIngredients = CurrentRecipeStep.RecipeStepsIngredients,
-                    RecipeStepsCloudFiles = CurrentRecipeStep.RecipeStepsCloudFiles
-                                                            .Select(x => new RecipeStepsCloudFile()
-                                                            {
-                                                                CloudFileId = x.CloudFileId,
-                                                                RecipeId = x.RecipeId,
-                                                                StepNumber = x.StepNumber,
-                                                                SlotNumber = x.SlotNumber,
-                                                            }).ToList()
+                    RecipeStepsIngredients = CurrentRecipeStep.RecipeStepsIngredients.Select(x => new RecipeStepsIngredient()
+                    {
+                        RecipeId = x.RecipeId,
+                        StepNumber = x.StepNumber,
+                        Amount = x.Amount,
+                        ToAmount = x.ToAmount,
+                        IngredientName = x.IngredientName,
+                        MeasurementUnitName = x.MeasurementUnitName
+                    }).ToList(),
+                    RecipeStepsCloudFiles = CurrentRecipeStep.RecipeStepsCloudFiles.Select(x => new RecipeStepsCloudFile()
+                    {
+                        CloudFileId = x.CloudFileId,
+                        RecipeId = x.RecipeId,
+                        StepNumber = x.StepNumber,
+                        SlotNumber = x.SlotNumber,
+                    }).ToList()
                 };
                 NewStepNum++;
                 Recipe.RecipeSteps.Add(RecipeStep);
@@ -378,7 +385,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 {
                     IngredientName = s.IngredientName,
                     MeasurementUnitName = s.MeasurementUnitName,
-                    MeasurementTypeName = s.MeasurementTypeName,
                     Amount = s.Amount,
                     ToAmount = s.ToAmount,
                 }).ToList()
@@ -407,7 +413,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 {
                     IngredientName = s.IngredientName,
                     MeasurementUnitName = s.MeasurementUnitName,
-                    MeasurementTypeName = s.MeasurementTypeName,
                     Amount = s.Amount,
                     ToAmount = s.ToAmount
                 }).ToList()
@@ -421,7 +426,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 {
                     IngredientName = s.IngredientName,
                     MeasurementUnitName = s.MeasurementUnitName,
-                    MeasurementTypeName = s.MeasurementTypeName,
                     Amount = s.Amount,
                     ToAmount = s.ToAmount
                 }).ToListAsync();
@@ -494,7 +498,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         StepNumber = NewStepNumber,
                         Amount = RecipeStepsIngredient.Amount,
                         IngredientName = RecipeStepsIngredient.IngredientName,
-                        MeasurementTypeName = RecipeStepsIngredient.MeasurementTypeName,
                         MeasurementUnitName = RecipeStepsIngredient.MeasurementUnitName,
                         ToAmount = RecipeStepsIngredient.ToAmount
                     });
@@ -596,7 +599,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     };                   
                     db.Ingredients.Add(Ingredient);
                 }
-
                 //Remove Leading 0s
                 if (RecipeStepsIngredient.Amount != null)
                 {

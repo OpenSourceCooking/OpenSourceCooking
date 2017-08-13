@@ -20,8 +20,8 @@ namespace OpenSourceCooking
             this.RecipeStepsIngredients = new HashSet<RecipeStepsIngredient>();
         }
     
-        public string MeasurementUnitName { get; set; }
         public string MeasurementTypeName { get; set; }
+        public string MeasurementUnitName { get; set; }
     
         public virtual MeasurementType MeasurementType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
