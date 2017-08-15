@@ -29,13 +29,14 @@ namespace OpenSourceCooking
         public int CreationStep { get; set; }
         public string CreatorId { get; set; }
         public string Description { get; set; }
-        public bool IsDeleted { get; set; }
+        public string SavedByAspNetUserId { get; set; }
         public System.DateTime LastEditDateUtc { get; set; }
         public string Name { get; set; }
         public int ServingSize { get; set; }
         public string ViewableType { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual AspNetUser SavedByAspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeCloudFile> RecipeCloudFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
