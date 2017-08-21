@@ -13,6 +13,7 @@ var MaxRecipeCommentLength = 300;
 var RecipeCommentsPageIndex = 0;
 var RecipeCommentsSkipAdjust = 0;
 var RecipesPageIndex = 0;
+var SavedBorderColor = "#0275d8";//Blue
 var SearchText = '';
 var ShowingRecipeSteps = false;
 var ShowingRecipeComments = false;
@@ -129,14 +130,16 @@ function AjaxGetRecipes() {
             }
             for (var i = 0; i < Recipes.length; i++) {
                 var isDraft = false;
-                var randomColor = "";
+                var BackgroundColor = GetRandomColor();
+                var BorderColor = '';
                 var CreateDateUtc = Recipes[i].CreateDateUtc;
-                var LastEditDateUtc = Recipes[i].LastEditDateUtc;
+                var LastEditDateUtc = ConvertJSONDateToString(Recipes[i].LastEditDateUtc);
                 var Description = Recipes[i].Description;
                 var RecipeName = Recipes[i].Name;
                 var MainCloudFileUrl = null;
                 var MainCloudFileThumbUrl = null;
                 var MainVideoUrl = null;
+                var RecipeDivHTMLString = '';
                 $.each(Recipes[i].RecipeCloudFileDataTransferObjects, function (i, RecipeCloudFileDataTransferObject) {
                     if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainImage") {
                         MainCloudFileUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
@@ -145,24 +148,24 @@ function AjaxGetRecipes() {
                     }
                     else if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainVideo")
                         MainVideoUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
-                });  
-
+                });
                 if (Recipes[i].Description === undefined || Recipes[i].Description === null || Recipes[i].Description.length < 1)
                     Description = '';
                 if (CreateDateUtc !== undefined && CreateDateUtc !== null) //If CreateDateUtc is null it means its a draft
                 {
                     CreateDateUtc = ConvertJSONDateToString(CreateDateUtc);
-                    randomColor = GetRandomColor();
+                    BorderColor = GetRandomColor();
                 }
                 else
                 {
                     isDraft = true;
-                    randomColor = '#ff2b2b';
+                    BorderColor = '#ff2b2b';//Red
                     RecipeName = '(Draft) ' + Recipes[i].Name;
-                }
-                LastEditDateUtc = ConvertJSONDateToString(LastEditDateUtc);                
-                var RecipeDivHTMLString = '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + Recipes[i].Id + '">'
-                    + '<div class="zoomImage" style="padding-bottom:15px;border:10px solid;border-radius:20px;border-color:' + GetRandomColor() + ';background-color:' + randomColor + ';">'
+                }  
+                if (Recipes[i].IsSaved == true)
+                    BorderColor = SavedBorderColor;
+                RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + Recipes[i].Id + '">'
+                    + '<div id="ClickableRecipeDivBorder' + Recipes[i].Id + '" class="zoomImage" style="padding-bottom:15px;border:10px solid;border-radius:20px;border-color:' + BorderColor + ';background-color:' + BackgroundColor + ';">'
                     + '<h3 class="text-center" id="RecipeNameDiv' + Recipes[i].Id + '" style="padding-top:4px;padding-bottom:2px;margin:10px;border-radius:12px;font-weight:bold;background-color:white;">' + RecipeName + '</h3>';
                 if (MainCloudFileThumbUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileThumbUrl + '" style="max-height:400px;"></div>';
@@ -171,7 +174,7 @@ function AjaxGetRecipes() {
                 else
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + Config.Images.OpenSourceCookingImageUrl + '" style="max-height:400px;"></div>';
                 RecipeDivHTMLString += '<div class="col-12 text-center" style= "padding:2px;" id="SymbolsDiv' + Recipes[i].Id + '""></div >';
-                RecipeDivHTMLString += '<div style="padding:4px;background-color:' + randomColor + ';">'
+                RecipeDivHTMLString += '<div style="padding:4px;background-color:' + BackgroundColor + ';">'
                 + '<div style="display:none;" id="MainCloudFileUrl' + Recipes[i].Id + '">' + MainCloudFileUrl + '</div>'
                 + '<div style="display:none;" id="RecipeVideo' + Recipes[i].Id + '">' + Recipes[i].MainVideoUrl + '</div>'
                 + '<div style="display:none;" id="CreatorNameDiv' + Recipes[i].Id + '">' + Recipes[i].CreatorName + '</div>'
@@ -238,6 +241,10 @@ function AjaxGetRecipes() {
                 }
                 else
                 {
+                    if (Recipes[i].IsSaved == true)
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star"></i> Save</a>';
+                    else
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star-o"></i> Save</a>';
                     RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + Recipes[i].Id + ');">Report</a></div>';
                 }
                 RecipeDivHTMLString += '</div>'
@@ -427,8 +434,7 @@ function HideRecipeComments() {
     RecipeCommentsPageIndex = 0;
     RecipeCommentsSkipAdjust = 0;
     ShowingRecipeComments = false;
-    $('#ShowMoreRecipeCommentsButtonDiv').hide();
-    $('#RecipeCommentTextAreaDiv').hide();
+    $('#RecipeCommentsAreaDiv').hide();
     $('#ShowRecipeCommentsButton').html('Show comments');
     $('#ShowRecipeCommentsButton').removeClass('btn-info').addClass('btn-outline-info');
     $('#RecipeComments').empty();
@@ -627,6 +633,34 @@ function SaveCommentChanges(commentId) {
         }
     });
 }
+function ToggleRecipe(recipeId) {
+    var SaveRecipeButton = $('#SaveRecipeButton' + recipeId);
+    SaveRecipeButton.hide();
+    $.ajax({
+        url: Config.AjaxUrls.AjaxToggleRecipe,
+        type: "GET",
+        cache: false,
+        data: { recipeId: recipeId },
+        success: function (IsSaved) {
+            if (IsSaved === true)
+            {                
+                SaveRecipeButton.html("<i class='fa fa-star'></i> Save</a>");
+                $('#ClickableRecipeDivBorder' + recipeId).css('border-color', SavedBorderColor);
+            }
+            else
+            {
+                SaveRecipeButton.html("<i class='fa fa-star-o'></i> Save</a>");
+                $('#ClickableRecipeDivBorder' + recipeId).css('border-color', GetRandomColor());
+            }
+            SaveRecipeButton.css('color', 'white');
+            SaveRecipeButton.fadeIn('slow');
+        },
+        error: function (er) {
+            ShowPopUpModal("Error", "Oops something bad happend :( Try again later..." + er);
+            SaveRecipeButton.fadeIn('slow');
+        }
+    });
+}
 function SetRecipeViewableType(viewableTypeName, recipeId) {
     $.ajax({
         url: Config.AjaxUrls.AjaxUpdateViewableType,
@@ -724,7 +758,6 @@ function ShowRecipeSteps() {
 }
 function ShowRecipeComments() {
     ShowingRecipeComments = true;
-    $('#RecipeCommentTextAreaDiv').show();
     $('#ShowRecipeCommentsButton').html('Hide Comments');
     $('#ShowRecipeCommentsButton').removeClass('btn-outline-info').addClass('btn-info');
     var RecipeCommentsDiv = $('#RecipeComments');
@@ -736,7 +769,7 @@ function ShowRecipeComments() {
         cache: false,
         data: { recipeId: ClickedRecipeId, commentsPageIndex: RecipeCommentsPageIndex, recipeCommentsSkipAdjust: RecipeCommentsSkipAdjust },
         success: function (RecipeCommentDataTransferObjects) {
-            $('#ShowMoreRecipeCommentsButtonDiv').show();
+            $('#RecipeCommentsAreaDiv').show();
             if (RecipeCommentDataTransferObjects.length < 10)
                 $('#ShowMoreRecipeCommentsButton ').html('No More Comments');
             else

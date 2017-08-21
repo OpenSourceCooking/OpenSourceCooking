@@ -102,7 +102,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 }).ToList(),
                 RecipeId = RecipeStep.RecipeId,
                 Comment = RecipeStep.Comment ?? "",
-                StepNumber = RecipeStep.StepNumber,                
+                StepNumber = RecipeStep.StepNumber,
                 EstimatedTimeInSeconds = RecipeStep.EstimatedTimeInSeconds
             };
             return Json(RecipeStepDataTransferObject, JsonRequestBehavior.AllowGet);
@@ -117,7 +117,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
             AzureCloudStorageWrapper.DeleteRecipeCloudFilesIfExist(recipe);
-            db.CloudFiles.RemoveRange(recipe.RecipeCloudFiles.Select(x=>x.CloudFile));
+            db.CloudFiles.RemoveRange(recipe.RecipeCloudFiles.Select(x => x.CloudFile));
             db.CloudFiles.RemoveRange(recipe.RecipeSteps.SelectMany(x => x.RecipeStepsCloudFiles).Select(x => x.CloudFile));
             db.Recipes.Remove(recipe);
             await db.SaveChangesAsync();
@@ -175,10 +175,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             string AspNetId = User.Identity.GetUserId();
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             if (Recipe.CreatorId != AspNetId)
-                return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);                 
+                return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
             if (stepNumber == -1) //-1 means main cloud file
             {
-                CloudFile CloudFile = Recipe.RecipeCloudFiles.Where(x => x.RecipeCloudFileTypeName == "MainImage").First().CloudFile;                
+                CloudFile CloudFile = Recipe.RecipeCloudFiles.Where(x => x.RecipeCloudFileTypeName == "MainImage").First().CloudFile;
                 AzureCloudStorageWrapper.DeleteCloudFile(CloudFile);
                 db.CloudFiles.Remove(CloudFile);
             }
@@ -199,7 +199,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             string AspNetId = User.Identity.GetUserId();
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             if (Recipe.CreatorId != AspNetId)
-                return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);           
+                return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
             CloudFile CloudFile = Recipe.RecipeCloudFiles.Where(x => x.RecipeCloudFileTypeName == "MainVideo").First().CloudFile;
             AzureCloudStorageWrapper.DeleteCloudFile(CloudFile);
             db.CloudFiles.Remove(CloudFile);
@@ -213,18 +213,18 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         public async Task<JsonResult> AjaxGetRecipe(int recipeId)
         {
             string AspNetId = User.Identity.GetUserId();
-            Recipe Recipe = await db.Recipes.FindAsync(recipeId);
-            RecipeDataTransferObject RecipeDataTransferObject = new RecipeDataTransferObject()
+            RecipeDataTransferObject RecipeDataTransferObject = await db.Recipes.Where(x=>x.Id == recipeId).Select(Recipe => new RecipeDataTransferObject()
             {
+                Id = Recipe.Id,
                 CreateDateUtc = Recipe.CreateDateUtc,
                 CreationStep = Recipe.CreationStep,
                 CreatorName = Recipe.AspNetUser.Email,
-                Id = Recipe.Id,
+                Description = Recipe.Description ?? "",
                 LastEditDateUtc = Recipe.LastEditDateUtc,
                 Name = Recipe.Name,
-                Description = Recipe.Description ?? "",
                 ServingSize = Recipe.ServingSize,
                 IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
+                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
                 ViewableType = Recipe.ViewableType,
                 DietaryRestrictionDataTransferObjects = Recipe.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
                 {
@@ -262,7 +262,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         Url = cf.CloudFile.Url
                     }).ToList()
                 }).ToList()
-            };
+            }).FirstOrDefaultAsync();
             return Json(RecipeDataTransferObject, JsonRequestBehavior.AllowGet);
         }
         public async Task<JsonResult> AjaxGetRecipes(int recipesPageIndex, string searchText, RecipeOwnersFilter recipeOwnersFilter, int sortingBy, int sortingDirection)
@@ -321,16 +321,17 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             }
             List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(r => new RecipeDataTransferObject()
             {
-                CreateDateUtc = r.CreateDateUtc,
-                CreatorName = r.AspNetUser.UserName,
                 Id = r.Id,
+                CreateDateUtc = r.CreateDateUtc,
+                CreationStep = r.CreationStep,
+                Description = r.Description ?? "",
+                CreatorName = r.AspNetUser.UserName,
+                IsMyRecipe = r.AspNetUser.Id == AspNetId ? true : false,
+                IsSaved = r.SavedRecipes.Where(x=>x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
                 LastEditDateUtc = r.LastEditDateUtc,
                 Name = r.Name,
-                Description = r.Description ?? "",
                 ServingSize = r.ServingSize,
-                IsMyRecipe = r.AspNetUser.Id == AspNetId ? true : false,
                 ViewableType = r.ViewableType,
-                CreationStep = r.CreationStep,
                 DietaryRestrictionDataTransferObjects = r.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
                 {
                     Name = x.Name,
@@ -341,7 +342,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     CloudFileId = x.CloudFileId,
                     RecipeCloudFileTypeName = x.RecipeCloudFileTypeName,
                     RecipeId = x.RecipeId,
-                    CloudFileDataTransferObject = x.CloudFile == null? null : new CloudFileDataTransferObject()
+                    CloudFileDataTransferObject = x.CloudFile == null ? null : new CloudFileDataTransferObject()
                     {
                         CreatorId = x.CloudFile.CreatorId,
                         FileExtension = x.CloudFile.FileExtension,
@@ -433,7 +434,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         }
         public async Task<JsonResult> AjaxGetUnits()
         {
-            var MeasurementUnits = await db.MeasurementUnits.OrderBy(x => x.MeasurementUnitName).ThenBy(x=>x.MeasurementTypeName).Select(x => new
+            var MeasurementUnits = await db.MeasurementUnits.OrderBy(x => x.MeasurementUnitName).ThenBy(x => x.MeasurementTypeName).Select(x => new
             {
                 Text = x.MeasurementUnitName,
                 Value = x.MeasurementTypeName
@@ -524,6 +525,25 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             await db.SaveChangesAsync();
             return Json(Recipe.CreationStep, JsonRequestBehavior.AllowGet);
         }
+        [Authorize]
+        public async Task<JsonResult> AjaxToggleRecipe(int recipeId)
+        {
+            string AspNetId = User.Identity.GetUserId();           
+            string RecipeCreatorId = await db.Recipes.Where(x=>x.Id == recipeId).Select(x=>x.CreatorId).FirstOrDefaultAsync();
+            if (RecipeCreatorId == AspNetId)
+                throw new Exception("You cant save your own recipe");
+            bool IsSaved = true;
+            SavedRecipe SavedRecipe = await db.SavedRecipes.FindAsync(AspNetId, recipeId);            
+            if (SavedRecipe == null)
+                db.SavedRecipes.Add(new SavedRecipe { AspNetUserId = AspNetId, RecipeId = recipeId, SavedDate = DateTime.UtcNow });
+            else
+            {
+                IsSaved = false;
+                db.SavedRecipes.Remove(SavedRecipe);
+            }             
+            await db.SaveChangesAsync();
+            return Json(IsSaved, JsonRequestBehavior.AllowGet);
+        }
 
         //Ajax Updates
         [Authorize]
@@ -596,7 +616,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         IngredientName = RecipeStepsIngredient.IngredientName,
                         CreatorId = AspNetId,
                         CreateDateUtc = DateTime.UtcNow
-                    };                   
+                    };
                     db.Ingredients.Add(Ingredient);
                 }
                 //Remove Leading 0s
@@ -609,7 +629,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 {
                     RecipeStepsIngredient.ToAmount = RecipeStepsIngredient.ToAmount.TrimStart('0');
                     RecipeStepsIngredient.ToAmount = RecipeStepsIngredient.ToAmount.Length > 0 ? RecipeStepsIngredient.ToAmount : "0";
-                }           
+                }
                 OldRecipeStep.RecipeStepsIngredients.Add(RecipeStepsIngredient);
             }
             await db.SaveChangesAsync();
@@ -659,8 +679,8 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             HttpPostedFile HttpPostedFile = System.Web.HttpContext.Current.Request.Files["UploadedFile"];
             int UploadedCloudFileId = await AzureCloudStorageWrapper.UploadCloudFile(AzureCloudStorageWrapper.AzureBlobContainer.recipecloudfiles, new HttpPostedFileWrapper(HttpPostedFile), AspNetId, "Recipe" + Recipe.Id + "MainImage", true);
             if (UploadedCloudFileId == -1)//File size too big            
-                return Json(-1, JsonRequestBehavior.AllowGet);       
-            Recipe.RecipeCloudFiles.Add(new RecipeCloudFile {RecipeId = recipeId, CloudFileId = UploadedCloudFileId, RecipeCloudFileTypeName= "MainImage" });
+                return Json(-1, JsonRequestBehavior.AllowGet);
+            Recipe.RecipeCloudFiles.Add(new RecipeCloudFile { RecipeId = recipeId, CloudFileId = UploadedCloudFileId, RecipeCloudFileTypeName = "MainImage" });
             Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
@@ -677,7 +697,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             HttpPostedFile HttpPostedFile = System.Web.HttpContext.Current.Request.Files["UploadedFile"];
             int UploadedCloudFileId = await AzureCloudStorageWrapper.UploadCloudFile(AzureCloudStorageWrapper.AzureBlobContainer.recipecloudfiles, new HttpPostedFileWrapper(HttpPostedFile), AspNetId, "Recipe" + Recipe.Id + "Step" + stepNumber + "Slot" + slotNumber, true);
             if (UploadedCloudFileId == -1)//File size too big            
-                return Json(-1, JsonRequestBehavior.AllowGet);          
+                return Json(-1, JsonRequestBehavior.AllowGet);
             //Get the correct recipe step to add the media files too
             RecipeStep RecipeStep = Recipe.RecipeSteps.Where(x => x.StepNumber == stepNumber).First();
             RecipeStepsCloudFile RecipeStepsCloudFiles = new RecipeStepsCloudFile() { RecipeId = recipeId, StepNumber = stepNumber, SlotNumber = slotNumber, CloudFileId = UploadedCloudFileId };
@@ -699,7 +719,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             HttpPostedFile HttpPostedFile = System.Web.HttpContext.Current.Request.Files["UploadedFile"];
             int UploadedCloudFileId = await AzureCloudStorageWrapper.UploadCloudFile(AzureCloudStorageWrapper.AzureBlobContainer.recipecloudfiles, new HttpPostedFileWrapper(HttpPostedFile), AspNetId, "Recipe" + Recipe.Id + "Video", false);
             if (UploadedCloudFileId == -1)//File size too big            
-                return Json(-1, JsonRequestBehavior.AllowGet);            
+                return Json(-1, JsonRequestBehavior.AllowGet);
             Recipe.RecipeCloudFiles.Add(new RecipeCloudFile { RecipeId = recipeId, CloudFileId = UploadedCloudFileId, RecipeCloudFileTypeName = "MainVideo" });
             Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;

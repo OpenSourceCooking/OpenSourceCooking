@@ -12,6 +12,8 @@ namespace OpenSourceCooking
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class OpenSourceCookingEntities : DbContext
     {
@@ -45,5 +47,19 @@ namespace OpenSourceCooking
         public virtual DbSet<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
         public virtual DbSet<MeasurementUnit> MeasurementUnits { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<SavedRecipe> SavedRecipes { get; set; }
+    
+        public virtual int SaveRecipe(string savedByAspNetUserId, Nullable<int> recipeId)
+        {
+            var savedByAspNetUserIdParameter = savedByAspNetUserId != null ?
+                new ObjectParameter("SavedByAspNetUserId", savedByAspNetUserId) :
+                new ObjectParameter("SavedByAspNetUserId", typeof(string));
+    
+            var recipeIdParameter = recipeId.HasValue ?
+                new ObjectParameter("RecipeId", recipeId) :
+                new ObjectParameter("RecipeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SaveRecipe", savedByAspNetUserIdParameter, recipeIdParameter);
+        }
     }
 }

@@ -104,37 +104,40 @@ namespace OpenSourceCooking.Models
     }
     public class RecipeDataTransferObject
     {
-        int id;       
-        int creationStep;
-        int servingSize;
-        string name;
-        string description;
-        string creatorName;
-        string viewableType;
+        int id;
         DateTime? createDateUtc;
+        int creationStep;
+        string creatorName;
+        string description;
         DateTime lastEditDateUtc;
+        string name;
+        int servingSize;             
+        string viewableType;
         ICollection<RecipeStepDataTransferObject> recipeStepDataTransferObjects;
         ICollection<DietaryRestrictionDataTransferObject> dietaryRestrictionDataTransferObjects;
         ICollection<RecipeCloudFileDataTransferObject> recipeCloudFileDataTransferObjects;
 
-        public int Id { get { return id; } set { id = value; } }      
+        public int Id { get { return id; } set { id = value; } }
+        public DateTime? CreateDateUtc { get { return createDateUtc; } set { createDateUtc = value; } }
         public int CreationStep { get { return creationStep; } set { creationStep = value; } }
-        public int ServingSize { get { return servingSize; } set { servingSize = value; } }
-        public string Name { get { return name; } set { name = value; } }
         public string CreatorName { get { return creatorName; } set { creatorName = value; } }
         public string Description { get { return description; } set { description = value; } }
-        public string ViewableType { get { return viewableType; } set { viewableType = value; } }
-        public DateTime? CreateDateUtc { get { return createDateUtc; } set { createDateUtc = value; } }
         public DateTime LastEditDateUtc { get { return lastEditDateUtc; } set { lastEditDateUtc = value; } }
+        public string Name { get { return name; } set { name = value; } }
+        public int ServingSize { get { return servingSize; } set { servingSize = value; } }
+        public string ViewableType { get { return viewableType; } set { viewableType = value; } }
         public ICollection<RecipeStepDataTransferObject> RecipeStepDataTransferObjects { get { return recipeStepDataTransferObjects; } set { recipeStepDataTransferObjects = value; } }
         public ICollection<DietaryRestrictionDataTransferObject> DietaryRestrictionDataTransferObjects { get { return dietaryRestrictionDataTransferObjects; } set { dietaryRestrictionDataTransferObjects = value; } }
         public ICollection<RecipeCloudFileDataTransferObject> RecipeCloudFileDataTransferObjects { get { return recipeCloudFileDataTransferObjects; } set { recipeCloudFileDataTransferObjects = value; } }
 
-        //Extra Properties    
+        //Extra Properties
         bool isMyRecipe;
+        bool isSaved;
 
-        public bool IsMyRecipe { get { return isMyRecipe; } set { isMyRecipe = value; } }
         public long EstimatedTimeInSeconds { get { return RecipeStepDataTransferObjects == null ? 0 : RecipeStepDataTransferObjects.Sum(x => x.EstimatedTimeInSeconds); } }
+        public bool IsMyRecipe { get { return isMyRecipe; } set { isMyRecipe = value; } }
+        public bool IsSaved { get { return isSaved; } set { isSaved = value; } }
+
     }
     public class RecipeStepDataTransferObject
     {

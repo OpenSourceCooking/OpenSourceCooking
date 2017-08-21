@@ -106,52 +106,67 @@
                 <h4 class="modal-title" id="ModalRecipeHeader"></h4>
                 <button type="button" class="close" aria-label="Close" onclick="$('#RecipePreviewer').modal('hide');"><span style="color:red;" aria-hidden="true">&times;</span></button>
             </div>
+            <!--
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h4 id="ModalRecipeHeader"></h4>
+                    </div>
+                    <div class="col-6 text-right">
+                        <div class="btn-group" style="padding:4px; color:white;">
+                            <a class="btn btn-primary" onclick="ToggleRecipe(ClickedRecipeId);"><i class="fa fa-star-o"></i> Save</a>
+                            <a class="btn btn-danger" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                -->
             <!--Body-->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6 text-center">
-                        <video controls class="img-fluid" style="display:none;max-height:172px;" id="ModalMainRecipeVideo" poster="~/Content/Images/OpenSourceCooking4096x2160.png"></video>
-                        <img class="zoomImage FullscreenableImg rounded img-fluid" style="display:none;max-height:172px;" id="ModalMainRecipeImg">
+                    <div class="col-12 text-center">
+                        <video controls class="img-fluid" style="display:none;max-height:200px;" id="ModalMainRecipeVideo" poster="~/Content/Images/OpenSourceCooking4096x2160.png"></video>
+                        <img class="zoomImage FullscreenableImg rounded img-fluid" style="display:none;max-height:200px;" id="ModalMainRecipeImg">
                     </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-12 text-right">
-                                <span id="RecipePreviewerEstMinutes"></span> to make
-                            </div>
-                            <div class="col-12 text-center" style="padding:2px;" id="RecipePreviewerSymbolsDiv">
-                                <!--Jquery Populates-->
-                            </div>
-                        </div>
-                        <span id="ModalRecipeDescriptionSpan"></span>
+                    <div class="col-6 text-center" style="padding:2px;" id="RecipePreviewerSymbolsDiv">
+                        <!--Jquery Populates-->
                     </div>
+                    <div class="col-6 text-right">
+                        <span id="RecipePreviewerEstMinutes"></span> to make
+                    </div>
+                    <span id="ModalRecipeDescriptionSpan"></span>
                     <div class="col-12" style="padding:1%;" id="RecipeIngredientSummary">
                         <ul id="RecipePreviewerIngredientSummaryList">
                             <!--Jquery Populates-->
                         </ul>
                     </div>
-                    <div class="col-12 text-center">
+                    <div class="col-12" style="padding-top:3px;">
                         <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowRecipeSteps()" id="ShowRecipeStepsButton"></button>
                     </div>
-                    <div class="col-12" id="RecipeStepsDiv"style="display:none;">
+                    <div class="col-12" id="RecipeStepsDiv" style="display:none;">
                         <!--Recipes Steps-->
                     </div>
                     <div class="col-12" style="padding-top:3px;">
                         <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowComments()" id="ShowRecipeCommentsButton"></button>
                     </div>
-                    <div class="col-12 text-center" style="display:none;margin-top:4px;" id="RecipeCommentTextAreaDiv">
-                        <textarea class="form-control" rows="3" placeholder="Add public comment" id="RecipeCommentTextArea"></textarea>
-                    </div>
-                    <div class="col-12 text-right" style="font-size:16px;">
-                        <span id="RecipeCommentCharactersLeftSpan"></span><span> characters left </span><img id="DescriptionInputImage" src="~/Content/Images/Icons/Checkmark.png" class="img-fluid" style="vertical-align:middle; width:16px;height:16px;" />
-                    </div>
-                    <div class="col-12 text-right" style="font-size:16px;">
-                        <button type="button" class="pull-right btn btn-sm btn-primary" style="margin-top:4px;" onclick="Onclick_SubmitComment()" id="SubmitCommentButton">Submit Comment</button>
+                    <div class="col-12" style="padding-top:3px;">
+                        <div class="row" id="RecipeCommentsAreaDiv" style="display:none;">
+                            <div class="col-12 text-center" style="margin-top:4px;">
+                                <textarea class="form-control" rows="3" placeholder="Add public comment" id="RecipeCommentTextArea"></textarea>
+                            </div>
+                            <div class="col-12 text-right" style="font-size:16px;">
+                                <span id="RecipeCommentCharactersLeftSpan"></span><span> characters left </span><img id="DescriptionInputImage" src="~/Content/Images/Icons/Checkmark.png" class="img-fluid" style="vertical-align:middle; width:16px;height:16px;" />
+                            </div>
+                            <div class="col-12 text-right" style="font-size:16px;">
+                                <button type="button" class="pull-right btn btn-sm btn-primary" style="margin-top:4px;" onclick="Onclick_SubmitComment()" id="SubmitCommentButton">Submit Comment</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-12" id="RecipeComments">
                         <!--Jquery Populates-->
                     </div>
                     <div class="col-12" style="display:none;padding-top:4px;" id="ShowMoreRecipeCommentsButtonDiv">
-                        <button  id="ShowMoreRecipeCommentsButton" class="btn btn-block btn-sm btn-secondary" onclick="ShowMoreRecipeComments()">Show More Comments</button>
+                        <button id="ShowMoreRecipeCommentsButton" class="btn btn-block btn-sm btn-secondary" onclick="ShowMoreRecipeComments()">Show More Comments</button>
                     </div>
                 </div>
             </div>
@@ -167,8 +182,8 @@
                     <div class="col-lg-3">
                         <span class="modal-title" id="ModalEditDate"></span>
                     </div>
-                    <div class="col-lg-3">
-                        <button type="button" class="btn btn-danger btn-block" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</button>
+                    <div class="col-lg-3 text-right">
+                        <button type="button" class="btn btn-danger" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</button>
                     </div>
                 </div>
             </div>

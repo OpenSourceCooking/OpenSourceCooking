@@ -27,6 +27,7 @@
     <TargetFrameworkProfile />
     <ApplicationInsightsResourceId>/subscriptions/551ffe8e-4044-433f-9b25-19345dabbf58/resourcegroups/OpenSourceCookingResourceGroup/providers/microsoft.insights/components/OpenSourceCookingApplicationInsights</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/551ffe8e-4044-433f-9b25-19345dabbf58/resourcegroups/OpenSourceCookingResourceGroup/providers/microsoft.insights/components/OpenSourceCookingApplicationInsights</ApplicationInsightsAnnotationResourceId>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -337,6 +338,9 @@
     <Compile Include="Models\DataTransferObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecipeViewableType.cs">
+      <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SavedRecipe.cs">
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
