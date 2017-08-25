@@ -90,21 +90,29 @@ function ShowDietaryRestrictionsSymbolLegend(Table) {
 
 }
 function ShowPopUpModal(ModalType, Message) {
-    switch (ModalType) {
-        case "PopUp":
-            $('#PopUpModal').modal('show');
-            $('#PopUpModalMessage').text(Message);
-            break;
-        case "Validation":
-            $('#PopUpModal').modal('show');
-            $('#PopUpModalMessage').text(Message);
-            $('#PopUpModalMessage').css('color', 'orangered');
-            $('#PopUpModalCloseButton').text("Ugh.. I'll fix it");
-            break;
-        case "Error":
-            $('#PopUpModal').modal('show');
-            $('#PopUpModalMessage').text(Message);
-            $('#PopUpModalMessage').css('color', 'red');
-            break;
-    }
+    if (!Message) //This is kind of a hack that allows ShowPopUpModal(ModalType, Message) or ShowPopUpModal(Message)
+    {
+        $('#PopUpModal').modal('show');
+        $('#PopUpModalMessage').text(ModalType);
+    }      
+    else
+    {
+        switch (ModalType) {
+            case "Validation":
+                $('#PopUpModal').modal('show');
+                $('#PopUpModalMessage').text(Message);
+                $('#PopUpModalMessage').css('color', 'orangered');
+                $('#PopUpModalCloseButton').text("Ugh.. I'll fix it");
+                break;
+            case "Error":
+                $('#PopUpModal').modal('show');
+                $('#PopUpModalMessage').text(Message);
+                $('#PopUpModalMessage').css('color', 'red');
+                break;
+            default:
+                $('#PopUpModal').modal('show');
+                $('#PopUpModalMessage').text(Message);
+                break;
+        }
+    }   
 }

@@ -242,9 +242,9 @@ function AjaxGetRecipes() {
                 else
                 {
                     if (Recipes[i].IsSaved == true)
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star"></i> Save</a>';
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star"></i> Save</a>';
                     else
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star-o"></i> Save</a>';
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star-o"></i> Save</a>';
                     RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + Recipes[i].Id + ');">Report</a></div>';
                 }
                 RecipeDivHTMLString += '</div>'
@@ -633,15 +633,17 @@ function SaveCommentChanges(commentId) {
         }
     });
 }
-function ToggleRecipe(recipeId) {
+function ToggleSaveRecipe(recipeId) {
     var SaveRecipeButton = $('#SaveRecipeButton' + recipeId);
     SaveRecipeButton.hide();
     $.ajax({
-        url: Config.AjaxUrls.AjaxToggleRecipe,
+        url: Config.AjaxUrls.AjaxToggleSaveRecipe,
         type: "GET",
         cache: false,
         data: { recipeId: recipeId },
         success: function (IsSaved) {
+            if (IsSaved === 'No AspNetId')            
+                ShowPopUpModal('You must be logged in');            
             if (IsSaved === true)
             {                
                 SaveRecipeButton.html("<i class='fa fa-star'></i> Save</a>");

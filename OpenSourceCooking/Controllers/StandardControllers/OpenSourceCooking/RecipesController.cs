@@ -525,10 +525,12 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             await db.SaveChangesAsync();
             return Json(Recipe.CreationStep, JsonRequestBehavior.AllowGet);
         }
-        [Authorize]
-        public async Task<JsonResult> AjaxToggleRecipe(int recipeId)
+
+        public async Task<JsonResult> AjaxToggleSaveRecipe(int recipeId)
         {
-            string AspNetId = User.Identity.GetUserId();           
+            string AspNetId = User.Identity.GetUserId();
+            if (String.IsNullOrEmpty(AspNetId))
+                return Json("No AspNetId", JsonRequestBehavior.AllowGet);
             string RecipeCreatorId = await db.Recipes.Where(x=>x.Id == recipeId).Select(x=>x.CreatorId).FirstOrDefaultAsync();
             if (RecipeCreatorId == AspNetId)
                 throw new Exception("You cant save your own recipe");
@@ -765,6 +767,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             };
             return Json(RecipeStepsIngredientsDataTransferObject, JsonRequestBehavior.AllowGet);
         }
+
         #endregion        
     }
 }
