@@ -234,7 +234,7 @@ function AjaxGetRecipes() {
                         RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="javascript:EditRecipe(' + Recipes[i].Id + ', ' + Recipes[i].SavedByCount + ')">Edit</a>';
                     else
                         RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + Recipes[i].Id + '">Continue</a>';
-                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="ConfirmAndDeleteRecipe(' + Recipes[i].Id + ');">Delete</a>'
+                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="DeleteRecipe(' + Recipes[i].Id + ', ' + Recipes[i].SavedByCount + ');">Delete</a>'
                         + '</div >'
                         + '</div >';
                 }
@@ -305,30 +305,6 @@ function CancelEditingComment(commentId, CurrentText) {
     EditOrSaveCommentButton.html('Edit');
 
 }
-function ConfirmAndDeleteRecipe(recipeId) {
-    $('#ConfirmRecipeDeleteModal').modal('show');
-    $('#ConfirmRecipeDeleteModalDeleteButton').off();
-    $('#ConfirmRecipeDeleteModalDeleteButton').on('click', function (e) {
-        $.ajax({
-            url: Config.AjaxUrls.AjaxDeleteRecipe,
-            type: "GET",
-            cache: false,
-            data: { recipeId: recipeId },
-            success: function (bool) {
-                if (bool === false) {
-                    ShowPopUpModal('Error', 'Recipe id ' + recipeId + ' was unable to be deleted');
-                    return;
-                }
-                $('#ConfirmRecipeDeleteModal').modal('hide');
-                //Remove the recipe from the isotope layout
-                $RecipesDiv.isotope('remove', $('#ClickableRecipeDiv' + recipeId)).isotope('layout');
-            },
-            error: function (er) {
-                ShowPopUpModal("Error", er);
-            }
-        });
-    });
-}
 function CreateCommentVote(commentId, isUpVote) {
     if (IsVoteOnCommentBusy === true)
         return;
@@ -363,6 +339,34 @@ function CreateCommentVote(commentId, isUpVote) {
         }
     });
 }
+function DeleteRecipe(recipeId, SavedByCount) {
+    if (SavedByCount !== 0) {
+        ShowPopUpModal('This recipe is saved by other users and can not be deleted');
+        return;
+    }
+    $('#ConfirmRecipeDeleteModal').modal('show');
+    $('#ConfirmRecipeDeleteModalDeleteButton').off();
+    $('#ConfirmRecipeDeleteModalDeleteButton').on('click', function (e) {
+        $.ajax({
+            url: Config.AjaxUrls.AjaxDeleteRecipe,
+            type: "GET",
+            cache: false,
+            data: { recipeId: recipeId },
+            success: function (bool) {
+                if (bool === false) {
+                    ShowPopUpModal('Error', 'Recipe id ' + recipeId + ' was unable to be deleted');
+                    return;
+                }
+                $('#ConfirmRecipeDeleteModal').modal('hide');
+                //Remove the recipe from the isotope layout
+                $RecipesDiv.isotope('remove', $('#ClickableRecipeDiv' + recipeId)).isotope('layout');
+            },
+            error: function (er) {
+                ShowPopUpModal("Error", er);
+            }
+        });
+    });
+}
 function DeleteRecipeComment(commentId) {
     $.ajax({
         url: Config.AjaxUrls.AjaxDeleteComment,
@@ -382,10 +386,12 @@ function DeleteRecipeComment(commentId) {
     });
 }
 function EditRecipe(recipeId, SavedByCount) {
-    if (SavedByCount === 0)
-        window.location.href = Config.Urls.RecipeEditor + '?RecipeId=' + recipeId;       
-    else
+    if (SavedByCount !== 0)
+    {
         ShowPopUpModal('This recipe is saved by other users and can not be edited');
+        return;
+    }
+    window.location.href = Config.Urls.RecipeEditor + '?RecipeId=' + recipeId;             
 }
 function EditRecipeComment(commentId) {
     var CommentTextDiv = $('#CommentText' + commentId);
