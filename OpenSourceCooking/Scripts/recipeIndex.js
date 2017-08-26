@@ -231,7 +231,7 @@ function AjaxGetRecipes() {
                                 break;
                         }
                     if (!isDraft)
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + Recipes[i].Id + '">Edit</a>';
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="javascript:EditRecipe(' + Recipes[i].Id + ', ' + Recipes[i].SavedByCount + ')">Edit</a>';
                     else
                         RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + Recipes[i].Id + '">Continue</a>';
                     RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="ConfirmAndDeleteRecipe(' + Recipes[i].Id + ');">Delete</a>'
@@ -380,6 +380,12 @@ function DeleteRecipeComment(commentId) {
             ShowPopUpModal("Error", "Oops something bad happend :( Try again later..." + er);
         }
     });
+}
+function EditRecipe(recipeId, SavedByCount) {
+    if (SavedByCount === 0)
+        window.location.href = Config.Urls.RecipeEditor + '?RecipeId=' + recipeId;       
+    else
+        ShowPopUpModal('This recipe is saved by other users and can not be edited');
 }
 function EditRecipeComment(commentId) {
     var CommentTextDiv = $('#CommentText' + commentId);

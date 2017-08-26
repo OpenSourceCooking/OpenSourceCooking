@@ -220,17 +220,15 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 CreationStep = Recipe.CreationStep,
                 CreatorName = Recipe.AspNetUser.Email,
                 Description = Recipe.Description ?? "",
-                LastEditDateUtc = Recipe.LastEditDateUtc,
-                Name = Recipe.Name,
-                ServingSize = Recipe.ServingSize,
-                IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
-                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
-                ViewableType = Recipe.ViewableType,
                 DietaryRestrictionDataTransferObjects = Recipe.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
                 {
                     Name = x.Name,
                     IconUrl = x.IconUrl
                 }).ToList(),
+                LastEditDateUtc = Recipe.LastEditDateUtc,
+                Name = Recipe.Name,                
+                IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
+                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,         
                 RecipeCloudFileDataTransferObjects = Recipe.RecipeCloudFiles.Select(x => new RecipeCloudFileDataTransferObject
                 {
                     CloudFileId = x.CloudFileId,
@@ -261,7 +259,14 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         StepNumber = cf.StepNumber,
                         Url = cf.CloudFile.Url
                     }).ToList()
-                }).ToList()
+                }).ToList(),
+                SavedRecipeDataTransferObjects = Recipe.SavedRecipes.Select(x=> new SavedRecipeDataTransferObject
+                {
+                    RecipeId = x.RecipeId,
+                    SavedDate = x.SavedDate
+                }).ToList(),
+                ServingSize = Recipe.ServingSize,
+                ViewableType = Recipe.ViewableType,
             }).FirstOrDefaultAsync();
             return Json(RecipeDataTransferObject, JsonRequestBehavior.AllowGet);
         }
@@ -319,25 +324,25 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     RecipesQuery = RecipesQuery.Where(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
                     break;
             }
-            List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(r => new RecipeDataTransferObject()
+            List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(Recipe => new RecipeDataTransferObject()
             {
-                Id = r.Id,
-                CompleteDateUtc = r.CompleteDateUtc,
-                CreationStep = r.CreationStep,
-                Description = r.Description ?? "",
-                CreatorName = r.AspNetUser.UserName,
-                IsMyRecipe = r.AspNetUser.Id == AspNetId ? true : false,
-                IsSaved = r.SavedRecipes.Where(x=>x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
-                LastEditDateUtc = r.LastEditDateUtc,
-                Name = r.Name,
-                ServingSize = r.ServingSize,
-                ViewableType = r.ViewableType,
-                DietaryRestrictionDataTransferObjects = r.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
+                Id = Recipe.Id,
+                CompleteDateUtc = Recipe.CompleteDateUtc,
+                CreationStep = Recipe.CreationStep,
+                Description = Recipe.Description ?? "",
+                CreatorName = Recipe.AspNetUser.UserName,
+                IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
+                IsSaved = Recipe.SavedRecipes.Where(x=>x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
+                LastEditDateUtc = Recipe.LastEditDateUtc,
+                Name = Recipe.Name,
+                ServingSize = Recipe.ServingSize,
+                ViewableType = Recipe.ViewableType,
+                DietaryRestrictionDataTransferObjects = Recipe.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
                 {
                     Name = x.Name,
                     IconUrl = x.IconUrl
                 }).ToList(),
-                RecipeCloudFileDataTransferObjects = r.RecipeCloudFiles.Select(x => new RecipeCloudFileDataTransferObject
+                RecipeCloudFileDataTransferObjects = Recipe.RecipeCloudFiles.Select(x => new RecipeCloudFileDataTransferObject
                 {
                     CloudFileId = x.CloudFileId,
                     RecipeCloudFileTypeName = x.RecipeCloudFileTypeName,
@@ -356,11 +361,16 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         }
                     }
                 }).ToList(),
-                RecipeStepDataTransferObjects = r.RecipeSteps.Select(x => new RecipeStepDataTransferObject
+                RecipeStepDataTransferObjects = Recipe.RecipeSteps.Select(x => new RecipeStepDataTransferObject
                 {
                     Comment = x.Comment,
                     StepNumber = x.StepNumber,
                     EstimatedTimeInSeconds = x.EstimatedTimeInSeconds
+                }).ToList(),
+                SavedRecipeDataTransferObjects = Recipe.SavedRecipes.Select(x => new SavedRecipeDataTransferObject
+                {
+                    RecipeId = x.RecipeId,
+                    SavedDate = x.SavedDate
                 }).ToList(),
             }).ToListAsync();
             return Json(Recipes, JsonRequestBehavior.AllowGet);

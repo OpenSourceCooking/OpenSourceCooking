@@ -113,9 +113,10 @@ namespace OpenSourceCooking.Models
         string name;
         int servingSize;             
         string viewableType;
-        ICollection<RecipeStepDataTransferObject> recipeStepDataTransferObjects;
         ICollection<DietaryRestrictionDataTransferObject> dietaryRestrictionDataTransferObjects;
         ICollection<RecipeCloudFileDataTransferObject> recipeCloudFileDataTransferObjects;
+        ICollection<RecipeStepDataTransferObject> recipeStepDataTransferObjects;
+        ICollection<SavedRecipeDataTransferObject> savedRecipeDataTransferObjects;
 
         public int Id { get { return id; } set { id = value; } }
         public DateTime? CompleteDateUtc { get { return completeDateUtc; } set { completeDateUtc = value; } }
@@ -126,9 +127,10 @@ namespace OpenSourceCooking.Models
         public string Name { get { return name; } set { name = value; } }
         public int ServingSize { get { return servingSize; } set { servingSize = value; } }
         public string ViewableType { get { return viewableType; } set { viewableType = value; } }
-        public ICollection<RecipeStepDataTransferObject> RecipeStepDataTransferObjects { get { return recipeStepDataTransferObjects; } set { recipeStepDataTransferObjects = value; } }
         public ICollection<DietaryRestrictionDataTransferObject> DietaryRestrictionDataTransferObjects { get { return dietaryRestrictionDataTransferObjects; } set { dietaryRestrictionDataTransferObjects = value; } }
         public ICollection<RecipeCloudFileDataTransferObject> RecipeCloudFileDataTransferObjects { get { return recipeCloudFileDataTransferObjects; } set { recipeCloudFileDataTransferObjects = value; } }
+        public ICollection<RecipeStepDataTransferObject> RecipeStepDataTransferObjects { get { return recipeStepDataTransferObjects; } set { recipeStepDataTransferObjects = value; } }
+        public ICollection<SavedRecipeDataTransferObject> SavedRecipeDataTransferObjects { get { return savedRecipeDataTransferObjects; } set { savedRecipeDataTransferObjects = value; } }
 
         //Extra Properties
         bool isMyRecipe;
@@ -137,6 +139,7 @@ namespace OpenSourceCooking.Models
         public long EstimatedTimeInSeconds { get { return RecipeStepDataTransferObjects == null ? 0 : RecipeStepDataTransferObjects.Sum(x => x.EstimatedTimeInSeconds); } }
         public bool IsMyRecipe { get { return isMyRecipe; } set { isMyRecipe = value; } }
         public bool IsSaved { get { return isSaved; } set { isSaved = value; } }
+        public int SavedByCount { get { return savedRecipeDataTransferObjects == null ? 0 : savedRecipeDataTransferObjects.Count(); } }
 
     }
     public class RecipeStepDataTransferObject
@@ -186,5 +189,14 @@ namespace OpenSourceCooking.Models
         public string MeasurementUnitName { get { return measurementUnitName; } set { measurementUnitName = value; } }
         public string MeasurementTypeName { get { return measurementTypeName; } set { measurementTypeName = value; } }
         public string ToAmount { get { return toAmount; } set { toAmount = value; } }
+    }
+
+    public class SavedRecipeDataTransferObject
+    {
+        int recipeId;
+        DateTime savedDate;
+        
+        public int RecipeId { get { return recipeId; } set { recipeId = value; } }
+        public DateTime SavedDate { get { return savedDate; } set { savedDate = value; } }
     }
 }
