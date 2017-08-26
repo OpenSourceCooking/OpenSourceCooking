@@ -34,7 +34,6 @@ $(document).ready(function () {
             isFitWidth: true
         }
     });
-
     var RecipeCommentTextArea = $('#RecipeCommentTextArea');
     RecipeCommentTextArea.attr('maxlength', MaxRecipeCommentLength);
     $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength);
@@ -79,7 +78,7 @@ function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCom
         + '</div>'
         + '<div class="col-12 text-right" style="font-size:14px;">';
     if (RecipeCommentDataTransferObject.IsMyRecipe)
-        CommentHTML += '<a id="EditOrSaveCommentButton' + RecipeCommentDataTransferObject.Id + '" href="javascript:EditRecipe(' + RecipeCommentDataTransferObject.Id + ')">Edit</a> '
+        CommentHTML += '<a id="EditOrSaveCommentButton' + RecipeCommentDataTransferObject.Id + '" href="javascript:EditRecipeComment(' + RecipeCommentDataTransferObject.Id + ')">Edit</a> '
             + '| <a id="DeleteOrCancelCommentButton' + RecipeCommentDataTransferObject.Id + '" href="javascript:DeleteRecipeComment(' + RecipeCommentDataTransferObject.Id + ');">Delete</a>';
     CommentHTML += '</div>'
         + '<div class="col-12" style="font-size:14px;">'
@@ -100,7 +99,7 @@ function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCom
     }
     CommentHTML += '</div>'
         + '<div class="col-8 text-right" style="padding-left:0;padding-right:6px;">'
-        + RecipeCommentDataTransferObject.PostedByChefName + ' ' + ConvertJSONDateToString(RecipeCommentDataTransferObject.CompleteDateUtc)
+        + RecipeCommentDataTransferObject.PostedByChefName + ' ' + ConvertJSONDateToString(RecipeCommentDataTransferObject.CreateDateUtc)
         + '</div>'
         + '</div>'
         + '</div>'
@@ -302,7 +301,7 @@ function CancelEditingComment(commentId, CurrentText) {
     DeleteOrCancelCommentButton.attr('href', 'javascript:DeleteRecipeComment(' + commentId + ')');
     DeleteOrCancelCommentButton.html('Delete');
     var EditOrSaveCommentButton = $('#EditOrSaveCommentButton' + commentId);
-    EditOrSaveCommentButton.attr('href', 'javascript:EditRecipe(' + commentId + ')');
+    EditOrSaveCommentButton.attr('href', 'javascript:EditRecipeComment(' + commentId + ')');
     EditOrSaveCommentButton.html('Edit');
 
 }
@@ -382,7 +381,7 @@ function DeleteRecipeComment(commentId) {
         }
     });
 }
-function EditRecipe(commentId) {
+function EditRecipeComment(commentId) {
     var CommentTextDiv = $('#CommentText' + commentId);
     var CurrentText = CommentTextDiv.html();
     CommentTextDiv.empty();
@@ -625,7 +624,7 @@ function SaveCommentChanges(commentId) {
             DeleteOrCancelCommentButton.attr('href', 'javascript:DeleteRecipeComment(' + commentId + ')');
             DeleteOrCancelCommentButton.html('Delete');
             var EditOrSaveCommentButton = $('#EditOrSaveCommentButton' + commentId);
-            EditOrSaveCommentButton.attr('href', 'javascript:EditRecipe(' + commentId + ')');
+            EditOrSaveCommentButton.attr('href', 'javascript:EditRecipeComment(' + commentId + ')');
             EditOrSaveCommentButton.html('Edit');
         },
         error: function (er) {
