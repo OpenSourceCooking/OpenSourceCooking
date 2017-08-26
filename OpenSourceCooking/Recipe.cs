@@ -20,16 +20,18 @@ namespace OpenSourceCooking
             this.RecipeCloudFiles = new HashSet<RecipeCloudFile>();
             this.RecipeFlags = new HashSet<RecipeFlag>();
             this.RecipeSteps = new HashSet<RecipeStep>();
+            this.SavedRecipes = new HashSet<SavedRecipe>();
             this.Comments = new HashSet<Comment>();
             this.DietaryRestrictions = new HashSet<DietaryRestriction>();
-            this.SavedRecipes = new HashSet<SavedRecipe>();
         }
     
         public int Id { get; set; }
-        public Nullable<System.DateTime> CreateDateUtc { get; set; }
+        public Nullable<System.DateTime> CompleteDateUtc { get; set; }
+        public System.DateTime CreateDateUtc { get; set; }
         public int CreationStep { get; set; }
         public string CreatorId { get; set; }
         public string Description { get; set; }
+        public bool IsArchived { get; set; }
         public System.DateTime LastEditDateUtc { get; set; }
         public string Name { get; set; }
         public int ServingSize { get; set; }
@@ -44,10 +46,10 @@ namespace OpenSourceCooking
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStep> RecipeSteps { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SavedRecipe> SavedRecipes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DietaryRestriction> DietaryRestrictions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SavedRecipe> SavedRecipes { get; set; }
     }
 }

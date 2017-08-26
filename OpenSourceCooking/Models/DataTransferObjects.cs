@@ -105,7 +105,7 @@ namespace OpenSourceCooking.Models
     public class RecipeDataTransferObject
     {
         int id;
-        DateTime? createDateUtc;
+        DateTime? completeDateUtc;
         int creationStep;
         string creatorName;
         string description;
@@ -118,7 +118,7 @@ namespace OpenSourceCooking.Models
         ICollection<RecipeCloudFileDataTransferObject> recipeCloudFileDataTransferObjects;
 
         public int Id { get { return id; } set { id = value; } }
-        public DateTime? CreateDateUtc { get { return createDateUtc; } set { createDateUtc = value; } }
+        public DateTime? CompleteDateUtc { get { return completeDateUtc; } set { completeDateUtc = value; } }
         public int CreationStep { get { return creationStep; } set { creationStep = value; } }
         public string CreatorName { get { return creatorName; } set { creatorName = value; } }
         public string Description { get { return description; } set { description = value; } }

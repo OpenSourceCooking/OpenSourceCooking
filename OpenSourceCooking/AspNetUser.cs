@@ -23,8 +23,8 @@ namespace OpenSourceCooking
             this.Ingredients = new HashSet<Ingredient>();
             this.RecipeFlags = new HashSet<RecipeFlag>();
             this.Comments = new HashSet<Comment>();
-            this.Recipes = new HashSet<Recipe>();
             this.SavedRecipes = new HashSet<SavedRecipe>();
+            this.Recipes = new HashSet<Recipe>();
         }
     
         public string Id { get; set; }
@@ -54,8 +54,8 @@ namespace OpenSourceCooking
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Recipe> Recipes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SavedRecipe> SavedRecipes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

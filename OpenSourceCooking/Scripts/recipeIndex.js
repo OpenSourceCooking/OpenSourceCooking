@@ -4,7 +4,7 @@ var ClickedViewableTypeButton = null;
 var FiltersKeyValueList = [
     //If adding filter, dont forget to update the Jquery population of FilteredByDiv
     { Key: 'RecipeOwnersFilter', Value: 0 }, //0-Any, 1-Mine, 2-NotMine
-    { Key: 'SortingBy', Value: 0 }, //0-LastEditDateUtc, 1-CreateDateUtc, 2-RecipeName, 3-Username
+    { Key: 'SortingBy', Value: 0 }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
     { Key: 'SortingDirection', Value: 0 } //0-Asc, 1-Desc
 ];
 var IsGettingRecipes = false;
@@ -100,7 +100,7 @@ function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCom
     }
     CommentHTML += '</div>'
         + '<div class="col-8 text-right" style="padding-left:0;padding-right:6px;">'
-        + RecipeCommentDataTransferObject.PostedByChefName + ' ' + ConvertJSONDateToString(RecipeCommentDataTransferObject.CreateDateUtc)
+        + RecipeCommentDataTransferObject.PostedByChefName + ' ' + ConvertJSONDateToString(RecipeCommentDataTransferObject.CompleteDateUtc)
         + '</div>'
         + '</div>'
         + '</div>'
@@ -132,7 +132,7 @@ function AjaxGetRecipes() {
                 var isDraft = false;
                 var BackgroundColor = GetRandomColor();
                 var BorderColor = '';
-                var CreateDateUtc = Recipes[i].CreateDateUtc;
+                var CompleteDateUtc = Recipes[i].CompleteDateUtc;
                 var LastEditDateUtc = ConvertJSONDateToString(Recipes[i].LastEditDateUtc);
                 var Description = Recipes[i].Description;
                 var RecipeName = Recipes[i].Name;
@@ -151,9 +151,9 @@ function AjaxGetRecipes() {
                 });
                 if (Recipes[i].Description === undefined || Recipes[i].Description === null || Recipes[i].Description.length < 1)
                     Description = '';
-                if (CreateDateUtc !== undefined && CreateDateUtc !== null) //If CreateDateUtc is null it means its a draft
+                if (CompleteDateUtc !== undefined && CompleteDateUtc !== null) //If CompleteDateUtc is null it means its a draft
                 {
-                    CreateDateUtc = ConvertJSONDateToString(CreateDateUtc);
+                    CompleteDateUtc = ConvertJSONDateToString(CompleteDateUtc);
                     BorderColor = GetRandomColor();
                 }
                 else
@@ -180,13 +180,13 @@ function AjaxGetRecipes() {
                 + '<div style="display:none;" id="CreatorNameDiv' + Recipes[i].Id + '">' + Recipes[i].CreatorName + '</div>'
                 + '<div style="display:none;" id="RecipeDescriptionDiv' + Recipes[i].Id + '">' + Description + '</div>'
                 + '<div style="display:none;" id="LastEditDateUtcDiv' + Recipes[i].Id + '">' + LastEditDateUtc + '</div>'
-                + '<div style="display:none;" id="CreateDateUtcDiv' + Recipes[i].Id + '">' + CreateDateUtc + '</div>'
+                + '<div style="display:none;" id="CompleteDateUtcDiv' + Recipes[i].Id + '">' + CompleteDateUtc + '</div>'
                 + '<div style="display:none;" id="EstimatedTimeInSecondsDiv' + Recipes[i].Id + '">' + Recipes[i].EstimatedTimeInSeconds + '</div>'
                 + '<h6 style="padding:4px;font-weight:bold;">Chef ' + Recipes[i].CreatorName + '</h6>'
                 + '<div class="text-right" id="FilteredByDiv' + Recipes[i].Id + '">';
                 $.each(FiltersKeyValueList, function (i, FiltersKeyValue) {
                     if (FiltersKeyValue.Key === 'SortingBy') {
-                        //0-LastEditDateUtc, 1-CreateDateUtc, 2-RecipeName, 3-Username
+                        //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
                         switch (FiltersKeyValue.Value) {
                             case 0:
                                 {
@@ -195,10 +195,10 @@ function AjaxGetRecipes() {
                                 }
                             case 1:
                                 {
-                                    if (CreateDateUtc === null || CreateDateUtc === undefined || CreateDateUtc === '')
+                                    if (CompleteDateUtc === null || CompleteDateUtc === undefined || CompleteDateUtc === '')
                                         RecipeDivHTMLString += 'Created ' + LastEditDateUtc;
                                     else
-                                        RecipeDivHTMLString += 'Created ' + CreateDateUtc;
+                                        RecipeDivHTMLString += 'Created ' + CompleteDateUtc;
                                     break;
                                 }
                             case 2:
@@ -561,7 +561,7 @@ function PreviewRecipe(recipeId) {
             //Populate the Recipe Previewer
             $('#ModalRecipeHeader').text($('#RecipeNameDiv' + ClickedRecipeId).text());
             $('#ModalCreatorName').text('Chef ' + $('#CreatorNameDiv' + ClickedRecipeId).html());
-            $('#ModalCreateDateUtc').text('Created ' + $('#CreateDateUtcDiv' + ClickedRecipeId).html());
+            $('#ModalCompleteDateUtc').text('Created ' + $('#CompleteDateUtcDiv' + ClickedRecipeId).html());
             $('#ModalEditDate').text('Edited ' + $('#LastEditDateUtcDiv' + ClickedRecipeId).html());
             $('#ModalRecipeDescriptionSpan').text($('#RecipeDescriptionDiv' + ClickedRecipeId).html());
             $('#RecipePreviewerEstMinutes').text(GetEstimatedTimeString($('#EstimatedTimeInSecondsDiv' + ClickedRecipeId).html()));
@@ -794,7 +794,7 @@ function SwitchSortBy(sortingByEnum, sortingDirectionEnum) {
     var SortDirectionText = ' Asc';
     if (GetFilterByKey('SortingDirection').Value === 1)
         SortDirectionText = ' Desc';
-    //0-LastEditDateUtc, 1-CreateDateUtc, 2-Name, 3-Username
+    //0-LastEditDateUtc, 1-CompleteDateUtc, 2-Name, 3-Username
     switch (sortingByEnum) {
         case 0:
             $('#SortingByButton').text('Edit Date' + SortDirectionText);

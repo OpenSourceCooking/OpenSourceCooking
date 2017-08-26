@@ -62,7 +62,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             string AspNetId = User.Identity.GetUserId();
             Recipe Recipe = new Recipe()
             {
-                CreateDateUtc = null, //This indicates that its a recipe draft
+                CreateDateUtc = DateTime.UtcNow, //This indicates that its a recipe draft
                 CreatorId = AspNetId,
                 LastEditDateUtc = DateTime.UtcNow,
                 Name = recipeName,
@@ -216,7 +216,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             RecipeDataTransferObject RecipeDataTransferObject = await db.Recipes.Where(x=>x.Id == recipeId).Select(Recipe => new RecipeDataTransferObject()
             {
                 Id = Recipe.Id,
-                CreateDateUtc = Recipe.CreateDateUtc,
+                CompleteDateUtc = Recipe.CompleteDateUtc,
                 CreationStep = Recipe.CreationStep,
                 CreatorName = Recipe.AspNetUser.Email,
                 Description = Recipe.Description ?? "",
@@ -279,7 +279,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         RecipesQuery = db.Recipes.OrderByDescending(r => r.LastEditDateUtc);
                         break;
                     case 1:
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.CreateDateUtc);
+                        RecipesQuery = db.Recipes.OrderByDescending(r => r.CompleteDateUtc);
                         break;
                     case 2:
                         RecipesQuery = db.Recipes.OrderByDescending(r => r.Name);
@@ -295,7 +295,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         RecipesQuery = db.Recipes.OrderBy(r => r.LastEditDateUtc);
                         break;
                     case 1:
-                        RecipesQuery = db.Recipes.OrderBy(r => r.CreateDateUtc);
+                        RecipesQuery = db.Recipes.OrderBy(r => r.CompleteDateUtc);
                         break;
                     case 2:
                         RecipesQuery = db.Recipes.OrderBy(r => r.Name);
@@ -322,7 +322,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(r => new RecipeDataTransferObject()
             {
                 Id = r.Id,
-                CreateDateUtc = r.CreateDateUtc,
+                CompleteDateUtc = r.CompleteDateUtc,
                 CreationStep = r.CreationStep,
                 Description = r.Description ?? "",
                 CreatorName = r.AspNetUser.UserName,
@@ -519,13 +519,12 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             if (Recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
-            if (Recipe.CreationStep < 4)//CreationStep should never be above 4
+            if (Recipe.CreationStep < 4)
                 Recipe.CreationStep++;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(Recipe.CreationStep, JsonRequestBehavior.AllowGet);
         }
-
         public async Task<JsonResult> AjaxToggleSaveRecipe(int recipeId)
         {
             string AspNetId = User.Identity.GetUserId();
@@ -644,10 +643,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
             if (Recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
-            if (Recipe.CreateDateUtc == null)
+            if (Recipe.CompleteDateUtc == null)
             {
                 Recipe.CreationStep = 5;
-                Recipe.CreateDateUtc = DateTime.UtcNow;
+                Recipe.CompleteDateUtc = DateTime.UtcNow;
             }
             Recipe.ViewableType = viewableTypeName;
             db.Entry(Recipe).State = EntityState.Modified;
@@ -767,7 +766,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             };
             return Json(RecipeStepsIngredientsDataTransferObject, JsonRequestBehavior.AllowGet);
         }
-
         #endregion        
     }
 }
