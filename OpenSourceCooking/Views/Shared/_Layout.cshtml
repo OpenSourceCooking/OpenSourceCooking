@@ -53,50 +53,62 @@
                 @if (true) //This is only here to keep spacing nice in code. It doesnt do anything
                 {
                     @*
-                        <li>
-                            <div class="nav-link  btn-group">
-                                <a class="btn btn-outline-info" href="@Url.Action("Index", "Ingredients")" id="NavbarIngredietnsButton">Ingredients</a>
-                                <button class="btn btn-outline-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <ul class="dropdown-menu bg-inverse" style="max-height:280px;overflow-y:auto;">
-                                    <li><a class="dropdown-item" style="color:#5bc0de;" href="@Url.Action("Create", "Ingredients")">Add Ingredient</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    *@
                     <li>
-                        <div class="nav-link btn-group">
-                            <a class="btn btn-outline-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
-                            <button class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        <div class="nav-link  btn-group">
+                            <a class="btn btn-outline-info" href="@Url.Action("Index", "Ingredients")" id="NavbarIngredietnsButton">Ingredients</a>
+                            <button class="btn btn-outline-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                             <ul class="dropdown-menu bg-inverse" style="max-height:280px;overflow-y:auto;">
-                                <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
-                                @if (Request.IsAuthenticated)
-                                {
-                                    <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes", new { RecipeOwnersFilter = 1 })">My Recipes</a></li>
-                                }
+                                <li><a class="dropdown-item" style="color:#5bc0de;" href="@Url.Action("Create", "Ingredients")">Add Ingredient</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li>
+                    *@
+                    if (Request.Url.AbsoluteUri.Contains("/Recipes"))
+                    {
+                        <li class="text-right">
+                            <div class="nav-link">
+                                <div class="btn-group">
+                                    <input type="text" class="form-control" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center; padding-bottom:4px;" id="SearchTextInput">
+                                    <a class="btn btn-info" style="font-size:18px;" href="#" onclick="OnClick_FilterModalApplyButton()"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                    <a class="btn btn-primary" style="font-size:18px;" href="#" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                <li class="text-right">
+                    <div class="nav-link btn-group">
+                        <a class="btn btn-outline-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
+                        <button class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        <ul class="dropdown-menu bg-inverse text-right" style="max-height:280px;overflow-y:auto;">
+                            <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes", new { RecipeOwnersFilter = 1 })">My Recipes</a></li>
+                            }
+                        </ul>
+                    </div>
+                </li>
+                    <li class="text-right">
                         <div class="nav-link">
                             <a class="btn btn-outline-info" href="#" onclick="ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
                         </div>
                     </li>
-                    <li>
+                    <li class="text-right">
                         <div class="nav-link">
                             <a class="btn btn-outline-danger" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
                         </div>
-                    </li>                 
+                    </li>
                 }
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
-                    <li>
+                    <li class="text-right">
                         <div class="nav-link  dropdown">
                             <button type="button" class="btn btn-outline-warning dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Database
                             </button>
                             <ul class="dropdown-menu bg-inverse" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;">
                                 <li class="dropdown-header">Database</li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBBugReports")">Bug Reports</a></li>   
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBBugReports")">Bug Reports</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCloudFiles")">Cloud Files</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBComments")">Comments</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCommentVotes")">Comment Votes</a></li>
@@ -104,7 +116,7 @@
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBFlags")">Flags</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBIngredients")">Ingredients</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementTypes")">Measurement Types</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementUnits")">Measurement Units</a></li>                                
+                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementUnits")">Measurement Units</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipes")">Recipes</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeFlags")">Recipe Flags</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeSteps")">Recipe Steps</a></li>
@@ -121,6 +133,7 @@
             </ul>
             @Html.Partial("_LoginPartial")
         </div>
+
     </nav>
     <div class="container-fluid">
         @RenderBody()

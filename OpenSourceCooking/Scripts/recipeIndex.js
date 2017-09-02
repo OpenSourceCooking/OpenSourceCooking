@@ -462,6 +462,7 @@ function OnClick_FilterModalApplyButton() {
     $('#RecipesDiv').empty();
     AjaxGetRecipes();
     $('#FilterModal').modal('hide');
+    $('.navbar-toggler').click()
 }
 function OnClick_FilterModalClearButton() {
     SwitchSortBy(0, 0);
