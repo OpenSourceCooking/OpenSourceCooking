@@ -171,7 +171,7 @@ function AjaxGetRecipes() {
                 if (Recipes[i].IsSaved == true)
                     BorderColor = SavedBorderColor;
                 RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + Recipes[i].Id + '">'
-                    + '<div id="ClickableRecipeDivBorder' + Recipes[i].Id + '" class="zoomImage" style="padding-bottom:15px;border:6px solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
+                    + '<div id="ClickableRecipeDivBorder' + Recipes[i].Id + '" class="zoomImage" style="padding-bottom:15px;border:solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
                     + '<h3 class="text-center" id="RecipeNameDiv' + Recipes[i].Id + '" style="padding-top:4px;padding-bottom:2px;margin:10px;border-radius:12px;font-weight:bold;background-color:white;">' + RecipeName + '</h3>';
                 if (MainCloudFileThumbUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileThumbUrl + '" style="max-height:400px;"></div>';
