@@ -2,7 +2,6 @@
 
 <script>
     var ViewBagRecipeId = '@(ViewBag.RecipeId)';
-    var ViewBagRecipeOwnersFilter = '@(ViewBag.RecipeOwnersFilter)';
     var ViewBagSearchText = '@(ViewBag.SearchText)';
 </script>
 @section Scripts{
@@ -22,7 +21,6 @@
             <!--Header-->
             <div class="modal-header text-center">
                 <h5>Optional Filters</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <!--Body-->
             <div class="modal-body text-center">
@@ -34,37 +32,37 @@
                         <div class="dropdown-menu text-right" aria-labelledby="dropdownMenuLink" id="SortingByDropDown" style="left:50%;right:auto;transform:translate(-50%, 0); padding-right:6px;">
                             <div class="btn-group btn-group-sm recipe" style="padding-bottom:4px;width:100%;">
                                 <label class="dropdown-item" href="#">Create Date <!--CompleteDateUtc--></label>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(1,0);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(1,false);">
                                     <i class="fa fa-arrow-up" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(1,1);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(1,true);">
                                     <i class="fa fa-arrow-down" aria-hidden="true"></i>
                                 </button>
                             </div>
                             <div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">
                                 <label class="dropdown-item" href="#">Edit Date</label>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(0,0);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(0,false);">
                                     <i class="fa fa-arrow-up" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(0,1);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(0,true);">
                                     <i class="fa fa-arrow-down" aria-hidden="true"></i>
                                 </button>
                             </div>
                             <div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">
                                 <label class="dropdown-item" href="#">Name</label>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(2,0);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(2,false);">
                                     <i class="fa fa-arrow-up" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(2,1);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(2,true);">
                                     <i class="fa fa-arrow-down" aria-hidden="true"></i>
                                 </button>
                             </div>
                             <div class="btn-group btn-group-sm" style="width:100%;">
                                 <label class="dropdown-item" href="#">Username</label>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(3,0);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(3,false);">
                                     <i class="fa fa-arrow-up" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(3,1);">
+                                <button class="btn btn-secondary" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(3,true);">
                                     <i class="fa fa-arrow-down" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -78,7 +76,7 @@
                 </div>
                 <div class="row" style="padding-bottom:10px;">
                     <div class="col-12">
-                        <button type="button" class="btn btn-primary btn-block" onclick="OnClick_FilterModalApplyButton()" id="FilterModalFilterButton">Apply</button>
+                        <button type="button" class="btn btn-primary btn-block" onclick="OnClick_FilterModalDoneButton()" id="FilterModalFilterButton">Done</button>
                     </div>
                 </div>
             </div>
@@ -206,7 +204,7 @@
             <div class="modal-body text-center" style="padding-bottom:0px;">
                 <span style="color:red;">Abusing the report function will result with an account ban and all report flags deleted. Don't be a troll.</span>
             </div>
-             <div class="modal-body" id="ReportModalBody">                 
+            <div class="modal-body" id="ReportModalBody">
             </div>
         </div>
     </div>

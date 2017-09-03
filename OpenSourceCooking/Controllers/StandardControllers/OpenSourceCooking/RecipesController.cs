@@ -9,25 +9,18 @@ using Microsoft.AspNet.Identity;
 using OpenSourceCooking.Models;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using LinqKit;
 
 namespace OpenSourceCooking.Controllers.StandardControllers
 {
-    public enum RecipeOwnersFilter
-    {
-        Any,
-        Mine,
-        NotMine
-    }
-
     public class RecipesController : Controller
     {
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public ActionResult Index(int? recipeId, RecipeOwnersFilter? recipeOwnersFilter, string searchText)
+        public ActionResult Index(int? recipeId, string searchText)
         {
             ViewBag.RecipeId = recipeId ?? 0;
-            ViewBag.RecipeOwnersFilter = recipeOwnersFilter ?? RecipeOwnersFilter.Any;
             ViewBag.SearchText = searchText;
             return View();
         }
@@ -213,7 +206,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         public async Task<JsonResult> AjaxGetRecipe(int recipeId)
         {
             string AspNetId = User.Identity.GetUserId();
-            RecipeDataTransferObject RecipeDataTransferObject = await db.Recipes.Where(x=>x.Id == recipeId).Select(Recipe => new RecipeDataTransferObject()
+            RecipeDataTransferObject RecipeDataTransferObject = await db.Recipes.Where(x => x.Id == recipeId).Select(Recipe => new RecipeDataTransferObject()
             {
                 Id = Recipe.Id,
                 CompleteDateUtc = Recipe.CompleteDateUtc,
@@ -226,9 +219,9 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     IconUrl = x.IconUrl
                 }).ToList(),
                 LastEditDateUtc = Recipe.LastEditDateUtc,
-                Name = Recipe.Name,                
+                Name = Recipe.Name,
                 IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
-                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,         
+                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
                 RecipeCloudFileDataTransferObjects = Recipe.RecipeCloudFiles.Select(x => new RecipeCloudFileDataTransferObject
                 {
                     CloudFileId = x.CloudFileId,
@@ -260,7 +253,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         Url = cf.CloudFile.Url
                     }).ToList()
                 }).ToList(),
-                SavedRecipeDataTransferObjects = Recipe.SavedRecipes.Select(x=> new SavedRecipeDataTransferObject
+                SavedRecipeDataTransferObjects = Recipe.SavedRecipes.Select(x => new SavedRecipeDataTransferObject
                 {
                     RecipeId = x.RecipeId,
                     SavedDate = x.SavedDate
@@ -270,60 +263,81 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             }).FirstOrDefaultAsync();
             return Json(RecipeDataTransferObject, JsonRequestBehavior.AllowGet);
         }
-        public async Task<JsonResult> AjaxGetRecipes(int recipesPageIndex, string searchText, RecipeOwnersFilter recipeOwnersFilter, int sortingBy, int sortingDirection)
+        public async Task<JsonResult> AjaxGetRecipes(bool? myRecipes, bool? publicRecipes, int recipesPageIndex, bool? savedRecipes, string searchText, string sortingBy, bool? sortAscending)
         {
             string AspNetId = User.Identity.GetUserId();
-            if (recipeOwnersFilter != RecipeOwnersFilter.Any && AspNetId == null)
+            if (myRecipes != null && AspNetId == null)
                 if (AspNetId == null)
                     return Json("Unauthorized", JsonRequestBehavior.AllowGet);
             IQueryable<Recipe> RecipesQuery = null;
-            if (sortingDirection == 0)
+            if (!sortAscending.HasValue || !sortAscending.Value)
                 switch (sortingBy)
                 {
-                    case 0:
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.LastEditDateUtc);
-                        break;
-                    case 1:
+                    case "1":
                         RecipesQuery = db.Recipes.OrderByDescending(r => r.CompleteDateUtc);
                         break;
-                    case 2:
+                    case "2":
                         RecipesQuery = db.Recipes.OrderByDescending(r => r.Name);
                         break;
-                    case 3:
+                    case "3":
                         RecipesQuery = db.Recipes.OrderByDescending(r => r.AspNetUser.UserName);
+                        break;
+                    default:
+                        RecipesQuery = db.Recipes.OrderByDescending(r => r.LastEditDateUtc);
                         break;
                 }
             else
                 switch (sortingBy)
                 {
-                    case 0:
-                        RecipesQuery = db.Recipes.OrderBy(r => r.LastEditDateUtc);
-                        break;
-                    case 1:
+                    case "1":
                         RecipesQuery = db.Recipes.OrderBy(r => r.CompleteDateUtc);
                         break;
-                    case 2:
+                    case "2":
                         RecipesQuery = db.Recipes.OrderBy(r => r.Name);
                         break;
-                    case 3:
+                    case "3":
                         RecipesQuery = db.Recipes.OrderBy(r => r.AspNetUser.UserName);
                         break;
+                    default:
+                        RecipesQuery = db.Recipes.OrderBy(r => r.LastEditDateUtc);
+                        break;
                 }
-            //Where clauses are added based on filters. LINQ doesnt execute the query until .ToList() is called at the end
+            var Predicate = PredicateBuilder.New<Recipe>(true);
+            //searchText
             if (!String.IsNullOrEmpty(searchText))
-                RecipesQuery = RecipesQuery.Where(r => r.Name.Contains(searchText));
-            switch (recipeOwnersFilter)
-            {
-                case RecipeOwnersFilter.Any:
-                    RecipesQuery = RecipesQuery.Where(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
-                    break;
-                case RecipeOwnersFilter.Mine:
-                    RecipesQuery = RecipesQuery.Where(r => r.CreatorId == AspNetId);
-                    break;
-                case RecipeOwnersFilter.NotMine:
-                    RecipesQuery = RecipesQuery.Where(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
-                    break;
-            }
+                Predicate = Predicate.And(r => r.Name.Contains(searchText));
+            //myRecipes
+            if (myRecipes.HasValue)
+                if (myRecipes.Value)                
+                    Predicate = Predicate.And(r => r.CreatorId == AspNetId);                
+                else                
+                    Predicate = Predicate.And(r => r.CreatorId != AspNetId);
+            //publicRecipes
+            if (publicRecipes.HasValue)
+                if (publicRecipes.Value)                
+                    Predicate = Predicate.And(r => r.ViewableType == "Public");                
+                else                
+                    Predicate = Predicate.And(r => r.ViewableType != "Public");
+            //savedRecipes
+            if (savedRecipes.HasValue)
+                if (savedRecipes.Value)
+                    Predicate = Predicate.And(r => r.ViewableType == "Public");
+                else
+                    Predicate = Predicate.And(r => r.ViewableType != "Public");
+            RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
+
+            //switch (myRecipes)
+            //{
+            //    case null:
+            //        RecipesQuery = RecipesQuery.Where(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
+            //        break;
+            //    case "1":
+            //        RecipesQuery = RecipesQuery.Where(r => r.CreatorId == AspNetId);
+            //        break;
+            //    case "2":
+            //        RecipesQuery = RecipesQuery.Where(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
+            //        break;
+            //}
             List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(Recipe => new RecipeDataTransferObject()
             {
                 Id = Recipe.Id,
@@ -332,7 +346,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 Description = Recipe.Description ?? "",
                 CreatorName = Recipe.AspNetUser.UserName,
                 IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
-                IsSaved = Recipe.SavedRecipes.Where(x=>x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
+                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
                 LastEditDateUtc = Recipe.LastEditDateUtc,
                 Name = Recipe.Name,
                 ServingSize = Recipe.ServingSize,
@@ -540,18 +554,18 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             string AspNetId = User.Identity.GetUserId();
             if (String.IsNullOrEmpty(AspNetId))
                 return Json("No AspNetId", JsonRequestBehavior.AllowGet);
-            string RecipeCreatorId = await db.Recipes.Where(x=>x.Id == recipeId).Select(x=>x.CreatorId).FirstOrDefaultAsync();
+            string RecipeCreatorId = await db.Recipes.Where(x => x.Id == recipeId).Select(x => x.CreatorId).FirstOrDefaultAsync();
             if (RecipeCreatorId == AspNetId)
                 throw new Exception("You cant save your own recipe");
             bool IsSaved = true;
-            SavedRecipe SavedRecipe = await db.SavedRecipes.FindAsync(AspNetId, recipeId);            
+            SavedRecipe SavedRecipe = await db.SavedRecipes.FindAsync(AspNetId, recipeId);
             if (SavedRecipe == null)
                 db.SavedRecipes.Add(new SavedRecipe { AspNetUserId = AspNetId, RecipeId = recipeId, SavedDate = DateTime.UtcNow });
             else
             {
                 IsSaved = false;
                 db.SavedRecipes.Remove(SavedRecipe);
-            }             
+            }
             await db.SaveChangesAsync();
             return Json(IsSaved, JsonRequestBehavior.AllowGet);
         }
