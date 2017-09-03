@@ -1,8 +1,8 @@
-﻿body {padding-top: 50px;}
+﻿body {padding-top: 68px;}
 @media (min-width: 576px) { }
 @media (min-width: 768px) { }
 @media (min-width: 992px) {
-    body{padding-top:60px;}
+    body{padding-top:82px;}
 }
 @media (min-width: 1200px) {}
 
@@ -68,7 +68,7 @@ button, input, optgroup, select, textarea {
     height: auto;
     margin: 0 auto;
     position: relative;
-    padding-top: 56px;
+    padding-top: 0px;
 }
 .box {
     width: 260px;

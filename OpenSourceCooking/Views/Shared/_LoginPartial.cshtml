@@ -53,10 +53,10 @@
                     }
                 </li>
                 <li class="nav-link">
-                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @Style = "color:white;" })
+                    <a class="btn btn-secondary" href="@Url.Action("Index", "Manage", new { title = "Manage"})">Hello @User.Identity.GetUserName()!</a>
                 </li>
                 <li class="nav-link">
-                    <a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log off</a>
+                    <a class="btn btn-primary" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
                 </li>
             </ul>
         }
@@ -64,8 +64,12 @@
     else
     {
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav-link">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @Style = "color:white;" })</li>
-            <li class="nav-link">@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @Style = "color:white;" })</li>
+            <li class="nav-link">
+                <a class="btn btn-primary" href="@Url.Action("Register", "Account", new { id = "registerLink"})">Register</a>
+            </li>
+            <li class="nav-link">
+                <a class="btn btn-primary" href="@Url.Action("Login", "Account", new { id = "loginLink"})">Log in</a>
+            </li>
         </ul>
     }
 }
