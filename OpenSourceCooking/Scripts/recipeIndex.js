@@ -48,12 +48,10 @@ $(document).ready(function () {
     RecipeCommentTextArea.keyup(function (event) {
         $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
     });    
-    if (!ViewBagSearchText)
-        GetFilterByKey('SearchText').Value = '';
-    else
+    if (ViewBagSearchText)
     {
         GetFilterByKey('SearchText').Value = ViewBagSearchText;
-        $('#SearchTextInput').val(SearchText);
+        $('#SearchTextInput').val(ViewBagSearchText);
     }        
     AjaxGetRecipes();
     window.onscroll = function (ev) {
