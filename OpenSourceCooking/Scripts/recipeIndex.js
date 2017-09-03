@@ -171,7 +171,7 @@ function AjaxGetRecipes() {
                 if (Recipes[i].IsSaved == true)
                     BorderColor = SavedBorderColor;
                 RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + Recipes[i].Id + '">'
-                    + '<div id="ClickableRecipeDivBorder' + Recipes[i].Id + '" class="zoomImage" style="padding-bottom:15px;border:10px solid;border-radius:20px;border-color:' + BorderColor + ';background-color:' + BackgroundColor + ';">'
+                    + '<div id="ClickableRecipeDivBorder' + Recipes[i].Id + '" class="zoomImage" style="padding-bottom:15px;border:6px solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
                     + '<h3 class="text-center" id="RecipeNameDiv' + Recipes[i].Id + '" style="padding-top:4px;padding-bottom:2px;margin:10px;border-radius:12px;font-weight:bold;background-color:white;">' + RecipeName + '</h3>';
                 if (MainCloudFileThumbUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileThumbUrl + '" style="max-height:400px;"></div>';
@@ -180,7 +180,7 @@ function AjaxGetRecipes() {
                 else
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + Config.Images.OpenSourceCookingImageUrl + '" style="max-height:400px;"></div>';
                 RecipeDivHTMLString += '<div class="col-12 text-center" style= "padding:2px;" id="SymbolsDiv' + Recipes[i].Id + '""></div >';
-                RecipeDivHTMLString += '<div style="padding:4px;background-color:' + BackgroundColor + ';">'
+                RecipeDivHTMLString += '<div style="padding:4px;">'
                 + '<div style="display:none;" id="MainCloudFileUrl' + Recipes[i].Id + '">' + MainCloudFileUrl + '</div>'
                 + '<div style="display:none;" id="RecipeVideo' + Recipes[i].Id + '">' + Recipes[i].MainVideoUrl + '</div>'
                 + '<div style="display:none;" id="CreatorNameDiv' + Recipes[i].Id + '">' + Recipes[i].CreatorName + '</div>'
@@ -247,11 +247,11 @@ function AjaxGetRecipes() {
                 }
                 else
                 {
+                    RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + Recipes[i].Id + ');">Report</a></div>';
                     if (Recipes[i].IsSaved == true)
                         RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star"></i> Save</a>';
                     else
                         RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star-o"></i> Save</a>';
-                    RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + Recipes[i].Id + ');">Report</a></div>';
                 }
                 RecipeDivHTMLString += '</div>'
                     + '</div>'
