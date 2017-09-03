@@ -67,7 +67,7 @@
                     <div class="nav-link btn-group">
                         <a class="btn btn-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
                         <button class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        <ul class="dropdown-menu bg-inverse text-right" style="max-height:280px;overflow-y:auto;">
+                        <ul class="dropdown-menu text-right" style="max-height:280px;overflow-y:auto;background-color:white">
                             <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
                             @if (Request.IsAuthenticated)
                             {
