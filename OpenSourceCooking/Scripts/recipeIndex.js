@@ -6,9 +6,9 @@ var FiltersKeyValueList = [
     { Key: 'MyRecipes', Value: null },
     { Key: 'PublicRecipes', Value: null },
     { Key: 'SavedRecipes', Value: null },
-    { Key: 'SearchText', Value: '' },
-    { Key: 'SortingBy', Value: null }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
-    { Key: 'SortAscending', Value: null }
+    { Key: 'SearchText', Value: null },
+    { Key: 'SortingBy', Value: 0 }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
+    { Key: 'SortAscending', Value: false }
 ];
 var IsGettingRecipes = false;
 var IsVoteOnCommentBusy = false;
@@ -17,6 +17,12 @@ var RecipeCommentsPageIndex = 0;
 var RecipeCommentsSkipAdjust = 0;
 var RecipesPageIndex = 0;
 var SavedBorderColor = "#0275d8";//Blue
+var SortByOptions = [
+    { Key: 'Create Date', Value: 1 },
+    { Key: 'Edit Date', Value: 0 },
+    { Key: 'Name', Value: 2 },
+    { Key: 'Chef Name', Value: 3 }
+]
 var ShowingRecipeSteps = false;
 var ShowingRecipeComments = false;
 
@@ -58,7 +64,7 @@ $(document).ready(function () {
     };
     $('#SearchTextInput').on('keypress', function (e) {
         if (e.which === 13) {
-            OnClick_FilterModalDoneButton(GetFilterByKey('SortingBy').Value, GetFilterByKey('SortAscending').Value);
+            OnClick_FilterModalDoneButton();
         }
     });
     $('#SetRecipeViewableTypePublic').on('click', function (e) {
@@ -70,7 +76,8 @@ $(document).ready(function () {
     $('#SetRecipeViewableTypeSecret').on('click', function (e) {
         SetRecipeViewableType('Secret', ClickedRecipeId);
     });
-    if (ViewBagRecipeId != 0)
+    RefreshFiltersSortingTable();
+    if (ViewBagRecipeId != 0)//This should be last
         PreviewRecipe(ViewBagRecipeId);
 });
 function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCommentsDiv) {
@@ -478,7 +485,7 @@ function OnClick_FilterModalDoneButton() {
 }
 function OnClick_FilterModalClearButton() {
     SwitchSortBy(0, false);
-    $('#SortingByButton').text('Sorting');
+    //$('#SortingByButton').text('Sorting');
     var FilterButton = $('#FilterButton');
     GetFilterByKey('SearchText').Value = '';
     $('#SearchTextInput').val('');
@@ -686,6 +693,23 @@ function ToggleSaveRecipe(recipeId) {
         }
     });
 }
+function RefreshFiltersSortingTable() {
+    var SortByTable = $('#SortByTable');
+    SortByTable.empty();
+    var SortToggle = false;
+    $.each(SortByOptions, function (i, SortByOption) {
+        var trHTMLString = '<tr><td>' + SortByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
+        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString() + SortByOption.Value + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>';
+        SortToggle = !SortToggle;
+        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString() + SortByOption.Value + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></div></td></tr>';
+        SortByTable.append(trHTMLString);
+    });
+    var sortAscending = GetFilterByKey('SortAscending').Value;
+    $('.SortByButton').removeClass('btn btn-info');
+    $('.SortByButton').addClass('btn btn-secondary');
+    $('#SortByButton' + sortAscending.toString() + GetFilterByKey('SortingBy').Value).removeClass("btn-secondary");
+    $('#SortByButton' + sortAscending.toString() + GetFilterByKey('SortingBy').Value).addClass("btn-info");
+}
 function SetRecipeViewableType(viewableTypeName, recipeId) {
     $.ajax({
         url: Config.AjaxUrls.AjaxUpdateViewableType,
@@ -809,26 +833,9 @@ function ShowRecipeComments() {
         }
     });
 }
-function SwitchSortBy(sortingByEnum, sortAscending) {
-    if (sortingByEnum !== null)
-        GetFilterByKey('SortingBy').Value = sortingByEnum;
-    GetFilterByKey('SortAscending').Value = sortAscending;
-    var SortDirectionText = ' <i class="fa fa-arrow-up" aria-hidden="true"></i>';
-    if (GetFilterByKey('SortAscending').Value)
-        SortDirectionText = ' <i class="fa fa-arrow-down" aria-hidden="true"></i>';
-    //0-LastEditDateUtc, 1-CompleteDateUtc, 2-Name, 3-Username
-    switch (sortingByEnum) {
-        case 0:
-            $('#SortingByButton').html('Edit Date' + SortDirectionText);
-            break;
-        case 1:
-            $('#SortingByButton').html('Create Date' + SortDirectionText);
-            break;
-        case 2:
-            $('#SortingByButton').html('Name' + SortDirectionText);
-            break;
-        case 3:
-            $('#SortingByButton').html('Username' + SortDirectionText);
-            break;
-    }
+function SwitchSortBy(sortByOptionValue, sortAscending) {
+    if (sortByOptionValue !== null)
+        GetFilterByKey('SortingBy').Value = sortByOptionValue;
+    GetFilterByKey('SortAscending').Value = sortAscending;  
+    RefreshFiltersSortingTable();
 }
