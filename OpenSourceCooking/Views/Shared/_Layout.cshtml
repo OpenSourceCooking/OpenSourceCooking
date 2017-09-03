@@ -15,18 +15,6 @@
     @Scripts.Render("~/bundles/OpenSourceCooking") 
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>    <!--Google Ad Sense-->
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-2501733207374862", enable_page_level_ads: true });</script>    <!--Google Ad Sense-->
-    <script type="text/javascript">
-        $(document).ready(function () {
-            //Highlight the correct nav bar button
-            var url = window.location.href;
-            if (url.indexOf("/Ingredients") >= 0)
-                $('#NavbarIngredietnsButton').removeClass('btn-outline-info').addClass('btn-info');
-            if (url.indexOf("/Recipes") >= 0)
-                $('#NavbarRecipesButton').removeClass('btn-outline-success').addClass('btn-success');
-            if (url.indexOf("DB_") >= 0)
-                $('#NavbarDatabaseButton').removeClass('btn-outline-warning').addClass('btn-warning');
-        });
-    </script>
     @RenderSection("scripts", required: false)
     <script type='text/javascript'>
         var appInsights = window.appInsights || function (config) {
@@ -39,9 +27,9 @@
         appInsights.trackPageView();
     </script>
 </head>
-<body style="font-family:'Handlee';">
+<body style="font-family:'Handlee';background-color:whitesmoke;">
     <!--Navbar-->
-    <nav class="navbar navbar-toggleable-md navbar-light bg-inverse fixed-top" role="navigation">
+    <nav class="navbar navbar-toggleable-md navbar-light fixed-top" role="navigation" style="background-color:slategray;">
         <button class="navbar-toggler navbar-toggler-right bg-faded" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -77,8 +65,8 @@
                     }
                 <li class="text-right">
                     <div class="nav-link btn-group">
-                        <a class="btn btn-outline-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
-                        <button class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        <a class="btn btn-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
+                        <button class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <ul class="dropdown-menu bg-inverse text-right" style="max-height:280px;overflow-y:auto;">
                             <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
                             @if (Request.IsAuthenticated)
@@ -90,12 +78,12 @@
                 </li>
                     <li class="text-right">
                         <div class="nav-link">
-                            <a class="btn btn-outline-info" onclick="ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
+                            <a class="btn btn-info" href="javascript:ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
                         </div>
                     </li>
                     <li class="text-right">
                         <div class="nav-link">
-                            <a class="btn btn-outline-danger" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
+                            <a class="btn btn-danger" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
                         </div>
                     </li>
                 }
@@ -103,7 +91,7 @@
                 {
                     <li class="text-right">
                         <div class="nav-link  dropdown">
-                            <button type="button" class="btn btn-outline-warning dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-warning dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Database
                             </button>
                             <ul class="dropdown-menu bg-inverse" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;">

@@ -1,10 +1,8 @@
 ﻿body {padding-top: 50px;}
-.RecipesSearchBar{ position:fixed; top:58px; left:0; right:0;}
 @media (min-width: 576px) { }
 @media (min-width: 768px) { }
 @media (min-width: 992px) {
     body{padding-top:60px;}
-    .RecipesSearchBar{top:72px;}
 }
 @media (min-width: 1200px) {}
 

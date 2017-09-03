@@ -371,12 +371,12 @@
     <Content Include="Content\Images\Icons\Error.png" />
     <Content Include="Content\Images\LikeLightGreen.png" />
     <Content Include="Content\Images\LikeWhite.png" />
-    <Content Include="Content\Images\OpenSourceCooking4096x2160.png" />
     <Content Include="Content\Images\Icons\DairyFreeSymbol.png" />
     <Content Include="Content\Images\Icons\GlutenFreeSymbol.png" />
     <Content Include="Content\Images\Icons\GMOFreeSymbol.png" />
     <Content Include="Content\Images\Icons\VeganSymbol.png" />
     <Content Include="Content\Images\Icons\VegetarianSymbol.png" />
+    <Content Include="Content\Images\OpenSourceCooking4096x2160.png" />
     <Content Include="Content\Images\UploadPhotoButton720x720.png" />
     <Content Include="Content\range-slider.css" />
     <Content Include="Content\tether\tether-theme-arrows-dark.css" />
