@@ -52,10 +52,10 @@
                         }
                     }
                 </li>
-                <li class="nav-link">
+                <li class="nav-link text-right">
                     <a class="btn btn-secondary" href="@Url.Action("Index", "Manage", new { title = "Manage"})">Hello @User.Identity.GetUserName()!</a>
                 </li>
-                <li class="nav-link">
+                <li class="nav-link text-right">
                     <a class="btn btn-primary" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
                 </li>
             </ul>
@@ -64,10 +64,10 @@
     else
     {
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav-link">
+            <li class="nav-link text-right">
                 <a class="btn btn-primary" href="@Url.Action("Register", "Account", new { id = "registerLink"})">Register</a>
             </li>
-            <li class="nav-link">
+            <li class="nav-link text-right">
                 <a class="btn btn-primary" href="@Url.Action("Login", "Account", new { id = "loginLink"})">Log in</a>
             </li>
         </ul>
