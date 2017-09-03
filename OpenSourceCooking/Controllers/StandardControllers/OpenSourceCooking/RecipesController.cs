@@ -579,6 +579,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (Recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
             Recipe.Description = description;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -595,6 +596,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (dietaryRestrictionNames != null)
                 foreach (DietaryRestriction DietaryRestriction in db.DietaryRestrictions.Where(x => dietaryRestrictionNames.Contains(x.Name)))
                     Recipe.DietaryRestrictions.Add(DietaryRestriction);
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             var DietaryRestrictionDataTransferObjects = Recipe.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
@@ -612,6 +614,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (Recipe.CreatorId != AspNetId)
                 return Json("Not your recipe! Stop hacking please", JsonRequestBehavior.AllowGet);
             Recipe.Name = recipeName;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(Recipe.Name, JsonRequestBehavior.AllowGet);
@@ -687,6 +690,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             Recipe.ServingSize = servingSize;
             if (Recipe.CreationStep < 2)
                 Recipe.CreationStep = 2;
+            Recipe.LastEditDateUtc = DateTime.UtcNow;
             db.Entry(Recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Json(Recipe.ServingSize, JsonRequestBehavior.AllowGet);
