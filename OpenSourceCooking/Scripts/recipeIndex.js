@@ -63,7 +63,7 @@ $(document).ready(function () {
     };
     $('#SearchTextInput').on('keypress', function (e) {
         if (e.which === 13) {
-            OnClick_FilterModalDoneButton();
+            SearchRecipes();
         }
     });
     $('#SetRecipeViewableTypePublic').on('click', function (e) {
@@ -476,7 +476,7 @@ function HideRecipeSteps() {
     $('#ShowRecipeStepsButton').removeClass('btn-info').addClass('btn-outline-info');
     $('#RecipeStepsDiv').empty();
 }
-function OnClick_FilterModalDoneButton() {
+function SearchRecipes() {
     RecipesPageIndex = 0;
     GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
     $('#RecipesDiv').empty();

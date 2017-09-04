@@ -12,7 +12,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/OpenSourceCooking") 
+    @Scripts.Render("~/bundles/OpenSourceCooking")
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>    <!--Google Ad Sense-->
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-2501733207374862", enable_page_level_ads: true });</script>    <!--Google Ad Sense-->
     @RenderSection("scripts", required: false)
@@ -40,52 +40,41 @@
             <ul class="navbar-nav mr-auto">
                 @if (true) //This is only here to keep spacing nice in code. It doesnt do anything
                 {
-                    @*
-                    <li>
-                        <div class="nav-link  btn-group">
-                            <a class="btn btn-outline-info" href="@Url.Action("Index", "Ingredients")" id="NavbarIngredietnsButton">Ingredients</a>
-                            <button class="btn btn-outline-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                            <ul class="dropdown-menu bg-inverse" style="max-height:280px;overflow-y:auto;">
-                                <li><a class="dropdown-item" style="color:#5bc0de;" href="@Url.Action("Create", "Ingredients")">Add Ingredient</a></li>
+                    <li class="text-right">
+                        @if (Request.Url.AbsoluteUri.Contains("/Recipes"))
+                        {
+                            <div class="nav-link">
+                                <div class="btn-group">
+                                    <input type="text" class="form-control btn-bordered" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center; border-right:none;" id="SearchTextInput">
+                                    <a class="btn btn-info btn-bordered" style="font-size:18px;color:white" onclick="SearchRecipes()"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                    <a class="btn btn-primary btn-bordered" style="font-size:18px;color:white" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
+                                </div>
+                            </div>
+                        }
+                    </li>
+                    <li class="text-right">
+                        <div class="nav-link btn-group">
+                            <a class="btn btn-success btn-bordered" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
+                            <button class="btn btn-success btn-bordered dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <ul class="dropdown-menu text-right" style="max-height:280px;overflow-y:auto;background-color:whitesmoke;border:none;">
+                                <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
+                                @if (Request.IsAuthenticated)
+                                {
+                                    @*<li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes")">My Recipes</a></li>*@
+                                }
                             </ul>
                         </div>
                     </li>
-                    *@
-                if (Request.Url.AbsoluteUri.Contains("/Recipes"))
-                {
-                    <li class="text-right">
-                        <div class="nav-link">
-                            <div class="btn-group btn-bordered">
-                                <input type="text" class="form-control" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center;" id="SearchTextInput">
-                                <a class="btn btn-info" style="font-size:18px;color:white" onclick="OnClick_FilterModalDoneButton()"><i class="fa fa-search" aria-hidden="true"></i></a>
-                                <a class="btn btn-primary" style="font-size:18px;color:white" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
+                        <li class="text-right">
+                            <div class="nav-link">
+                                <a class="btn btn-info btn-bordered" href="javascript:ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
                             </div>
-                        </div>
-                    </li>
-                }
-                <li class="text-right">
-                    <div class="nav-link btn-group">
-                        <a class="btn btn-success" style="border:1px black solid;border-radius:5px;" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
-                        <button class="btn btn-success btn-bordered dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        <ul class="dropdown-menu text-right" style="max-height:280px;overflow-y:auto;background-color:slategray;border:none;">
-                            <li><a class="dropdown-item" style="color:white;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
-                            @if (Request.IsAuthenticated)
-                            {
-                                @*<li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes")">My Recipes</a></li>*@
-                            }
-                        </ul>
-                    </div>
-                </li>
-                    <li class="text-right">
-                        <div class="nav-link">
-                            <a class="btn btn-info btn-bordered" href="javascript:ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
-                        </div>
-                    </li>
-                    <li class="text-right">
-                        <div class="nav-link">
-                            <a class="btn btn-danger btn-bordered" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
-                        </div>
-                    </li>
+                        </li>
+                        <li class="text-right">
+                            <div class="nav-link">
+                                <a class="btn btn-danger btn-bordered" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
+                            </div>
+                        </li>
                 }
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
@@ -94,8 +83,8 @@
                             <button type="button" class="btn btn-warning btn-bordered dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Database
                             </button>
-                            <ul class="dropdown-menu bg-inverse" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;">
-                                <li class="dropdown-header">Database</li>
+                            <ul class="dropdown-menu" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;background-color:whitesmoke;">
+                                <li class="dropdown-header" style="color:black;">Database</li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBBugReports")">Bug Reports</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCloudFiles")">Cloud Files</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBComments")">Comments</a></li>
@@ -110,7 +99,7 @@
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeSteps")">Recipe Steps</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeStepsCloudFile")">Recipe Steps Cloud Files</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeStepsIngredients")">Recipe Steps Ingredients</a></li>
-                                <li class="dropdown-header">Security</li>
+                                <li class="dropdown-header" style="color:black;">Security</li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "GroupsAdmin")">Groups</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "RolesAdmin")">Roles</a></li>
                                 <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "UsersAdmin")">Users</a></li>
@@ -180,6 +169,6 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </body>
 </html>
