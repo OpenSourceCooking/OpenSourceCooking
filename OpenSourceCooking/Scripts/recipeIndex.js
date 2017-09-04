@@ -48,7 +48,20 @@ $(document).ready(function () {
     $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength);
     RecipeCommentTextArea.keyup(function (event) {
         $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
-    });    
+    });
+
+
+    //if(ViewBagMyRecipes)
+    //if(ViewBagPublicRecipes)
+    //if(ViewBagRecipeId)
+    //if(ViewBagRecipesPageIndex)
+    //if(ViewBagReturnJson)
+    //if(ViewBagSavedRecipes)
+    //if(ViewBagSearchText)
+    //if(ViewBagSortingBy)
+    //if(ViewBagSortAscending)
+
+
     if (ViewBagSearchText)
     {
         GetFilterByKey('SearchText').Value = ViewBagSearchText;

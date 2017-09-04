@@ -22,11 +22,18 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         {
             if(!returnJson.HasValue || !returnJson.Value)
             {
-                ViewBag.RecipeId = recipeId ?? 0;
+                //Pass default JS params
+                ViewBag.MyRecipes = myRecipes;
+                ViewBag.PublicRecipes = publicRecipes;
+                ViewBag.RecipeId = recipeId ?? 0; ;
+                ViewBag.RecipesPageIndex = recipesPageIndex;
+                ViewBag.ReturnJson = returnJson;
+                ViewBag.SavedRecipes = savedRecipes;
                 ViewBag.SearchText = searchText;
+                ViewBag.SortingBy = sortingBy;
+                ViewBag.SortAscending = sortAscending;
                 return View();
-            }         
-
+            }
             string AspNetId = User.Identity.GetUserId();
             if (myRecipes != null && AspNetId == null)
                 if (AspNetId == null)
