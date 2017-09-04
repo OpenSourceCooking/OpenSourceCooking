@@ -20,6 +20,13 @@
     -o-transition: all .4s ease-in-out;
 }
 
+.modal-header {
+    border-bottom: ridge;
+}
+.modal-body {
+    background-color: whitesmoke;
+}
+
 /*Justified Button Group*/
 .btn {
     font-size: 18px;

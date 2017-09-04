@@ -20,7 +20,7 @@
         <div class="modal-content">
             <!--Header-->
             <div class="modal-header text-center">
-                <h5>Optional Filters</h5>
+                <h4>Optional Filters</h4>
             </div>
             <!--Body-->
             <div class="modal-body">
@@ -56,21 +56,6 @@
                 <h4 class="modal-title" id="ModalRecipeHeader"></h4>
                 <button type="button" class="close" aria-label="Close" onclick="$('#RecipePreviewer').modal('hide');"><span style="color:red;" aria-hidden="true">&times;</span></button>
             </div>
-            <!--
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-6">
-                        <h4 id="ModalRecipeHeader"></h4>
-                    </div>
-                    <div class="col-6 text-right">
-                        <div class="btn-group" style="padding:4px; color:white;">
-                            <a class="btn btn-primary" onclick="ToggleSaveRecipe(ClickedRecipeId);"><i class="fa fa-star-o"></i> Save</a>
-                            <a class="btn btn-danger" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                -->
             <!--Body-->
             <div class="modal-body">
                 <div class="row">
@@ -84,7 +69,9 @@
                     <div class="col-6 text-right">
                         <span id="RecipePreviewerEstMinutes"></span> to make
                     </div>
-                    <span id="ModalRecipeDescriptionSpan"></span>
+                    <div class="col-12">
+                        <span id="ModalRecipeDescriptionSpan"></span>
+                    </div>                   
                     <div class="col-12" style="padding:1%;" id="RecipeIngredientSummary">
                         <ul id="RecipePreviewerIngredientSummaryList">
                             <!--Jquery Populates-->

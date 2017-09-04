@@ -269,75 +269,63 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             if (myRecipes != null && AspNetId == null)
                 if (AspNetId == null)
                     return Json("Unauthorized", JsonRequestBehavior.AllowGet);
-            IQueryable<Recipe> RecipesQuery = null;
+            //Build Where clause with PredicateBuilder
+            IQueryable<Recipe> RecipesQuery = db.Recipes;               
+            var Predicate = PredicateBuilder.New<Recipe>(true);                       
+            if(AspNetId != null)
+            {
+                //PredicateBuilder-myRecipes
+                if (myRecipes.HasValue && !myRecipes.Value)
+                    Predicate = Predicate.And(r => r.CreatorId != AspNetId);                                      
+                else
+                    Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public");
+                //PredicateBuilder-publicRecipes
+                if (publicRecipes.HasValue && !publicRecipes.Value)
+                    Predicate = Predicate.And(r => r.ViewableType != "Public");
+                //PredicateBuilder-savedRecipes
+                if (savedRecipes.HasValue && !savedRecipes.Value)
+                    Predicate = Predicate.And(r => !r.SavedRecipes.Select(s=>s.AspNetUserId).Contains(AspNetId));
+            }
+            else
+                Predicate = Predicate.And(r => r.ViewableType == "Public");
+            //PredicateBuilder-searchText
+            if (!String.IsNullOrEmpty(searchText))
+                Predicate = Predicate.And(r => r.Name.Contains(searchText));
+            //Add the where clause
+            RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
+            //Sort By
             if (!sortAscending.HasValue || !sortAscending.Value)
                 switch (sortingBy)
                 {
                     case "1":
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.CompleteDateUtc);
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.CompleteDateUtc);
                         break;
                     case "2":
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.Name);
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.Name);
                         break;
                     case "3":
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.AspNetUser.UserName);
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.AspNetUser.UserName);
                         break;
                     default:
-                        RecipesQuery = db.Recipes.OrderByDescending(r => r.LastEditDateUtc);
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.LastEditDateUtc);
                         break;
                 }
             else
                 switch (sortingBy)
                 {
                     case "1":
-                        RecipesQuery = db.Recipes.OrderBy(r => r.CompleteDateUtc);
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.CompleteDateUtc);
                         break;
                     case "2":
-                        RecipesQuery = db.Recipes.OrderBy(r => r.Name);
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.Name);
                         break;
                     case "3":
-                        RecipesQuery = db.Recipes.OrderBy(r => r.AspNetUser.UserName);
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.AspNetUser.UserName);
                         break;
                     default:
-                        RecipesQuery = db.Recipes.OrderBy(r => r.LastEditDateUtc);
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.LastEditDateUtc);
                         break;
                 }
-            var Predicate = PredicateBuilder.New<Recipe>(true);
-            //searchText
-            if (!String.IsNullOrEmpty(searchText))
-                Predicate = Predicate.And(r => r.Name.Contains(searchText));
-            //myRecipes
-            if (myRecipes.HasValue)
-                if (myRecipes.Value)                
-                    Predicate = Predicate.And(r => r.CreatorId == AspNetId);                
-                else                
-                    Predicate = Predicate.And(r => r.CreatorId != AspNetId);
-            //publicRecipes
-            if (publicRecipes.HasValue)
-                if (publicRecipes.Value)                
-                    Predicate = Predicate.And(r => r.ViewableType == "Public");                
-                else                
-                    Predicate = Predicate.And(r => r.ViewableType != "Public");
-            //savedRecipes
-            if (savedRecipes.HasValue)
-                if (savedRecipes.Value)
-                    Predicate = Predicate.And(r => r.ViewableType == "Public");
-                else
-                    Predicate = Predicate.And(r => r.ViewableType != "Public");
-            RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
-
-            //switch (myRecipes)
-            //{
-            //    case null:
-            //        RecipesQuery = RecipesQuery.Where(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
-            //        break;
-            //    case "1":
-            //        RecipesQuery = RecipesQuery.Where(r => r.CreatorId == AspNetId);
-            //        break;
-            //    case "2":
-            //        RecipesQuery = RecipesQuery.Where(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
-            //        break;
-            //}
             List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex * PageSize).Take(PageSize).Select(Recipe => new RecipeDataTransferObject()
             {
                 Id = Recipe.Id,

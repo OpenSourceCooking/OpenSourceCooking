@@ -15,6 +15,7 @@ var IsVoteOnCommentBusy = false;
 var MaxRecipeCommentLength = 300;
 var RecipeCommentsPageIndex = 0;
 var RecipeCommentsSkipAdjust = 0;
+var RecipesArray = [];
 var RecipesPageIndex = 0;
 var SavedBorderColor = "#0275d8";//Blue
 var SortByOptions = [
@@ -117,6 +118,7 @@ function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCom
         RecipeCommentsDiv.append(CommentHTML);
 }
 function AjaxGetRecipes() {
+    RecipesArray = [];//Clear Recipe Array
     $('#NoMoreDiv').text('Loading...');
     if (IsGettingRecipes)
         return;
@@ -135,18 +137,20 @@ function AjaxGetRecipes() {
                 return;
             }
             for (var i = 0; i < Recipes.length; i++) {
+                RecipesArray.push(Recipes[i]);
+                var CurrentRecipe = RecipesArray[i];
+                CurrentRecipe.CompleteDateUtc = ConvertJSONDateToString(CurrentRecipe.CompleteDateUtc);
+                CurrentRecipe.LastEditDateUtc = ConvertJSONDateToString(CurrentRecipe.LastEditDateUtc);
                 var isDraft = false;
                 var BackgroundColor = GetRandomColor();
                 var BorderColor = '';
-                var CompleteDateUtc = Recipes[i].CompleteDateUtc;
-                var LastEditDateUtc = ConvertJSONDateToString(Recipes[i].LastEditDateUtc);
-                var Description = Recipes[i].Description;
-                var RecipeName = Recipes[i].Name;
+                var Description = CurrentRecipe.Description;
+                var RecipeName = CurrentRecipe.Name;
                 var MainCloudFileUrl = null;
                 var MainCloudFileThumbUrl = null;
                 var MainVideoUrl = null;
                 var RecipeDivHTMLString = '';
-                $.each(Recipes[i].RecipeCloudFileDataTransferObjects, function (i, RecipeCloudFileDataTransferObject) {
+                $.each(CurrentRecipe.RecipeCloudFileDataTransferObjects, function (i, RecipeCloudFileDataTransferObject) {
                     if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainImage") {
                         MainCloudFileUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
                         if (RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.CloudFileThumbnailsDataTransferObject !== null)
@@ -155,56 +159,47 @@ function AjaxGetRecipes() {
                     else if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainVideo")
                         MainVideoUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
                 });
-                if (Recipes[i].Description === undefined || Recipes[i].Description === null || Recipes[i].Description.length < 1)
+                if (CurrentRecipe.Description === undefined || CurrentRecipe.Description === null || CurrentRecipe.Description.length < 1)
                     Description = '';
-                if (CompleteDateUtc !== undefined && CompleteDateUtc !== null) //If CompleteDateUtc is null it means its a draft
-                {
-                    CompleteDateUtc = ConvertJSONDateToString(CompleteDateUtc);
-                    BorderColor = GetRandomColor();
-                }
+                if (CurrentRecipe.CompleteDateUtc !== null) //If CompleteDateUtc is null it means its a draft                
+                    BorderColor = GetRandomColor();                
                 else
                 {
                     isDraft = true;
                     BorderColor = '#ff2b2b';//Red
-                    RecipeName = '(Draft) ' + Recipes[i].Name;
+                    RecipeName = '(Draft) ' + CurrentRecipe.Name;
                 }  
-                if (Recipes[i].IsSaved == true)
+                if (CurrentRecipe.IsSaved == true)
                     BorderColor = SavedBorderColor;
-                RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + Recipes[i].Id + '">'
-                    + '<div id="ClickableRecipeDivBorder' + Recipes[i].Id + '" class="zoomImage" style="padding-bottom:15px;border:solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
-                    + '<h3 class="text-center" id="RecipeNameDiv' + Recipes[i].Id + '" style="padding-top:4px;padding-bottom:2px;margin:10px;font-weight:bold;border:solid;border-color:' + BorderColor +';border-radius:10px;">' + RecipeName + '</h3>';
+                RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + CurrentRecipe.Id + '">'
+                    + '<div id="ClickableRecipeDivBorder' + CurrentRecipe.Id + '" class="zoomImage" style="padding-bottom:15px;border:solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
+                    + '<h3 class="text-center" style="padding-top:4px;padding-bottom:2px;margin:10px;font-weight:bold;border:solid;border-color:' + BorderColor +';border-radius:10px;">' + RecipeName + '</h3>';
                 if (MainCloudFileThumbUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileThumbUrl + '" style="max-height:400px;"></div>';
                 else if (MainCloudFileUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileUrl + '" style="max-height:400px;"></div>';
                 else
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + Config.Images.OpenSourceCookingImageUrl + '" style="max-height:400px;"></div>';
-                RecipeDivHTMLString += '<div class="col-12 text-center" style= "padding:2px;" id="SymbolsDiv' + Recipes[i].Id + '""></div >';
+                RecipeDivHTMLString += '<div class="col-12 text-center" style= "padding:2px;" id="SymbolsDiv' + CurrentRecipe.Id + '""></div >';
                 RecipeDivHTMLString += '<div style="padding:4px;">'
-                + '<div style="display:none;" id="MainCloudFileUrl' + Recipes[i].Id + '">' + MainCloudFileUrl + '</div>'
-                + '<div style="display:none;" id="RecipeVideo' + Recipes[i].Id + '">' + Recipes[i].MainVideoUrl + '</div>'
-                + '<div style="display:none;" id="CreatorNameDiv' + Recipes[i].Id + '">' + Recipes[i].CreatorName + '</div>'
-                + '<div style="display:none;" id="RecipeDescriptionDiv' + Recipes[i].Id + '">' + Description + '</div>'
-                + '<div style="display:none;" id="LastEditDateUtcDiv' + Recipes[i].Id + '">' + LastEditDateUtc + '</div>'
-                + '<div style="display:none;" id="CompleteDateUtcDiv' + Recipes[i].Id + '">' + CompleteDateUtc + '</div>'
-                + '<div style="display:none;" id="EstimatedTimeInSecondsDiv' + Recipes[i].Id + '">' + Recipes[i].EstimatedTimeInSeconds + '</div>'
-                + '<h6 style="padding:4px;font-weight:bold;">Chef ' + Recipes[i].CreatorName + '</h6>'
-                + '<div class="text-right" id="FilteredByDiv' + Recipes[i].Id + '">';
+                    + '<div style="display:none;" id="CompleteDateUtcDiv' + CurrentRecipe.Id + '">' + CurrentRecipe.CompleteDateUtc + '</div>'
+                    + '<h6 style="padding:4px;font-weight:bold;">Chef ' + CurrentRecipe.CreatorName + '</h6>'
+                    + '<div class="text-right" id="FilteredByDiv' + CurrentRecipe.Id + '">';
                 $.each(FiltersKeyValueList, function (i, FiltersKeyValue) {
                     if (FiltersKeyValue.Key === 'SortingBy') {
                         //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
                         switch (FiltersKeyValue.Value) {
                             case 0:
                                 {
-                                    RecipeDivHTMLString += 'Edited ' + LastEditDateUtc;
+                                    RecipeDivHTMLString += 'Edited ' + CurrentRecipe.LastEditDateUtc;
                                     break;
                                 }
                             case 1:
                                 {
-                                    if (CompleteDateUtc === null || CompleteDateUtc === undefined || CompleteDateUtc === '')
-                                        RecipeDivHTMLString += 'Created ' + LastEditDateUtc;
+                                    if (CurrentRecipe.CompleteDateUtc === null)
+                                        RecipeDivHTMLString += 'Created ' + CurrentRecipe.LastEditDateUtc;
                                     else
-                                        RecipeDivHTMLString += 'Created ' + CompleteDateUtc;
+                                        RecipeDivHTMLString += 'Created ' + CurrentRecipe.CompleteDateUtc;
                                     break;
                                 }
                             case 2:
@@ -222,36 +217,36 @@ function AjaxGetRecipes() {
                 });
                 +'</div >'
                     + '</div>';
-                if (Recipes[i].IsMyRecipe === true) {                    
+                if (CurrentRecipe.IsMyRecipe === true) {                    
                     RecipeDivHTMLString += '<div>'
                         + '<div class="btn-group btn-group-sm btn-group-justified" style="padding:4px;">';
                     if (!isDraft) //Drafts cant be set to anything but secret
-                        switch (Recipes[i].ViewableType) {
+                        switch (CurrentRecipe.ViewableType) {
                             case "Public":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-success PublicOrsecretButton" id="PublicOrsecretButton' + Recipes[i].Id + '">Public</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-success PublicOrsecretButton" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Public</a>';
                                 break;
                             case "Followers":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-warning PublicOrsecretButton" id="PublicOrsecretButton' + Recipes[i].Id + '">Followers</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-warning PublicOrsecretButton" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Followers</a>';
                                 break;
                             case "Secret":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-secondary PublicOrsecretButton" id="PublicOrsecretButton' + Recipes[i].Id + '">secret</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-secondary PublicOrsecretButton" id="PublicOrsecretButton' + CurrentRecipe.Id + '">secret</a>';
                                 break;
                         }
                     if (!isDraft)
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="javascript:EditRecipe(' + Recipes[i].Id + ', ' + Recipes[i].SavedByCount + ')">Edit</a>';
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="javascript:EditRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ')">Edit</a>';
                     else
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + Recipes[i].Id + '">Continue</a>';
-                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="DeleteRecipe(' + Recipes[i].Id + ', ' + Recipes[i].SavedByCount + ');">Delete</a>'
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + CurrentRecipe.Id + '">Continue</a>';
+                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="DeleteRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ');">Delete</a>'
                         + '</div >'
                         + '</div >';
                 }
                 else
                 {
-                    RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + Recipes[i].Id + ');">Report</a></div>';
-                    if (Recipes[i].IsSaved == true)
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star"></i> Save</a>';
+                    RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + CurrentRecipe.Id + ');">Report</a></div>';
+                    if (CurrentRecipe.IsSaved == true)
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star"></i> Save</a>';
                     else
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + Recipes[i].Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + Recipes[i].Id + ');"><i class="fa fa-star-o"></i> Save</a>';
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star-o"></i> Save</a>';
                 }
                 RecipeDivHTMLString += '</div>'
                     + '</div>'
@@ -259,7 +254,7 @@ function AjaxGetRecipes() {
                 var $items = $(RecipeDivHTMLString);
                 //Add RecipesDiv to isotope and lay out newly appended items
                 $('#RecipesDiv').append($items).isotope('appended', $items);
-                PopulateSymbolsDiv($('#SymbolsDiv' + Recipes[i].Id), Recipes[i].DietaryRestrictionDataTransferObjects, false);
+                PopulateSymbolsDiv($('#SymbolsDiv' + CurrentRecipe.Id), CurrentRecipe.DietaryRestrictionDataTransferObjects, false);
             }
         }
         else {
@@ -280,7 +275,7 @@ function AjaxGetRecipes() {
         $('.PublicOrsecretButton').on('click', function (e) {
             ClickedViewableTypeButton = $(this);
             ClickedRecipeId = $(this).closest('.ClickableRecipeDiv').attr('id').split("ClickableRecipeDiv").pop();
-            $('#RecipeViewableTypeModalHeader').text('Should ' + $('#RecipeNameDiv' + ClickedRecipeId).text() + ' be public or secret?');
+            $('#RecipeViewableTypeModalHeader').text('Should ' + GetRecipeById(ClickedRecipeId).Name + ' be public or secret?');
             $('#RecipeViewableTypeModal').modal('show');
             e.stopPropagation();
         });
@@ -458,6 +453,14 @@ function GetFilterByKey(Key) {
     });
     return KeyValue;
 }
+function GetRecipeById(recipeId) {    
+    var r = null;
+    $.each(RecipesArray, function (i, Recipe) {        
+        if (Recipe.Id === parseInt(recipeId))
+            r = Recipe;
+    });
+    return r;
+}
 function HideRecipeComments() {
     RecipeCommentsPageIndex = 0;
     RecipeCommentsSkipAdjust = 0;
@@ -587,12 +590,12 @@ function PreviewRecipe(recipeId) {
             $('#ModalMainRecipeImg').hide();
 
             //Populate the Recipe Previewer
-            $('#ModalRecipeHeader').text($('#RecipeNameDiv' + ClickedRecipeId).text());
-            $('#ModalCreatorName').text('Chef ' + $('#CreatorNameDiv' + ClickedRecipeId).html());
-            $('#ModalCompleteDateUtc').text('Created ' + $('#CompleteDateUtcDiv' + ClickedRecipeId).html());
-            $('#ModalEditDate').text('Edited ' + $('#LastEditDateUtcDiv' + ClickedRecipeId).html());
-            $('#ModalRecipeDescriptionSpan').text($('#RecipeDescriptionDiv' + ClickedRecipeId).html());
-            $('#RecipePreviewerEstMinutes').text(GetEstimatedTimeString($('#EstimatedTimeInSecondsDiv' + ClickedRecipeId).html()));
+            $('#ModalRecipeHeader').text(RecipeDataTransferObject.Name);
+            $('#ModalCreatorName').text('Chef ' + RecipeDataTransferObject.CreatorName);
+            $('#ModalCompleteDateUtc').text('Created ' + ConvertJSONDateToString(RecipeDataTransferObject.CompleteDateUtc));
+            $('#ModalEditDate').text('Edited ' + ConvertJSONDateToString(RecipeDataTransferObject.LastEditDateUtc));
+            $('#ModalRecipeDescriptionSpan').text(RecipeDataTransferObject.Description);
+            $('#RecipePreviewerEstMinutes').text(GetEstimatedTimeString(RecipeDataTransferObject.EstimatedTimeInSeconds));
 
             //Populate Photo & Video
             var MainCloudFileUrl = null;
