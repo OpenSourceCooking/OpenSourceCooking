@@ -169,11 +169,11 @@ function AjaxGetRecipes() {
                     BorderColor = '#ff2b2b';//Red
                     RecipeName = '(Draft) ' + CurrentRecipe.Name;
                 }  
-                if (CurrentRecipe.IsSaved == true)
-                    BorderColor = SavedBorderColor;
+                //if (CurrentRecipe.IsSaved == true)
+                //    BorderColor = SavedBorderColor;
                 RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + CurrentRecipe.Id + '">'
-                    + '<div id="ClickableRecipeDivBorder' + CurrentRecipe.Id + '" class="zoomImage" style="padding-bottom:15px;border:solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
-                    + '<h3 class="text-center" style="padding-top:4px;padding-bottom:2px;margin:10px;font-weight:bold;border:solid;border-color:' + BorderColor +';border-radius:10px;">' + RecipeName + '</h3>';
+                    + '<div id="ClickableRecipeDivBorder' + CurrentRecipe.Id + '" class="zoomImage" style="padding-bottom:15px;border:2px solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
+                    + '<h3 class="text-center" style="padding-top:4px;padding-bottom:2px;margin:10px;font-weight:bold;border:2px solid;border-color:' + BorderColor +';border-radius:10px;">' + RecipeName + '</h3>';
                 if (MainCloudFileThumbUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileThumbUrl + '" style="max-height:400px;"></div>';
                 else if (MainCloudFileUrl)
@@ -244,7 +244,7 @@ function AjaxGetRecipes() {
                 {
                     RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + CurrentRecipe.Id + ');">Report</a></div>';
                     if (CurrentRecipe.IsSaved == true)
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star"></i> Save</a>';
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star" style="color:yellow;"></i> Unsave</a>';
                     else
                         RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star-o"></i> Save</a>';
                 }
@@ -675,11 +675,8 @@ function ToggleSaveRecipe(recipeId) {
         success: function (IsSaved) {
             if (IsSaved === 'No AspNetId')            
                 ShowPopUpModal('You must be logged in');            
-            if (IsSaved === true)
-            {                
-                SaveRecipeButton.html("<i class='fa fa-star'></i> Save</a>");
-                $('#ClickableRecipeDivBorder' + recipeId).css('border-color', SavedBorderColor);
-            }
+            if (IsSaved === true)            
+                SaveRecipeButton.html('<i class="fa fa-star" style="color:yellow;"></i> Unsave</a>');
             else
             {
                 SaveRecipeButton.html("<i class='fa fa-star-o'></i> Save</a>");

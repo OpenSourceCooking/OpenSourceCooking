@@ -6,6 +6,11 @@
 }
 @media (min-width: 1200px) {}
 
+.btn-bordered {
+    border:1px black solid;
+    border-radius:5px;
+}
+
 .imageZoomed {
     -webkit-transform: scale(1.04);
     -moz-transform: scale(1.04);

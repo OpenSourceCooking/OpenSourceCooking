@@ -1,16 +1,19 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<br />
-<div class="row" style="padding-top:10px;">
+<div class="row">
     <div class="col-12 text-center">
         <h2>Open Source Cooking</h2>
-        <div style="color:red">This site is in Alpha stage and features are still being developed. If you find a bug you can report it <a href="@Url.Action("Create","BugReports")">here</a></div>        
+    </div>
+    <div class="col-12 text-center">
+        <div style="color:red">This site is in Alpha stage and features are still being developed.</div>   
         <div>Contact email is <a href="mailto:Admin@OpenSourceCooking.com" target="_top">Admin@OpenSourceCooking.com</a></div>
         <div>Source code is on GitHub <a href="https://github.com/OpenSourceCooking/OpenSourceCooking" target="_blank">Here</a></div>
-        <img src="~/Content/Images/OpenSourceCooking4096x2160.png" class="rounded img-fluid" style="max-width:64%;"/>       
-        <br />
-        @*@Html.ActionLink("Ingredients", "Index", "Ingredients", null, new { @class = "btn btn-large btn-info btn-block", @style = "font-size:40px;" })*@
-        @Html.ActionLink("View Recipes", "Index", "Recipes", null, new { @class = "btn btn-large btn-success", @style = "font-size:40px;" })
+    </div>
+    <div class="col-12 text-center">
+        <img src="~/Content/Images/OpenSourceCooking4096x2160.png" class="img-fluid" style="max-width:60%;" />       
+    </div>
+    <div class="col-12 text-center">
+        @Html.ActionLink("View Recipes", "Index", "Recipes", null, new { @class = "btn btn-large btn-success", @style = "font-size:32px;" })      
     </div>
 </div>

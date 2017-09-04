@@ -51,24 +51,24 @@
                         </div>
                     </li>
                     *@
-                    if (Request.Url.AbsoluteUri.Contains("/Recipes"))
-                    {
-                        <li class="text-right">
-                            <div class="nav-link">
-                                <div class="btn-group">
-                                    <input type="text" class="form-control" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center; padding-bottom:4px;" id="SearchTextInput">
-                                    <a class="btn btn-info" style="font-size:18px;color:white" onclick="OnClick_FilterModalDoneButton()"><i class="fa fa-search" aria-hidden="true"></i></a>
-                                    <a class="btn btn-primary" style="font-size:18px;color:white" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
-                                </div>
+                if (Request.Url.AbsoluteUri.Contains("/Recipes"))
+                {
+                    <li class="text-right">
+                        <div class="nav-link">
+                            <div class="btn-group btn-bordered">
+                                <input type="text" class="form-control" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center;" id="SearchTextInput">
+                                <a class="btn btn-info" style="font-size:18px;color:white" onclick="OnClick_FilterModalDoneButton()"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                <a class="btn btn-primary" style="font-size:18px;color:white" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
                             </div>
-                        </li>
-                    }
+                        </div>
+                    </li>
+                }
                 <li class="text-right">
                     <div class="nav-link btn-group">
-                        <a class="btn btn-success" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
-                        <button class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        <ul class="dropdown-menu text-right" style="max-height:280px;overflow-y:auto;background-color:white">
-                            <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
+                        <a class="btn btn-success" style="border:1px black solid;border-radius:5px;" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
+                        <button class="btn btn-success btn-bordered dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        <ul class="dropdown-menu text-right" style="max-height:280px;overflow-y:auto;background-color:slategray;border:none;">
+                            <li><a class="dropdown-item" style="color:white;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
                             @if (Request.IsAuthenticated)
                             {
                                 @*<li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes")">My Recipes</a></li>*@
@@ -78,20 +78,20 @@
                 </li>
                     <li class="text-right">
                         <div class="nav-link">
-                            <a class="btn btn-info" href="javascript:ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
+                            <a class="btn btn-info btn-bordered" href="javascript:ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
                         </div>
                     </li>
                     <li class="text-right">
                         <div class="nav-link">
-                            <a class="btn btn-danger" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
+                            <a class="btn btn-danger btn-bordered" href="@Url.Action("Create", "BugReports")">Report A Bug</a>
                         </div>
                     </li>
                 }
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     <li class="text-right">
-                        <div class="nav-link  dropdown">
-                            <button type="button" class="btn btn-warning dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="nav-link dropdown">
+                            <button type="button" class="btn btn-warning btn-bordered dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Database
                             </button>
                             <ul class="dropdown-menu bg-inverse" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;">
