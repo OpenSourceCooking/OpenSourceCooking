@@ -126,7 +126,7 @@ function AjaxGetRecipes() {
     ajax = new XMLHttpRequest();
     ajax.upload.addEventListener("progress", AjaxGetRecipesProgressHandler, false);
     ajax.addEventListener("load", AjaxGetRecipesCompleteHandler, false);
-    ajax.open("GET", "/Recipes/AjaxGetRecipes?recipesPageIndex=" + RecipesPageIndex + GenerateFiltersQueryString());
+    ajax.open("GET", "/Recipes?ReturnJson=true&recipesPageIndex=" + RecipesPageIndex + GenerateFiltersQueryString());
     ajax.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             var Recipes = JSON.parse(this.responseText);
