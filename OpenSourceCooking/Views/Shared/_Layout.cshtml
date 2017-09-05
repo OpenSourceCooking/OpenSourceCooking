@@ -44,7 +44,7 @@
                         <div class="nav-link"style="padding-left:2px;padding-right:2px;">
                             <div class="btn-group">
                                 <input type="text" class="form-control btn-bordered" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center; border-right:none;" id="SearchTextInput">
-                                <a class="btn btn-info btn-bordered" style="font-size:18px;color:white" onclick="SearchRecipes()"><i class="fa fa-search" aria-hidden="true"></i></a>
+                                <a class="btn btn-primary btn-bordered" style="font-size:18px;color:white" onclick="SearchRecipes()"><i class="fa fa-search" aria-hidden="true"></i></a>
                                 @if (Request.Url.AbsoluteUri.Contains("/Recipes"))
                                 {
                                     <a class="btn btn-primary btn-bordered" style="font-size:18px;color:white" onclick="$('#FilterModal').modal('show');" id="FilterButton">Filters</a>
