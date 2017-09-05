@@ -1,29 +1,14 @@
 ﻿var $RecipesDiv = null;
 var ClickedRecipeId = 0;
 var ClickedViewableTypeButton = null;
-var FiltersKeyValueList = [
-    //If adding filter, dont forget to update the Jquery population of FilteredByDiv    
-    { Key: 'MyRecipes', Value: null },
-    { Key: 'PublicRecipes', Value: null },
-    { Key: 'SavedRecipes', Value: null },
-    { Key: 'SearchText', Value: null },
-    { Key: 'SortingBy', Value: 0 }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
-    { Key: 'SortAscending', Value: false }
-];
 var IsGettingRecipes = false;
 var IsVoteOnCommentBusy = false;
 var MaxRecipeCommentLength = 300;
 var RecipeCommentsPageIndex = 0;
 var RecipeCommentsSkipAdjust = 0;
 var RecipesArray = [];
-var RecipesPageIndex = 0;
+var RecipeId = null;
 var SavedBorderColor = "#0275d8";//Blue
-var SortByOptions = [
-    { Key: 'Create Date', Value: 1 },
-    { Key: 'Edit Date', Value: 0 },
-    { Key: 'Name', Value: 2 },
-    { Key: 'Chef Name', Value: 3 }
-]
 var ShowingRecipeSteps = false;
 var ShowingRecipeComments = false;
 
@@ -49,36 +34,31 @@ $(document).ready(function () {
     RecipeCommentTextArea.keyup(function (event) {
         $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
     });
-
-
-    //if(ViewBagMyRecipes)
-    //if(ViewBagPublicRecipes)
-    //if(ViewBagRecipeId)
-    //if(ViewBagRecipesPageIndex)
-    //if(ViewBagReturnJson)
-    //if(ViewBagSavedRecipes)
-    //if(ViewBagSearchText)
-    //if(ViewBagSortingBy)
-    //if(ViewBagSortAscending)
-
-
-    if (ViewBagSearchText)
-    {
+    if (ViewBagMyRecipes)
+        GetFilterByKey('MyRecipes').Value = ViewBagMyRecipes;
+    if (ViewBagPublicRecipes)
+        GetFilterByKey('PublicRecipes').Value = ViewBagPublicRecipes; 
+    if (ViewBagRecipeId)
+        RecipeId = ViewBagRecipeId;
+    if (ViewBagRecipesPageIndex)
+        RecipesPageIndex = ViewBagRecipesPageIndex;
+    if (ViewBagSavedRecipes)
+        GetFilterByKey('SavedRecipes').Value = ViewBagSavedRecipes;
+    if (ViewBagSearchText) {
         GetFilterByKey('SearchText').Value = ViewBagSearchText;
         $('#SearchTextInput').val(ViewBagSearchText);
-    }        
+    }  
+    if (ViewBagSortingBy)
+        GetFilterByKey('SortingBy').Value = ViewBagSortingBy;
+    if (ViewBagSortAscending)
+        GetFilterByKey('SortAscending').Value = ViewBagSortAscending;
     AjaxGetRecipes();
     window.onscroll = function (ev) {
         if (window.innerHeight + window.pageYOffset + 20 >= document.body.offsetHeight) {
             window.scrollBy(0, -16);
             AjaxGetRecipes();
         }
-    };
-    $('#SearchTextInput').on('keypress', function (e) {
-        if (e.which === 13) {
-            SearchRecipes();
-        }
-    });
+    };    
     $('#SetRecipeViewableTypePublic').on('click', function (e) {
         SetRecipeViewableType('Public', ClickedRecipeId);
     });
@@ -89,8 +69,8 @@ $(document).ready(function () {
         SetRecipeViewableType('Secret', ClickedRecipeId);
     });
     RefreshFiltersSortingTable();
-    if (ViewBagRecipeId != 0)//This should be last
-        PreviewRecipe(ViewBagRecipeId);
+    if (RecipeId)//This should be last
+        PreviewRecipe(RecipeId);
 });
 function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCommentsDiv) {
     var CommentHTML = '<div id="RecipeComment' + RecipeCommentDataTransferObject.Id + '" class="row" style="padding-top:4px;margin:0;margin-top:4px;border-radius:12px;background-color:' + GetRandomColor() + '">'
@@ -139,12 +119,12 @@ function AjaxGetRecipes() {
     ajax = new XMLHttpRequest();
     ajax.upload.addEventListener("progress", AjaxGetRecipesProgressHandler, false);
     ajax.addEventListener("load", AjaxGetRecipesCompleteHandler, false);
-    ajax.open("GET", "/Recipes?ReturnJson=true&recipesPageIndex=" + RecipesPageIndex + GenerateFiltersQueryString());
+    ajax.open("GET", "/Recipes?ReturnJson=true&recipesPageIndex=" + RecipesPageIndex + "&" + GenerateFiltersQueryString() + "&R=" + new Date().getTime()); //This R param is in place to prevent caching in the ajax call
     ajax.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             var Recipes = JSON.parse(this.responseText);
             if (Recipes.length === 0)
-                $('#NoMoreDiv').text('No More');
+                $('#NoMoreDiv').text('No more recipes');
             if (Recipes === "Unauthorized") {
                 ShowPopUpModal("Error", "You must be singed in to use these filters");
                 return;
@@ -198,7 +178,7 @@ function AjaxGetRecipes() {
                     + '<div style="display:none;" id="CompleteDateUtcDiv' + CurrentRecipe.Id + '">' + CurrentRecipe.CompleteDateUtc + '</div>'
                     + '<h6 style="padding:4px;font-weight:bold;">Chef ' + CurrentRecipe.CreatorName + '</h6>'
                     + '<div class="text-right" id="FilteredByDiv' + CurrentRecipe.Id + '">';
-                $.each(FiltersKeyValueList, function (i, FiltersKeyValue) {
+                $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
                     if (FiltersKeyValue.Key === 'SortingBy') {
                         //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
                         switch (FiltersKeyValue.Value) {
@@ -271,7 +251,7 @@ function AjaxGetRecipes() {
             }
         }
         else {
-            $('#NoMoreDiv').text('No More');
+            $('#NoMoreDiv').text('No more recipes');
         }
         $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
         $('.ClickableRecipeDiv').off();
@@ -448,24 +428,6 @@ function FlagRecipe(recipeId, flagName) {
         }
     });
 }
-function GenerateFiltersQueryString() {
-    var FiltersQueryString = '';
-    $.each(FiltersKeyValueList, function (i, FiltersKeyValue) {
-        if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
-            FiltersQueryString += "&" + FiltersKeyValue.Key + "=" + FiltersKeyValue.Value;
-    });
-    if (FiltersQueryString)
-        FiltersQueryString += "&R=" + new Date().getTime() //This R param is in place to prevent caching in the ajax call
-    return FiltersQueryString;
-}
-function GetFilterByKey(Key) {
-    KeyValue = null;
-    $.each(FiltersKeyValueList, function (i, FiltersKeyValue) {
-        if (FiltersKeyValue.Key === Key)
-            KeyValue = FiltersKeyValue;
-    });
-    return KeyValue;
-}
 function GetRecipeById(recipeId) {    
     var r = null;
     $.each(RecipesArray, function (i, Recipe) {        
@@ -489,17 +451,8 @@ function HideRecipeSteps() {
     $('#ShowRecipeStepsButton').removeClass('btn-info').addClass('btn-outline-info');
     $('#RecipeStepsDiv').empty();
 }
-function SearchRecipes() {
-    RecipesPageIndex = 0;
-    GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
-    $('#RecipesDiv').empty();
-    AjaxGetRecipes();
-    $('#FilterModal').modal('hide');
-    $('.navbar-toggler').click()
-}
 function OnClick_FilterModalClearButton() {
     SwitchSortBy(0, false);
-    //$('#SortingByButton').text('Sorting');
     var FilterButton = $('#FilterButton');
     GetFilterByKey('SearchText').Value = '';
     $('#SearchTextInput').val('');
@@ -708,18 +661,23 @@ function RefreshFiltersSortingTable() {
     var SortByTable = $('#SortByTable');
     SortByTable.empty();
     var SortToggle = false;
-    $.each(SortByOptions, function (i, SortByOption) {
+    $.each(Config.SortByOptions, function (i, SortByOption) {        
         var trHTMLString = '<tr><td>' + SortByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
-        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString() + SortByOption.Value + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>';
+        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString().toUpperCase() + SortByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>';
         SortToggle = !SortToggle;
-        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString() + SortByOption.Value + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></div></td></tr>';
+        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString().toUpperCase() + SortByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></div></td></tr>';
         SortByTable.append(trHTMLString);
-    });
-    var sortAscending = GetFilterByKey('SortAscending').Value;
+    });    
+    var sortAscending = GetFilterByKey('SortAscending').Value
+    if (!sortAscending)
+        sortAscending = 'FALSE';
+    var SortingByValue = GetFilterByKey('SortingBy').Value
+    if (!SortingByValue)
+        SortingByValue = '0';
     $('.SortByButton').removeClass('btn btn-info');
-    $('.SortByButton').addClass('btn btn-secondary');
-    $('#SortByButton' + sortAscending.toString() + GetFilterByKey('SortingBy').Value).removeClass("btn-secondary");
-    $('#SortByButton' + sortAscending.toString() + GetFilterByKey('SortingBy').Value).addClass("btn-info");
+    $('.SortByButton').addClass('btn btn-secondary');   
+    $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).removeClass("btn-secondary");
+    $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).addClass("btn-info");
 }
 function SetRecipeViewableType(viewableTypeName, recipeId) {
     $.ajax({
@@ -844,7 +802,7 @@ function ShowRecipeComments() {
         }
     });
 }
-function SwitchSortBy(sortByOptionValue, sortAscending) {
+function SwitchSortBy(sortByOptionValue, sortAscending) {    
     if (sortByOptionValue !== null)
         GetFilterByKey('SortingBy').Value = sortByOptionValue;
     GetFilterByKey('SortAscending').Value = sortAscending;  

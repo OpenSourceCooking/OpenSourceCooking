@@ -20,12 +20,12 @@ namespace OpenSourceCooking.Controllers.StandardControllers
 
         public async Task<ActionResult> Index(bool? myRecipes, bool? publicRecipes, int? recipeId, int? recipesPageIndex, bool? returnJson, bool? savedRecipes, string searchText, string sortingBy, bool? sortAscending)
         {
-            if(!returnJson.HasValue || !returnJson.Value)
+            if (!returnJson.HasValue || !returnJson.Value)
             {
                 //Pass default JS params
                 ViewBag.MyRecipes = myRecipes;
                 ViewBag.PublicRecipes = publicRecipes;
-                ViewBag.RecipeId = recipeId ?? 0; ;
+                ViewBag.RecipeId = recipeId;
                 ViewBag.RecipesPageIndex = recipesPageIndex;
                 ViewBag.ReturnJson = returnJson;
                 ViewBag.SavedRecipes = savedRecipes;

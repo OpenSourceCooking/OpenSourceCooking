@@ -56,6 +56,15 @@
             //Recipe Flags Controller
             AjaxCreateRecipeFlag: '@Url.Action("AjaxCreateRecipeFlag", "RecipeFlags")'
         },
+        FiltersKeyValueList:[
+            //If adding filter, dont forget to update the Jquery population of FilteredByDiv    
+            { Key: 'MyRecipes', Value: null },
+            { Key: 'PublicRecipes', Value: null },
+            { Key: 'SavedRecipes', Value: null },
+            { Key: 'SearchText', Value: null },
+            { Key: 'SortingBy', Value: null }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
+            { Key: 'SortAscending', Value: null }
+        ],
         Icons:
         {
             ErrorIconUrl: '/Content/Images/Icons/Error.png',
@@ -68,6 +77,12 @@
             AddVideoImageUrl: '/Content/Images/AddVideo.svg',
             OpenSourceCookingImageUrl: '/Content/Images/OpenSourceCooking4096x2160.png'
         },
+        SortByOptions : [
+            { Key: 'Create Date', Value: 1 },
+            { Key: 'Edit Date', Value: 0 },
+            { Key: 'Name', Value: 2 },
+            { Key: 'Chef Name', Value: 3 }
+        ],
         Urls:
         {
             RecipeEditor: window.location.protocol + '//' + window.location.host +'/Recipes/RecipeEditor',

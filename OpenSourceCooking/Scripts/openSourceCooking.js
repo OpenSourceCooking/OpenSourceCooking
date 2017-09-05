@@ -1,17 +1,41 @@
 ﻿//Global Variables - These should be moved to the JavascriptConfig.cshtml
 var Colors = /*Pastels*/["#E3FBE9", "#F3F8F4", "#F1FEED", "#E7FFDF", "#F2FFEA", "#FFFFE3", "#FCFCE9", "#EEEEFF", "#ECF4FF", "#F9FDFF", "#E6FCFF", "#F2FFFE", "#CFFEF0", "#EAFFEF", "#FFECFF", "#F4D2F4", "#F9EEFF", "#F5EEFD", "#EFEDFC", "#EAF1FB", "#DBF0F7", "#FFECEC", "#FFEEFB", "#FFECF5", "#FFEEFD", "#FDF2FF", "#FAECFF", "#F1ECFF" /*,Bold&Bright "#66ffff", "#6666ff", "#ff66ff", "#ff6666", "#ffff66", "#66ff66", "#ffb366", "#cccccc"*/];
 var CurrentRandomColor = null;
+var RecipesPageIndex = 0;
+
 $(document).ready(function () {
+    $('#SearchTextInput').on('keypress', function (e) {
+        if (e.which === 13)
+            SearchRecipes();
+    });
     $('.UploadPhotoButton').attr('src', Config.Images.AddPhotoImageUrl);
     $('.UploadVideoButton').attr('src', Config.Images.AddVideoImageUrl);
     RefreshZoomImages();
 });
+function GenerateFiltersQueryString() {
+    var FiltersQueryString = '';
+    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
+        if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
+            FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";
+    });
+    if (FiltersQueryString.length > 0)
+        return FiltersQueryString.slice(0, -1);
+    return FiltersQueryString;
+}
 function GetEstimatedTimeString(EstimatedTimeInSeconds) {
     EstimatedTimeInSeconds = EstimatedTimeInSeconds / 60;//Convert Sec to Min
     if (EstimatedTimeInSeconds > 59)
         return parseFloat((EstimatedTimeInSeconds / 60).toFixed(2)).toString() + " Hr(s)";
     else
         return parseFloat(EstimatedTimeInSeconds.toFixed(2)).toString() + " Min(s)";
+}
+function GetFilterByKey(Key) {
+    KeyValue = null;
+    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
+        if (FiltersKeyValue.Key === Key)
+            KeyValue = FiltersKeyValue;
+    });
+    return KeyValue;
 }
 function GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) {
     var IngredientAmountString = recipeStepsIngredientsDataTransferObject.Amount + ' ';
@@ -75,6 +99,11 @@ function RefreshZoomImages()
 {
     $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
 }
+function SearchRecipes() {
+    RecipesPageIndex = null;
+    GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
+    window.location.href = Config.Urls.RecipesIndex + '?' + GenerateFiltersQueryString();
+}
 function SetSrcFromLocalFile(file, HTMLElement)
 {
     var URL = window.URL.createObjectURL(file);
@@ -126,4 +155,3 @@ function ShowPopUpModal(ModalType, Message) {
         }
     }   
 }
-
