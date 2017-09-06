@@ -57,7 +57,7 @@
             AjaxCreateRecipeFlag: '@Url.Action("AjaxCreateRecipeFlag", "RecipeFlags")'
         },
         FiltersKeyValueList:[
-            //If adding filter, dont forget to update the Jquery population of FilteredByDiv    
+            //All Filters MUST start with a null value     
             { Key: 'MyRecipes', Value: null },
             { Key: 'PublicRecipes', Value: null },
             { Key: 'SavedRecipes', Value: null },
@@ -77,7 +77,7 @@
             AddVideoImageUrl: '/Content/Images/AddVideo.svg',
             OpenSourceCookingImageUrl: '/Content/Images/OpenSourceCooking4096x2160.png'
         },
-        SortByOptions : [
+        OrderByOptions : [
             { Key: 'Create Date', Value: 1 },
             { Key: 'Edit Date', Value: 0 },
             { Key: 'Name', Value: 2 },

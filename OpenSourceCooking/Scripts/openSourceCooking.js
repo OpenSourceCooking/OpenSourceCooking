@@ -102,7 +102,11 @@ function RefreshZoomImages()
 function SearchRecipes() {
     RecipesPageIndex = null;
     GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
-    window.location.href = Config.Urls.RecipesIndex + '?' + GenerateFiltersQueryString();
+    var FiltersQueryString = GenerateFiltersQueryString();
+    if (FiltersQueryString)
+        window.location.href = Config.Urls.RecipesIndex + '?' + GenerateFiltersQueryString();
+    else
+        window.location.href = Config.Urls.RecipesIndex;
 }
 function SetSrcFromLocalFile(file, HTMLElement)
 {

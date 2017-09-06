@@ -177,22 +177,22 @@ function AjaxGetRecipes() {
                 RecipeDivHTMLString += '<div style="padding:4px;">'
                     + '<div style="display:none;" id="CompleteDateUtcDiv' + CurrentRecipe.Id + '">' + CurrentRecipe.CompleteDateUtc + '</div>'
                     + '<h6 style="padding:4px;font-weight:bold;">Chef ' + CurrentRecipe.CreatorName + '</h6>'
-                    + '<div class="text-right" id="FilteredByDiv' + CurrentRecipe.Id + '">';
+                    + '<div class="text-right">';
                 $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
                     if (FiltersKeyValue.Key === 'SortingBy') {
                         //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
                         switch (FiltersKeyValue.Value) {
                             case 0:
                                 {
-                                    RecipeDivHTMLString += 'Edited ' + CurrentRecipe.LastEditDateUtc;
+                                    //RecipeDivHTMLString += 'Edited ' + CurrentRecipe.LastEditDateUtc;
                                     break;
                                 }
                             case 1:
                                 {
-                                    if (CurrentRecipe.CompleteDateUtc === null)
-                                        RecipeDivHTMLString += 'Created ' + CurrentRecipe.LastEditDateUtc;
-                                    else
-                                        RecipeDivHTMLString += 'Created ' + CurrentRecipe.CompleteDateUtc;
+                                    //if (CurrentRecipe.CompleteDateUtc === null)
+                                    //    RecipeDivHTMLString += 'Created ' + CurrentRecipe.LastEditDateUtc;
+                                    //else
+                                    //    RecipeDivHTMLString += 'Created ' + CurrentRecipe.CompleteDateUtc;
                                     break;
                                 }
                             case 2:
@@ -452,14 +452,10 @@ function HideRecipeSteps() {
     $('#RecipeStepsDiv').empty();
 }
 function OnClick_FilterModalClearButton() {
-    SwitchSortBy(0, false);
-    var FilterButton = $('#FilterButton');
-    GetFilterByKey('SearchText').Value = '';
-    $('#SearchTextInput').val('');
-    $('#FilterModal').modal('hide');
-    $('#RecipesDiv').empty();
-    RecipesPageIndex = 0;
-    AjaxGetRecipes();
+    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
+        FiltersKeyValue.Value = null;
+    });
+    SearchRecipes();
 }
 function OnClick_ReportRecipe(recipeId) {
     $.ajax({
@@ -658,16 +654,21 @@ function ToggleSaveRecipe(recipeId) {
     });
 }
 function RefreshFiltersSortingTable() {
-    var SortByTable = $('#SortByTable');
-    SortByTable.empty();
-    var SortToggle = false;
-    $.each(Config.SortByOptions, function (i, SortByOption) {        
-        var trHTMLString = '<tr><td>' + SortByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
-        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString().toUpperCase() + SortByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>';
-        SortToggle = !SortToggle;
-        trHTMLString += '<button class="SortByButton" id="SortByButton' + SortToggle.toString().toUpperCase() + SortByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + SortByOption.Value + ',' + SortToggle.toString() + ');"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></div></td></tr>';
-        SortByTable.append(trHTMLString);
-    });    
+    var FiltersSortByTable = $('#FiltersSortByTable');
+    FiltersSortByTable.empty();  
+    $.each(Config.OrderByOptions, function (i, OrderByOption) {
+        var trHTMLString = '<tr><td>' + OrderByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
+        //Date OrderBy is inverted
+        if (OrderByOption.Key === 'Create Date' || OrderByOption.Key === 'Edit Date') {
+            trHTMLString += '<button class="SortByButton" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
+            trHTMLString += '<button class="SortByButton" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
+        }
+        else {
+            trHTMLString += '<button class="SortByButton" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
+            trHTMLString += '<button class="SortByButton" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
+        }        
+        FiltersSortByTable.append(trHTMLString);
+    });
     var sortAscending = GetFilterByKey('SortAscending').Value
     if (!sortAscending)
         sortAscending = 'FALSE';
