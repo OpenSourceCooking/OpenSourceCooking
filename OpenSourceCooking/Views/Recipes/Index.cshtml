@@ -33,7 +33,7 @@
                 <div class="row">
                     <div class="col-12 text-center" style="padding-bottom:10px;">
                         <h4 style="text-decoration:underline;">Recipe Owner</h4>
-                        <table class="table">
+                        <table class="table table-sm">
                             <tr>
                                 <td>
                                     <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 0" id="FiltersBothRecipesRadio">Both
@@ -46,13 +46,22 @@
                                 </td>
                             </tr>
                         </table>
-                        <!--
-                                <input id="FiltersMyRecipesCheckbox" onchange="GetFilterByKey('MyRecipes').Value = $(this).is(':checked')" type="checkbox" aria-label="Checkbox for My Recipes">My Recipes
-                                <input id="FiltersNotMyRecipesCheckbox"  onchange="GetFilterByKey('NotMyRecipes').Value = $(this).is(':checked')" type="checkbox" aria-label="Checkbox for Public Recipes">Not My Recipes
-                                <input id="FiltersPublicRecipesCheckbox" type="checkbox" checked="checked" aria-label="Checkbox for Public Recipes">Public Recipes
-                                <input id="FiltersSavedRecipesCheckbox" type="checkbox" checked="checked" aria-label="Checkbox for Saved Recipes">Saved Recipes
-                        -->
                     </div>
+                    <!--
+                    <div class="col-12 text-center" style="padding-bottom:10px;">
+                        <h4 style="text-decoration:underline;">Recipe Types</h4>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>
+                                    <input id="FiltersPublicRecipesCheckbox" type="checkbox" checked="checked" aria-label="Checkbox for Public Recipes">Public Recipes
+                                </td>
+                                <td>
+                                    <input id="FiltersSavedRecipesCheckbox" type="checkbox" checked="checked" aria-label="Checkbox for Saved Recipes">Saved Recipes
+                                </td>
+                            </tr>
+                        </table>
+                    </div>   
+                    -->
                     <div class="col-12 text-center"style="padding-bottom:10px;">
                         <h4 style="text-decoration:underline;">Sorting</h4>
                         <table style="margin: auto;" id="FiltersSortByTable">

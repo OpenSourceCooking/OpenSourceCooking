@@ -217,20 +217,20 @@ function AjaxGetRecipes() {
                     if (!isDraft) //Drafts cant be set to anything but secret
                         switch (CurrentRecipe.ViewableType) {
                             case "Public":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-success PublicOrsecretButton" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Public</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-success PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Public</a>';
                                 break;
                             case "Followers":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-warning PublicOrsecretButton" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Followers</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-warning PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Followers</a>';
                                 break;
                             case "Secret":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-secondary PublicOrsecretButton" id="PublicOrsecretButton' + CurrentRecipe.Id + '">secret</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-secondary PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">secret</a>';
                                 break;
                         }
                     if (!isDraft)
                         RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="javascript:EditRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ')">Edit</a>';
                     else
                         RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + CurrentRecipe.Id + '">Continue</a>';
-                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" onclick="DeleteRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ');">Delete</a>'
+                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" href="javascript:DeleteRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ');">Delete</a>'
                         + '</div >'
                         + '</div >';
                 }
