@@ -13,17 +13,24 @@ using LinqKit;
 
 namespace OpenSourceCooking.Controllers.StandardControllers
 {
+    public enum RecipeOwner
+    {
+        Any,
+        Mine,
+        NotMine
+    }
+
     public class RecipesController : Controller
     {
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public async Task<ActionResult> Index(bool? myRecipes, bool? publicRecipes, int? recipeId, int? recipesPageIndex, bool? returnJson, bool? savedRecipes, string searchText, string sortingBy, bool? sortAscending)
+        public async Task<ActionResult> Index(bool? publicRecipes, int? recipeId, RecipeOwner? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? savedRecipes, string searchText, string sortingBy, bool? sortAscending)
         {
             if (!returnJson.HasValue || !returnJson.Value)
             {
                 //Pass default JS params
-                ViewBag.MyRecipes = myRecipes;
+                ViewBag.RecipeOwner = recipeOwner ?? RecipeOwner.Any;
                 ViewBag.PublicRecipes = publicRecipes;
                 ViewBag.RecipeId = recipeId;
                 ViewBag.RecipesPageIndex = recipesPageIndex;
@@ -34,28 +41,44 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 ViewBag.SortAscending = sortAscending;
                 return View();
             }
-            string AspNetId = User.Identity.GetUserId();
-            if (myRecipes != null && AspNetId == null)
-                if (AspNetId == null)
-                    return Json("Unauthorized", JsonRequestBehavior.AllowGet);
             if (!recipesPageIndex.HasValue)
                 recipesPageIndex = 0;
             //Build Where clause with PredicateBuilder
             IQueryable<Recipe> RecipesQuery = db.Recipes;
             var Predicate = PredicateBuilder.New<Recipe>(true);
+            string AspNetId = User.Identity.GetUserId();
             if (AspNetId != null)
             {
-                //PredicateBuilder-myRecipes
-                if (myRecipes.HasValue && !myRecipes.Value)
-                    Predicate = Predicate.And(r => r.CreatorId != AspNetId);
-                else
-                    Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public");
-                //PredicateBuilder-publicRecipes
-                if (publicRecipes.HasValue && !publicRecipes.Value)
-                    Predicate = Predicate.And(r => r.ViewableType != "Public");
-                //PredicateBuilder-savedRecipes
-                if (savedRecipes.HasValue && !savedRecipes.Value)
-                    Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                switch (recipeOwner)
+                {
+                    case RecipeOwner.Any:
+                        Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
+                        break;
+                    case RecipeOwner.Mine:
+                        Predicate = Predicate.And(r => r.CreatorId == AspNetId);
+                        break;
+                    case RecipeOwner.NotMine:
+                        Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
+                        break;
+                }
+
+                //if (PublicRecipes)
+                //    Predicate = Predicate.And(r => r.ViewableType == "Public");
+                //else
+                //    Predicate = Predicate.And(r => r.ViewableType != "Public");
+                //
+                //
+                //if (SavedRecipes)
+                //    SavedRecipes = savedRecipes.Value;
+                //else
+                //    r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId)
+
+                //if (MyRecipes && !PublicRecipes)
+                //    Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
+                //if (!MyRecipes && !PublicRecipes && SavedRecipes)
+                //    Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                //if (!MyRecipes && !PublicRecipes && !SavedRecipes)
+                //    Predicate = Predicate.And(r => r.CreatorId == "-1");
             }
             else
                 Predicate = Predicate.And(r => r.ViewableType == "Public");

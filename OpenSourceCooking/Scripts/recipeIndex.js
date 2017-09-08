@@ -34,8 +34,8 @@ $(document).ready(function () {
     RecipeCommentTextArea.keyup(function (event) {
         $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
     });
-    if (ViewBagMyRecipes)
-        GetFilterByKey('MyRecipes').Value = ViewBagMyRecipes;
+    if (ViewBagRecipeOwner)
+        GetFilterByKey('RecipeOwner').Value = ViewBagRecipeOwner;    
     if (ViewBagPublicRecipes)
         GetFilterByKey('PublicRecipes').Value = ViewBagPublicRecipes; 
     if (ViewBagRecipeId)
@@ -52,6 +52,7 @@ $(document).ready(function () {
         GetFilterByKey('SortingBy').Value = ViewBagSortingBy;
     if (ViewBagSortAscending)
         GetFilterByKey('SortAscending').Value = ViewBagSortAscending;
+    RefreshFiltersRecipeOwnerRadios();
     AjaxGetRecipes();
     window.onscroll = function (ev) {
         if (window.innerHeight + window.pageYOffset + 20 >= document.body.offsetHeight) {
@@ -653,6 +654,14 @@ function ToggleSaveRecipe(recipeId) {
         }
     });
 }
+function RefreshFiltersRecipeOwnerRadios() {
+    if (GetFilterByKey('RecipeOwner').Value === 'NotMine')
+        $('#FiltersNotMyRecipesRadio').prop('checked', true);
+    else if (GetFilterByKey('RecipeOwner').Value === 'Mine')
+        $('#FiltersMyRecipesRadio').prop('checked', true);
+    else
+        $('#FiltersBothRecipesRadio').prop('checked', true);
+}
 function RefreshFiltersSortingTable() {
     var FiltersSortByTable = $('#FiltersSortByTable');
     FiltersSortByTable.empty();  
@@ -660,12 +669,12 @@ function RefreshFiltersSortingTable() {
         var trHTMLString = '<tr><td>' + OrderByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
         //Date OrderBy is inverted
         if (OrderByOption.Key === 'Create Date' || OrderByOption.Key === 'Edit Date') {
-            trHTMLString += '<button class="SortByButton" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
-            trHTMLString += '<button class="SortByButton" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
+            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
+            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
         }
         else {
-            trHTMLString += '<button class="SortByButton" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
-            trHTMLString += '<button class="SortByButton" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
+            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
+            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
         }        
         FiltersSortByTable.append(trHTMLString);
     });
@@ -675,10 +684,8 @@ function RefreshFiltersSortingTable() {
     var SortingByValue = GetFilterByKey('SortingBy').Value
     if (!SortingByValue)
         SortingByValue = '0';
-    $('.SortByButton').removeClass('btn btn-info');
-    $('.SortByButton').addClass('btn btn-secondary');   
-    $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).removeClass("btn-secondary");
-    $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).addClass("btn-info");
+    $('.SortByButton').removeClass('btn-info').addClass('btn-light');   
+    $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).removeClass("btn-light").addClass("btn-info");
 }
 function SetRecipeViewableType(viewableTypeName, recipeId) {
     $.ajax({

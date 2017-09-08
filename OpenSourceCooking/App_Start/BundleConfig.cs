@@ -19,6 +19,7 @@ namespace OpenSourceCooking
                 "~/Scripts/modernizr-*"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/tether/tether.min.js",
+                "~/Scripts/umd/popper.min.js",
                 "~/Scripts/bootstrap.min.js",
                 "~/Scripts/respond.min.js"));
             bundles.Add(new ScriptBundle("~/bundles/OpenSourceCooking").Include(
@@ -29,6 +30,7 @@ namespace OpenSourceCooking
                 //"~/Scripts/PhotoSwipe/photoswipe-ui-default.min.js"
                 ));
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/tether/tether.min.css",
                 "~/Content/bootstrap-grid.min.css",
                 "~/Content/bootstrap-reboot.min.css",
                 "~/Content/bootstrap.min.css",

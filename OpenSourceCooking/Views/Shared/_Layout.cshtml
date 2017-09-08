@@ -29,13 +29,11 @@
 </head>
 <body style="font-family:'Handlee';background-color:whitesmoke;">
     <!--Navbar-->
-    <nav class="navbar navbar-toggleable-md navbar-light fixed-top" role="navigation" style="background-color:slategray;border-bottom:ridge;">
-        <button class="navbar-toggler navbar-toggler-right bg-faded" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light" role="navigation" style="background-color:slategray;border-bottom:ridge;">
+        <a href=@Url.Action("Index", "Home")><img class="rounded" src="~/Content/Images/OpenSourceCooking4096x2160.png" style="height:42px;" /></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="background-color:white;">
             <span class="navbar-toggler-icon"></span>
-        </button>
-        <a href=@Url.Action("Index", "Home")>
-            <img class="rounded" src="~/Content/Images/OpenSourceCooking4096x2160.png" style="height:42px;" />
-        </a>
+        </button>      
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 @if (true) //This is only here to keep spacing nice in code. It doesnt do anything
@@ -80,29 +78,29 @@
                 {
                     <li class="text-right">
                         <div class="nav-link dropdown"style="padding-left:2px;padding-right:2px;">
-                            <button type="button" class="btn btn-warning btn-bordered dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-dark btn-bordered dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Database
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="NavbarDatabaseButton" style="max-height:280px;overflow-y:auto;background-color:whitesmoke;">
                                 <li class="dropdown-header" style="color:black;">Database</li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBBugReports")">Bug Reports</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCloudFiles")">Cloud Files</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBComments")">Comments</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBCommentVotes")">Comment Votes</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBDietaryRestrictions")">Dietary Restrictions</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBFlags")">Flags</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBIngredients")">Ingredients</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementTypes")">Measurement Types</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBMeasurementUnits")">Measurement Units</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipes")">Recipes</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeFlags")">Recipe Flags</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeSteps")">Recipe Steps</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeStepsCloudFile")">Recipe Steps Cloud Files</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "DBRecipeStepsIngredients")">Recipe Steps Ingredients</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBBugReports")">Bug Reports</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBCloudFiles")">Cloud Files</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBComments")">Comments</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBCommentVotes")">Comment Votes</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBDietaryRestrictions")">Dietary Restrictions</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBFlags")">Flags</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBIngredients")">Ingredients</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBMeasurementTypes")">Measurement Types</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBMeasurementUnits")">Measurement Units</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBRecipes")">Recipes</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBRecipeFlags")">Recipe Flags</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBRecipeSteps")">Recipe Steps</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBRecipeStepsCloudFile")">Recipe Steps Cloud Files</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "DBRecipeStepsIngredients")">Recipe Steps Ingredients</a></li>
                                 <li class="dropdown-header" style="color:black;">Security</li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "GroupsAdmin")">Groups</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "RolesAdmin")">Roles</a></li>
-                                <li><a class="dropdown-item" style="color:#f0ad4e;" href="@Url.Action("Index", "UsersAdmin")">Users</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "GroupsAdmin")">Groups</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "RolesAdmin")">Roles</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "UsersAdmin")">Users</a></li>
                             </ul>
                         </div>
                     </li>

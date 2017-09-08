@@ -101,6 +101,7 @@ function RefreshZoomImages()
 }
 function SearchRecipes() {
     RecipesPageIndex = null;
+    //SearchTextInput
     GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
     var FiltersQueryString = GenerateFiltersQueryString();
     if (FiltersQueryString)
