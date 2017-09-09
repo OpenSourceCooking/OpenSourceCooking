@@ -59,17 +59,17 @@
                     <a class="btn btn-primary btn-bordered" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
                 </li>
             </ul>
-                            }
-                        }
-                        else
-                        {
-                            <ul class="nav navbar-nav navbar-right">
-                                <li class="nav-link text-right" style="padding-left:2px;padding-right:2px;">
-                                    <a class="btn btn-primary btn-bordered" href="@Url.Action("Register", "Account", new { id = "registerLink"})">Register</a>
-                                </li>
-                                <li class="nav-link text-right" style="padding-left:2px;padding-right:2px;">
-                                    <a class="btn btn-primary btn-bordered" href="@Url.Action("Login", "Account", new { id = "loginLink"})">Log in</a>
-                                </li>
-                            </ul>
-                        }
+        }
+    }
+    else
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-link text-right" style="padding-left:2px;padding-right:2px;">
+                <a class="btn btn-primary btn-bordered" href="@Url.Action("Register", "Account", new { id = "registerLink"})">Register</a>
+            </li>
+            <li class="nav-link text-right" style="padding-left:2px;padding-right:2px;">
+                <a class="btn btn-primary btn-bordered" href="@Url.Action("Login", "Account", new { id = "loginLink"})">Log in</a>
+            </li>
+        </ul>
+    }
 }

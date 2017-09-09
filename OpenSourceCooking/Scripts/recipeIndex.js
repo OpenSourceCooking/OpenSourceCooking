@@ -8,7 +8,7 @@ var RecipeCommentsPageIndex = 0;
 var RecipeCommentsSkipAdjust = 0;
 var RecipesArray = [];
 var RecipeId = null;
-var SavedBorderColor = "#0275d8";//Blue
+var SavedBorderColor = "#007bff";//Blue
 var ShowingRecipeSteps = false;
 var ShowingRecipeComments = false;
 
@@ -47,6 +47,7 @@ $(document).ready(function () {
     if (ViewBagSearchText) {
         GetFilterByKey('SearchText').Value = ViewBagSearchText;
         $('#SearchTextInput').val(ViewBagSearchText);
+        $('#NavbarSearchButton').removeClass('btn-primary').addClass('btn-danger').html('X');
     }  
     if (ViewBagSortingBy)
         GetFilterByKey('SortingBy').Value = ViewBagSortingBy;
@@ -337,7 +338,7 @@ function CreateCommentVote(commentId, isUpVote) {
 }
 function DeleteRecipe(recipeId, SavedByCount) {
     if (SavedByCount !== 0) {
-        ShowPopUpModal('This recipe is saved by other users and can not be deleted');
+        ShowPopUpModal('This recipe is saved by other users and can no longer be deleted');
         return;
     }
     $('#ConfirmRecipeDeleteModal').modal('show');

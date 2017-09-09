@@ -4,7 +4,22 @@ var CurrentRandomColor = null;
 var RecipesPageIndex = 0;
 
 $(document).ready(function () {
-    $('#SearchTextInput').on('keypress', function (e) {
+    $('#NavbarSearchButton').click(function (e) {
+        if (ViewBagSearchText)
+        {
+            $('#SearchTextInput').val('')   
+            $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
+            ViewBagSearchText = null;
+            GetFilterByKey('SearchText').Value = null;
+        }            
+        else
+            SearchRecipes();     
+    });
+    $('#NavbarFilterButton').click(function (e) { $('#FilterModal').modal('show');});
+    $('#SearchTextInput').on('keydown', function (e) {
+        $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
+        ViewBagSearchText = null;
+        GetFilterByKey('SearchText').Value = null;
         if (e.which === 13)
             SearchRecipes();
     });
