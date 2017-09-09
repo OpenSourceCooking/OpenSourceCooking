@@ -217,20 +217,20 @@ function AjaxGetRecipes() {
                     if (!isDraft) //Drafts cant be set to anything but secret
                         switch (CurrentRecipe.ViewableType) {
                             case "Public":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-success PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Public</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-success btn-bordered PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Public</a>';
                                 break;
                             case "Followers":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-warning PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Followers</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-warning btn-bordered PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">Followers</a>';
                                 break;
                             case "Secret":
-                                RecipeDivHTMLString += '<a class="btn btn-sm btn-secondary PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">secret</a>';
+                                RecipeDivHTMLString += '<a class="btn btn-sm btn-secondary btn-bordered PublicOrsecretButton" href="javascript:null" id="PublicOrsecretButton' + CurrentRecipe.Id + '">secret</a>';
                                 break;
                         }
                     if (!isDraft)
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="javascript:EditRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ')">Edit</a>';
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info btn-bordered StopPropagationLink" href="javascript:EditRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ')">Edit</a>';
                     else
-                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + CurrentRecipe.Id + '">Continue</a>';
-                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger StopPropagationLink" href="javascript:DeleteRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ');">Delete</a>'
+                        RecipeDivHTMLString += '<a class="btn btn-sm btn-info btn-bordered StopPropagationLink" href="' + Config.Urls.RecipeEditor + '?RecipeId=' + CurrentRecipe.Id + '">Continue</a>';
+                    RecipeDivHTMLString += '<a class="btn btn-sm btn-danger btn-bordered StopPropagationLink" href="javascript:DeleteRecipe(' + CurrentRecipe.Id + ', ' + CurrentRecipe.SavedByCount + ');">Delete</a>'
                         + '</div >'
                         + '</div >';
                 }
@@ -238,9 +238,9 @@ function AjaxGetRecipes() {
                 {
                     RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + CurrentRecipe.Id + ');">Report</a></div>';
                     if (CurrentRecipe.IsSaved == true)
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star" style="color:yellow;"></i> Unsave</a>';
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary btn-bordered StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star" style="color:yellow;"></i> Unsave</a>';
                     else
-                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star-o"></i> Save</a>';
+                        RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary btn-bordered StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star-o"></i> Save</a>';
                 }
                 RecipeDivHTMLString += '</div>'
                     + '</div>'
@@ -384,7 +384,7 @@ function DeleteRecipeComment(commentId) {
 function EditRecipe(recipeId, SavedByCount) {
     if (SavedByCount !== 0)
     {
-        ShowPopUpModal('This recipe is saved by other users and can not be edited');
+        ShowPopUpModal('This recipe is saved by other users and can no longer be edited');
         return;
     }
     window.location.href = Config.Urls.RecipeEditor + '?RecipeId=' + recipeId;             
@@ -468,7 +468,7 @@ function OnClick_ReportRecipe(recipeId) {
             var ReportModalBodyDiv = $('#ReportModalBody');
             ReportModalBodyDiv.empty();
             $.each(FlagNames, function (i, FlagName) {
-                ReportModalBodyDiv.append('<button type="button" class="btn btn-primary btn-block" onclick="FlagRecipe(\'' + recipeId + '\',\'' + FlagName + '\')">' + FlagName + '</button>');
+                ReportModalBodyDiv.append('<button type="button" class="btn btn-primary btn-block btn-bordered" onclick="FlagRecipe(\'' + recipeId + '\',\'' + FlagName + '\')">' + FlagName + '</button>');
             });
             $('#ReportModal').modal('show');
         },

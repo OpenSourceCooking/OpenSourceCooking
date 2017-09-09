@@ -71,12 +71,12 @@
                 </div>
                 <div class="row" style="padding-bottom:10px;">
                     <div class="col-12">
-                        <button type="button" class="btn btn-danger btn-block" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Clear Filters</button>
+                        <button type="button" class="btn btn-danger btn-block btn-bordered" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Clear Filters</button>
                     </div>
                 </div>
                 <div class="row" style="padding-bottom:10px;">
                     <div class="col-12">
-                        <button type="button" class="btn btn-primary btn-block" onclick="SearchRecipes()" id="FilterModalFilterButton">Done</button>
+                        <button type="button" class="btn btn-primary btn-block btn-bordered" onclick="SearchRecipes()" id="FilterModalFilterButton">Done</button>
                     </div>
                 </div>
             </div>
@@ -115,13 +115,13 @@
                         </ul>
                     </div>
                     <div class="col-12" style="padding-top:3px;">
-                        <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowRecipeSteps()" id="ShowRecipeStepsButton"></button>
+                        <button type="button" class="btn btn-block btn-outline-info btn-bordered" onclick="Onclick_ShowRecipeSteps()" id="ShowRecipeStepsButton"></button>
                     </div>
                     <div class="col-12" id="RecipeStepsDiv" style="display:none;">
                         <!--Recipes Steps-->
                     </div>
                     <div class="col-12" style="padding-top:3px;">
-                        <button type="button" class="btn btn-block btn-outline-info" onclick="Onclick_ShowComments()" id="ShowRecipeCommentsButton"></button>
+                        <button type="button" class="btn btn-block btn-outline-info btn-bordered" onclick="Onclick_ShowComments()" id="ShowRecipeCommentsButton"></button>
                     </div>
                     <div class="col-12" style="padding-top:3px;">
                         <div class="row" id="RecipeCommentsAreaDiv" style="display:none;">
@@ -132,7 +132,7 @@
                                 <span id="RecipeCommentCharactersLeftSpan"></span><span> characters left </span><img id="DescriptionInputImage" src="~/Content/Images/Icons/Checkmark.png" class="img-fluid" style="vertical-align:middle; width:16px;height:16px;" />
                             </div>
                             <div class="col-12 text-right" style="font-size:16px;">
-                                <button type="button" class="pull-right btn btn-sm btn-primary" style="margin-top:4px;" onclick="Onclick_SubmitComment()" id="SubmitCommentButton">Submit Comment</button>
+                                <button type="button" class="pull-right btn btn-sm btn-primary btn-bordered" style="margin-top:4px;" onclick="Onclick_SubmitComment()" id="SubmitCommentButton">Submit Comment</button>
                             </div>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                         <!--Jquery Populates-->
                     </div>
                     <div class="col-12" style="display:none;padding-top:4px;" id="ShowMoreRecipeCommentsButtonDiv">
-                        <button id="ShowMoreRecipeCommentsButton" class="btn btn-block btn-sm btn-secondary" onclick="ShowMoreRecipeComments()">Show More Comments</button>
+                        <button id="ShowMoreRecipeCommentsButton" class="btn btn-block btn-sm btn-secondary btn-bordered" onclick="ShowMoreRecipeComments()">Show More Comments</button>
                     </div>
                 </div>
             </div>
@@ -157,7 +157,7 @@
                         <span class="modal-title" id="ModalEditDate"></span>
                     </div>
                     <div class="col-lg-3 text-right">
-                        <button type="button" class="btn btn-danger" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</button>
+                        <button type="button" class="btn btn-danger btn-bordered" onclick="$('#ModalMainRecipeVideo').get(0).pause(); $('#RecipePreviewer').modal('hide');">Close</button>
                     </div>
                 </div>
             </div>
@@ -174,7 +174,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-footer text-center">
-                <button type="button" class="btn btn-danger" id="ConfirmRecipeDeleteModalDeleteButton">Delete</button>
+                <button type="button" class="btn btn-danger btn-bordered" id="ConfirmRecipeDeleteModalDeleteButton">Delete</button>
             </div>
         </div>
     </div>

@@ -74,7 +74,7 @@
                 <h4>Steps</h4>
             </div>
             <div class="col-6 text-right" style="padding-top:1%; display:none;" id="StepsHeaderDiv2">
-                <button class="btn btn-sm btn-success" type="button" onclick="OnClicked_AddStep(EditingRecipe.Id)" id="AddRecipeStepButton">+ Add Step</button>
+                <button class="btn btn-sm btn-success btn-bordered" type="button" onclick="OnClicked_AddStep(EditingRecipe.Id)" id="AddRecipeStepButton">+ Add Step</button>
             </div>
         </div>
         <div class="row" style="padding-top:1%;">
@@ -101,10 +101,10 @@
         </div>
     </div>
     <div class="col-12" style="padding-top:1%;">
-        <button class="btn btn-primary" onclick="IncrementCreationStep()" id="NextButton">Next</button>
+        <button class="btn btn-primary btn-bordered" onclick="IncrementCreationStep()" id="NextButton">Next</button>
     </div>
     <div class="col-12" style="padding-top:1%;padding-bottom:1%;">
-        <a class="btn btn-danger btn-block" style="display:none;" onclick="OnClick_CompleteRecipe(EditingRecipe.Id)" id="CompleteButton">Finish Draft Later!</a>
+        <a class="btn btn-danger btn-block btn-bordered" style="display:none;" href="javascript:OnClick_CompleteRecipe(EditingRecipe.Id)" id="CompleteButton">Finish Draft Later!</a>
     </div>
 </div>
 
@@ -121,7 +121,7 @@
                     <!--Ingredients-->
                     <div class="col-md-6">
                         <div class="col-12">
-                            <button class="btn btn-sm btn-success btn-block" onclick="AddIngredientButtonClicked()">+ Add Ingredient</button>
+                            <button class="btn btn-sm btn-success btn-bordered btn-block" onclick="AddIngredientButtonClicked()">+ Add Ingredient</button>
                         </div>
                         <div class="col-12">
                             <table class="table borderless" id="RecipeStepIngredientsTable">
@@ -159,7 +159,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-block" onclick="UpdateRecipeStep(EditingRecipe.Id)">Done</button>
+                <button type="button" class="btn btn-primary btn-bordered btn-block" onclick="UpdateRecipeStep(EditingRecipe.Id)">Done</button>
             </div>
         </div>
     </div>
@@ -196,7 +196,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-block" onclick="UpdateIngredientToStep(EditingRecipe.Id)">Done</button>
+                <button type="button" class="btn btn-primary btn-bordered btn-block" onclick="UpdateIngredientToStep(EditingRecipe.Id)">Done</button>
             </div>
         </div>
     </div>
@@ -211,7 +211,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-footer text-center">
-                <button type="button" class="btn btn-danger" id="RemoveCloudFileModalRemoveButton">Remove</button>
+                <button type="button" class="btn btn-danger btn-bordered" id="RemoveCloudFileModalRemoveButton">Remove</button>
             </div>
         </div>
     </div>

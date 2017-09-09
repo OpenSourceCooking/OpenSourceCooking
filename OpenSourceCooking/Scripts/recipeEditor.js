@@ -117,8 +117,7 @@ $(document).ready(function () {
                     $('#RecipeStepsDiv').fadeIn("slow");
                     $('#StepsHeaderDiv1').fadeIn("slow");
                     $('#StepsHeaderDiv2').fadeIn("slow");
-                    $("#CompleteButton").removeClass('btn-danger');
-                    $("#CompleteButton").addClass('btn-info');
+                    $("#CompleteButton").removeClass('btn-danger').addClass('btn-info');
                     $("#CompleteButton").text("Complete Recipe!");
                     $('#NextButton').fadeOut('fast');
                 }
@@ -265,8 +264,7 @@ function ChangeStepNumber(StepNum) {
     });
 }
 function ClearAddIngredientToStepModal() {
-    $('.UnitTypeButton').removeClass('btn-success');
-    $('.UnitTypeButton').addClass('btn-info');
+    $('.UnitTypeButton').removeClass('btn-success').addClass('btn-info');
     $('#IngredientSearch').val('');
     $('#MeasurementTypeDropDown').val('');
     $('#SelectMeasurementTypeToShowUnitsSpan').fadeIn();
@@ -435,8 +433,7 @@ function IncrementCreationStep() {
                         $('#StepsHeaderDiv1').fadeIn("slow");
                         $('#StepsHeaderDiv2').fadeIn("slow");
                         $("#CompleteButton").hide();
-                        $("#CompleteButton").removeClass('btn-danger');
-                        $("#CompleteButton").addClass('btn-info');
+                        $("#CompleteButton").removeClass('btn-danger').addClass('btn-info');
                         $("#CompleteButton").text("Complete Recipe!");
                         $("#CompleteButton").fadeIn("slow");
                         break;
@@ -562,7 +559,7 @@ function OnClick_CompleteRecipe(RecipeId) {
         return;
     }
     if (EditingRecipe.CreationStep === 4) {
-        $('#RecipeViewableTypeModalHeader').text('Should ' + $('#RecipeNameButton').text().substr($('#RecipeNameButton').text().indexOf("Name:") + 5) + ' be public or secret?');
+        $('#RecipeViewableTypeModalHeader').text('Should ' + $('#RecipeNameInput').val() + ' be public, followers only, or secret?');
         $('#RecipeViewableTypeModal').modal('show');
     }
     else //Still a draft
@@ -589,11 +586,11 @@ function PopulateStepsTable(RecipeId) {
                     + '<div class="btn-group btn-group-sm">';
                 //Move Edit Delete Buttons
                 if (RecipeStep.StepNumber > 1)
-                    AppendString += '<button class="btn btn-sm btn-primary" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', -1)"><i class="fa fa-arrow-up"></i></button>';
+                    AppendString += '<button class="btn btn-sm btn-primary btn-bordered" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', -1)"><i class="fa fa-arrow-up"></i></button>';
                 if (RecipeStep.StepNumber != RecipeSteps.length)
-                    AppendString += '<button class="btn btn-sm btn-primary" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', 1)"><i class="fa fa-arrow-down"></i></button>';
-                AppendString += '<button class="btn btn-sm btn-info StepEditButton" id="Edit' + (i + 1) + '">Edit</button>'
-                    + '<button class="btn btn-sm btn-danger StepDeleteButton" id="Delete' + (i + 1) + '">Delete</button>'
+                    AppendString += '<button class="btn btn-sm btn-primary btn-bordered" onclick="MoveRecipeStep(' + RecipeStep.RecipeId + ',' + (i + 1) + ', 1)"><i class="fa fa-arrow-down"></i></button>';
+                AppendString += '<button class="btn btn-sm btn-info btn-bordered StepEditButton" id="Edit' + (i + 1) + '">Edit</button>'
+                    + '<button class="btn btn-sm btn-danger btn-bordered StepDeleteButton" id="Delete' + (i + 1) + '">Delete</button>'
                     + '</div>'
                     + '</div>'
                     + '<div class="col-6">'
@@ -700,18 +697,18 @@ function RefreshDietarySliderCss(DietaryRestrictionNames) {
 
       //Set Slider Styles
     if (jQuery.inArray("Vegan", DietaryRestrictionNames) !== -1)
-        $('#DietaryRestrictionsSliderDivVeganDiv').css({ 'color': 'green', 'font-weight': 'bold' });
+        $('#DietaryRestrictionsSliderDivVeganDiv').css({ 'color': '#28a745', 'font-weight': 'bold' });
     else if (jQuery.inArray("Vegetarian", DietaryRestrictionNames) !== -1)
-        $('#DietaryRestrictionsSliderDivVegetarianDiv').css({ 'color': 'green', 'font-weight': 'bold' });
+        $('#DietaryRestrictionsSliderDivVegetarianDiv').css({ 'color': '#28a745', 'font-weight': 'bold' });
     else
-        $('#DietaryRestrictionsSliderDivNoneDiv').css({ 'color': 'green', 'font-weight': 'bold' });
+        $('#DietaryRestrictionsSliderDivNoneDiv').css({ 'color': '#28a745', 'font-weight': 'bold' });
      //Checkbox Styles    
     if (jQuery.inArray("Dairy Free", DietaryRestrictionNames) !== -1)
-        $('#DairyFreeCheckboxSpan').css({ 'color': 'green', 'font-weight': 'bold' });
+        $('#DairyFreeCheckboxSpan').css({ 'color': '#28a745', 'font-weight': 'bold' });
     if (jQuery.inArray("Gluten Free", DietaryRestrictionNames) !== -1)
-        $('#GlutenCheckboxSpan').css({ 'color': 'green', 'font-weight': 'bold' });
+        $('#GlutenCheckboxSpan').css({ 'color': '#28a745', 'font-weight': 'bold' });
     if (jQuery.inArray("GMO Free", DietaryRestrictionNames) !== -1)
-        $('#GMOFreeCheckboxSpan').css({ 'color': 'green', 'font-weight': 'bold' });    
+        $('#GMOFreeCheckboxSpan').css({ 'color': '#28a745', 'font-weight': 'bold' });    
 }
 function ShowRemoveCloudFilePopUp(imageButton, RecipeId, StepNum, SlotNum) {
     $('#RemoveCloudFileModalHeader').text('Remove Photo?');
