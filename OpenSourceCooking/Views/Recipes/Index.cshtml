@@ -1,11 +1,13 @@
 ﻿@{ViewBag.Title = "Recipes";}
 
 <script>
-    var ViewBagRecipeOwner = '@(ViewBag.RecipeOwner)'; 
+    var ViewBagDrafts = '@(ViewBag.Drafts)';
+    var ViewBagFollower = '@(ViewBag.Follower)';
     var ViewBagPublicRecipes = '@(ViewBag.PublicRecipes)';
-    var ViewBagRecipeId = '@(ViewBag.RecipeId)' ;
+    var ViewBagRecipeId = '@(ViewBag.RecipeId)';
+    var ViewBagRecipeOwner = '@(ViewBag.RecipeOwner)';
     var ViewBagRecipesPageIndex = '@(ViewBag.RecipesPageIndex)';
-    var ViewBagSavedRecipes = '@(ViewBag.SavedRecipes)';
+    var ViewBagSaved = '@(ViewBag.SavedRecipes)';
     var ViewBagSearchText = '@(ViewBag.SearchText)';
     var ViewBagSortingBy = '@(ViewBag.SortingBy)';
     var ViewBagSortAscending = '@(ViewBag.SortAscending)';
@@ -16,7 +18,7 @@
 }
 <!--Infinite scrolling recipes-->
 <div id="RecipesDiv"></div>
-<div class="row"style="background-color:slategray;border-top:ridge">
+<div class="row" style="background-color:slategray;border-top:ridge">
     <div class="col-12 text-center" style="color:white; font-size:24px; font-weight:bold; padding:100px;" id="NoMoreDiv"> Loading...</div>
 </div>
 <!--MODALS                 MODALS                  MODALS                    MODALS                 MODALS                MODALS              MODALS-->
@@ -30,54 +32,72 @@
             </div>
             <!--Body-->
             <div class="modal-body">
+                @if (Request.IsAuthenticated)
+                {
+                    <div class="row">
+                        <div class="col-12 text-center" style="padding-bottom:10px;">
+                            <h4>Recipe Owner</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
+                            <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 0" id="FiltersBothRecipesRadio">All
+                        </div>
+                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
+                            <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 1" id="FiltersMyRecipesRadio">My Recipes
+                        </div>
+                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
+                            <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 2" id="FiltersNotMyRecipesRadio">Not My Recipes
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center" style="padding-bottom:10px;">
+                            <h4>Recipe Types</h4>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:10px;">
+                        <div class="col-sm-4 text-center">
+                            <input id="FiltersDraftsCheckbox" type="checkbox" checked="checked" onchange="GetFilterByKey('Drafts').Value = this.checked">Drafts
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <input id="FiltersFollowerCheckbox" type="checkbox" checked="checked" onchange="GetFilterByKey('Follower').Value = this.checked">Follower
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <input id="FiltersPublicRecipesCheckbox" type="checkbox" checked="checked" onchange="GetFilterByKey('PublicRecipes').Value = this.checked">Public
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center" style="padding-bottom:10px;">
+                            <h4>Saved Recipes</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
+                            <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 0" id="FiltersAllSavedRecipesRadio">All
+                        </div>
+                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
+                            <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 1" id="FiltersSavedRadio">Saved
+                        </div>
+                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
+                            <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 2" id="FiltersNotSavedRadio">Not Saved
+                        </div>
+                    </div>
+                }
                 <div class="row">
                     <div class="col-12 text-center" style="padding-bottom:10px;">
-                        <h4 style="text-decoration:underline;">Recipe Owner</h4>
-                        <table class="table table-sm">
-                            <tr>
-                                <td>
-                                    <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 0" id="FiltersBothRecipesRadio">Both
-                                </td>
-                                <td>
-                                    <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 1" id="FiltersMyRecipesRadio">My Recipes
-                                </td>
-                                <td>
-                                    <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 2" id="FiltersNotMyRecipesRadio">Not My Recipes
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--
-                    <div class="col-12 text-center" style="padding-bottom:10px;">
-                        <h4 style="text-decoration:underline;">Recipe Types</h4>
-                        <table class="table table-sm">
-                            <tr>
-                                <td>
-                                    <input id="FiltersPublicRecipesCheckbox" type="checkbox" checked="checked" aria-label="Checkbox for Public Recipes">Public Recipes
-                                </td>
-                                <td>
-                                    <input id="FiltersSavedRecipesCheckbox" type="checkbox" checked="checked" aria-label="Checkbox for Saved Recipes">Saved Recipes
-                                </td>
-                            </tr>
-                        </table>
-                    </div>   
-                    -->
-                    <div class="col-12 text-center"style="padding-bottom:10px;">
-                        <h4 style="text-decoration:underline;">Sorting</h4>
+                        <h4>Sorting</h4>
                         <table style="margin: auto;" id="FiltersSortByTable">
                             <!--Populated by Jquery-->
                         </table>
-                    </div>                  
-                </div>
-                <div class="row" style="padding-bottom:10px;">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-danger btn-block btn-bordered" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Clear Filters</button>
                     </div>
                 </div>
-                <div class="row" style="padding-bottom:10px;">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-primary btn-block btn-bordered" onclick="SearchRecipes()" id="FilterModalFilterButton">Done</button>
-                    </div>
+            </div>
+            <div class="row" style="padding:10px;">
+                <div class="col-6" style="padding-right:5px;">
+                    <button type="button" class="btn btn-danger btn-block btn-bordered" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Clear Filters</button>
+                </div>
+                <div class="col-6" style="padding-left:5px;">
+                    <button type="button" class="btn btn-primary btn-block btn-bordered" onclick="SearchRecipes()" id="FilterModalFilterButton">Apply</button>
                 </div>
             </div>
         </div>
@@ -108,7 +128,7 @@
                     </div>
                     <div class="col-12">
                         <span id="ModalRecipeDescriptionSpan"></span>
-                    </div>                   
+                    </div>
                     <div class="col-12" style="padding:1%;" id="RecipeIngredientSummary">
                         <ul id="RecipePreviewerIngredientSummaryList">
                             <!--Jquery Populates-->

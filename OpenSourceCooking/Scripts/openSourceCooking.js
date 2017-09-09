@@ -5,17 +5,17 @@ var RecipesPageIndex = 0;
 
 $(document).ready(function () {
     $('#NavbarSearchButton').click(function (e) {
-        if (ViewBagSearchText)
-        {
-            $('#SearchTextInput').val('')   
+        if (ViewBagSearchText) {
+            $('#SearchTextInput').val('')
             $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
             ViewBagSearchText = null;
             GetFilterByKey('SearchText').Value = null;
-        }            
+            SearchRecipes();
+        }
         else
-            SearchRecipes();     
+            SearchRecipes();
     });
-    $('#NavbarFilterButton').click(function (e) { $('#FilterModal').modal('show');});
+    $('#NavbarFilterButton').click(function (e) { $('#FilterModal').modal('show'); });
     $('#SearchTextInput').on('keydown', function (e) {
         $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
         ViewBagSearchText = null;
@@ -77,12 +77,11 @@ function GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) {
 //    }
 //    return vars;
 //}
-function GetRandomColor()
-{
+function GetRandomColor() {
     var RandomColor = Colors[Math.floor(Math.random() * Colors.length)];
     while (CurrentRandomColor === RandomColor) //Prevent same colors next to ea other                    
         RandomColor = Colors[Math.floor(Math.random() * Colors.length)];
-    CurrentRandomColor = RandomColor;  
+    CurrentRandomColor = RandomColor;
     return CurrentRandomColor;
 }
 function IsFileTypeAllowed(file, fileType) {
@@ -110,22 +109,24 @@ function IsFileTypeAllowed(file, fileType) {
     ShowPopUpModal('Validation', 'Bummer... We cant handle the ' + extension + ' image extension.  We currently only support JPEG, JPG, and PNG for images');
     return false;
 }
-function RefreshZoomImages()
-{
+function RefreshZoomImages() {
     $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
 }
 function SearchRecipes() {
     RecipesPageIndex = null;
     //SearchTextInput
     GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
+    if (GetFilterByKey('RecipeOwner').Value === 'Any')
+        GetFilterByKey('RecipeOwner').Value = null;
+    if (GetFilterByKey('Saved').Value === 'Any')
+        GetFilterByKey('Saved').Value = null;
     var FiltersQueryString = GenerateFiltersQueryString();
     if (FiltersQueryString)
         window.location.href = Config.Urls.RecipesIndex + '?' + GenerateFiltersQueryString();
     else
         window.location.href = Config.Urls.RecipesIndex;
 }
-function SetSrcFromLocalFile(file, HTMLElement)
-{
+function SetSrcFromLocalFile(file, HTMLElement) {
     var URL = window.URL.createObjectURL(file);
     HTMLElement.attr('src', URL);
 }
@@ -153,9 +154,8 @@ function ShowPopUpModal(ModalType, Message) {
     {
         $('#PopUpModal').modal('show');
         $('#PopUpModalMessage').text(ModalType);
-    }      
-    else
-    {
+    }
+    else {
         switch (ModalType) {
             case "Validation":
                 $('#PopUpModal').modal('show');
@@ -173,5 +173,5 @@ function ShowPopUpModal(ModalType, Message) {
                 $('#PopUpModalMessage').text(Message);
                 break;
         }
-    }   
+    }
 }

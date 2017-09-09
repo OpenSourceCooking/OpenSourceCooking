@@ -57,10 +57,12 @@
             AjaxCreateRecipeFlag: '@Url.Action("AjaxCreateRecipeFlag", "RecipeFlags")'
         },
         FiltersKeyValueList:[
-            //All Filters MUST start with a null value     
-            { Key: 'RecipeOwner', Value: null },           
+            //All Filters MUST start with a null value
+            { Key: 'Drafts', Value: null },
+            { Key: 'Follower', Value: null },
             { Key: 'PublicRecipes', Value: null },
-            { Key: 'SavedRecipes', Value: null },
+            { Key: 'RecipeOwner', Value: null },
+            { Key: 'Saved', Value: null },
             { Key: 'SearchText', Value: null },
             { Key: 'SortingBy', Value: null }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
             { Key: 'SortAscending', Value: null }

@@ -33,13 +33,13 @@
         <a href=@Url.Action("Index", "Home")><img class="rounded" src="~/Content/Images/OpenSourceCooking4096x2160.png" style="height:42px;" /></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="background-color:white;">
             <span class="navbar-toggler-icon"></span>
-        </button>      
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 @if (true) //This is only here to keep spacing nice in code. It doesnt do anything
                 {
                     <li class="text-right">
-                        <div class="nav-link"style="padding-left:2px;padding-right:2px;">
+                        <div class="nav-link" style="padding-left:2px;padding-right:2px;">
                             <div class="btn-group">
                                 <input type="text" class="form-control btn-bordered" placeholder="Search Recipes" style="border-top-right-radius:0;border-bottom-right-radius:0;text-align:center; border-right:none;" id="SearchTextInput">
                                 <a class="btn btn-primary btn-bordered" style="font-size:18px;color:white" id="NavbarSearchButton"><i class="fa fa-search" aria-hidden="true"></i></a>
@@ -51,33 +51,29 @@
                         </div>
                     </li>
                     <li class="text-right">
-                        <div class="nav-link btn-group"style="padding-left:2px;padding-right:2px;">
+                        <div class="nav-link btn-group" style="padding-left:2px;padding-right:2px;">
                             <a class="btn btn-success btn-bordered" href="@Url.Action("Index", "Recipes")" id="NavbarRecipesButton">Recipes</a>
                             <button class="btn btn-success btn-bordered dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                             <ul class="dropdown-menu text-right" style="max-height:280px;overflow-y:auto;background-color:whitesmoke;border:none;">
                                 <li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("RecipeEditor", "Recipes")">Add Recipe</a></li>
-                                @if (Request.IsAuthenticated)
-                                {
-                                    @*<li><a class="dropdown-item" style="color:#5cb85c;" href="@Url.Action("Index", "Recipes")">My Recipes</a></li>*@
-                                }
                             </ul>
                         </div>
                     </li>
                     <li class="text-right">
-                        <div class="nav-link"style="padding-left:2px;padding-right:2px;">
+                        <div class="nav-link" style="padding-left:2px;padding-right:2px;">
                             <a class="btn btn-info btn-bordered" href="javascript:ShowDietaryRestrictionsSymbolLegend($('#SymbolsLegendModalSymbolsTable'));$('#SymbolsLegendModal').modal('show');">Symbols Legend</a>
                         </div>
                     </li>
-                        <li class="text-right">
-                            <div class="nav-link"style="padding-left:2px;padding-right:2px;">
-                                <a class="btn btn-danger btn-bordered" href="@Url.Action("Create", "BugReports")">Report Bug</a>
-                            </div>
-                        </li>
+                    <li class="text-right">
+                        <div class="nav-link" style="padding-left:2px;padding-right:2px;">
+                            <a class="btn btn-danger btn-bordered" href="@Url.Action("Create", "BugReports")">Report Bug</a>
+                        </div>
+                    </li>
                 }
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     <li class="text-right">
-                        <div class="nav-link dropdown"style="padding-left:2px;padding-right:2px;">
+                        <div class="nav-link dropdown" style="padding-left:2px;padding-right:2px;">
                             <button type="button" class="btn btn-warning btn-bordered dropdown-toggle" id="NavbarDatabaseButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Database
                             </button>

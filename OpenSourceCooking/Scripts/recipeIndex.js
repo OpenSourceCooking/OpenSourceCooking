@@ -34,33 +34,38 @@ $(document).ready(function () {
     RecipeCommentTextArea.keyup(function (event) {
         $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
     });
-    if (ViewBagRecipeOwner)
-        GetFilterByKey('RecipeOwner').Value = ViewBagRecipeOwner;    
+    if (ViewBagDrafts)
+        GetFilterByKey('Drafts').Value = (ViewBagDrafts.toUpperCase() == 'TRUE');
+    if (ViewBagFollower)
+        GetFilterByKey('Follower').Value = (ViewBagFollower.toUpperCase() == 'TRUE');
     if (ViewBagPublicRecipes)
-        GetFilterByKey('PublicRecipes').Value = ViewBagPublicRecipes; 
+        GetFilterByKey('PublicRecipes').Value = (ViewBagPublicRecipes.toUpperCase() == 'TRUE');
     if (ViewBagRecipeId)
         RecipeId = ViewBagRecipeId;
+    if (ViewBagRecipeOwner)
+        GetFilterByKey('RecipeOwner').Value = ViewBagRecipeOwner;
     if (ViewBagRecipesPageIndex)
         RecipesPageIndex = ViewBagRecipesPageIndex;
-    if (ViewBagSavedRecipes)
-        GetFilterByKey('SavedRecipes').Value = ViewBagSavedRecipes;
+    if (ViewBagSaved)
+        GetFilterByKey('Saved').Value = ViewBagSaved;
     if (ViewBagSearchText) {
         GetFilterByKey('SearchText').Value = ViewBagSearchText;
         $('#SearchTextInput').val(ViewBagSearchText);
         $('#NavbarSearchButton').removeClass('btn-primary').addClass('btn-danger').html('X');
-    }  
+    }
     if (ViewBagSortingBy)
         GetFilterByKey('SortingBy').Value = ViewBagSortingBy;
     if (ViewBagSortAscending)
         GetFilterByKey('SortAscending').Value = ViewBagSortAscending;
     RefreshFiltersRecipeOwnerRadios();
+    RefreshFiltersRecipeTypesCheckboxes();
     AjaxGetRecipes();
     window.onscroll = function (ev) {
         if (window.innerHeight + window.pageYOffset + 20 >= document.body.offsetHeight) {
             window.scrollBy(0, -16);
             AjaxGetRecipes();
         }
-    };    
+    };
     $('#SetRecipeViewableTypePublic').on('click', function (e) {
         SetRecipeViewableType('Public', ClickedRecipeId);
     });
@@ -89,16 +94,16 @@ function AddRecipeCommentDiv(prepend, RecipeCommentDataTransferObject, RecipeCom
         + '<div class="col-4" style="padding-left:6px;padding-right:0;">'
         + '<span id="RecipeCommentVotes' + RecipeCommentDataTransferObject.Id + '">' + RecipeCommentDataTransferObject.TotalVoteValue + ' </span>';
     if (RecipeCommentDataTransferObject.MyVote === null) {
-        CommentHTML += '<input id="RecipeCommentLikeButton' + RecipeCommentDataTransferObject.Id+'" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', true)" type="image" src="/Content/Images/LikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-bottom:4px;"/>'
-        CommentHTML += '<input id="RecipeCommentDislikeButton' + RecipeCommentDataTransferObject.Id +'" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', false)" type="image" src="/Content/Images/DislikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-left:8px;margin-bottom:4px;"/>'
+        CommentHTML += '<input id="RecipeCommentLikeButton' + RecipeCommentDataTransferObject.Id + '" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', true)" type="image" src="/Content/Images/LikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-bottom:4px;"/>'
+        CommentHTML += '<input id="RecipeCommentDislikeButton' + RecipeCommentDataTransferObject.Id + '" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', false)" type="image" src="/Content/Images/DislikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-left:8px;margin-bottom:4px;"/>'
     }
     else if (RecipeCommentDataTransferObject.MyVote.VoteValue > 0) {
-        CommentHTML += '<input id="RecipeCommentLikeButton' + RecipeCommentDataTransferObject.Id +'" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', true)" type="image" src="/Content/Images/LikeLightGreen.png"style="vertical-align:middle;width:20px;height:20px;margin-bottom:4px;"/>'
-        CommentHTML += '<input id="RecipeCommentDislikeButton' + RecipeCommentDataTransferObject.Id +'" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', false)" type="image" src="/Content/Images/DislikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-left:8px;margin-bottom:4px;"/>'
+        CommentHTML += '<input id="RecipeCommentLikeButton' + RecipeCommentDataTransferObject.Id + '" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', true)" type="image" src="/Content/Images/LikeLightGreen.png"style="vertical-align:middle;width:20px;height:20px;margin-bottom:4px;"/>'
+        CommentHTML += '<input id="RecipeCommentDislikeButton' + RecipeCommentDataTransferObject.Id + '" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', false)" type="image" src="/Content/Images/DislikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-left:8px;margin-bottom:4px;"/>'
     }
     else {
-        CommentHTML += '<input id="RecipeCommentLikeButton' + RecipeCommentDataTransferObject.Id +'" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', true)" type="image" src="/Content/Images/LikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-bottom:4px;"/>'
-        CommentHTML += '<input id="RecipeCommentDislikeButton' + RecipeCommentDataTransferObject.Id +'" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', false)" type="image" src="/Content/Images/DislikeLightRed.png"style="vertical-align:middle;width:20px;height:20px;margin-left:8px;margin-bottom:4px;"/>'
+        CommentHTML += '<input id="RecipeCommentLikeButton' + RecipeCommentDataTransferObject.Id + '" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', true)" type="image" src="/Content/Images/LikeWhite.png"style="vertical-align:middle;width:20px;height:20px;margin-bottom:4px;"/>'
+        CommentHTML += '<input id="RecipeCommentDislikeButton' + RecipeCommentDataTransferObject.Id + '" onclick="CreateCommentVote(' + RecipeCommentDataTransferObject.Id + ', false)" type="image" src="/Content/Images/DislikeLightRed.png"style="vertical-align:middle;width:20px;height:20px;margin-left:8px;margin-bottom:4px;"/>'
     }
     CommentHTML += '</div>'
         + '<div class="col-8 text-right" style="padding-left:0;padding-right:6px;">'
@@ -157,18 +162,17 @@ function AjaxGetRecipes() {
                 if (CurrentRecipe.Description === undefined || CurrentRecipe.Description === null || CurrentRecipe.Description.length < 1)
                     Description = '';
                 if (CurrentRecipe.CompleteDateUtc !== null) //If CompleteDateUtc is null it means its a draft                
-                    BorderColor = GetRandomColor();                
-                else
-                {
+                    BorderColor = GetRandomColor();
+                else {
                     isDraft = true;
                     BorderColor = '#ff2b2b';//Red
                     RecipeName = '(Draft) ' + CurrentRecipe.Name;
-                }  
+                }
                 //if (CurrentRecipe.IsSaved == true)
                 //    BorderColor = SavedBorderColor;
                 RecipeDivHTMLString += '<div class="ClickableRecipeDiv box" id="ClickableRecipeDiv' + CurrentRecipe.Id + '">'
                     + '<div id="ClickableRecipeDivBorder' + CurrentRecipe.Id + '" class="zoomImage" style="padding-bottom:15px;border:2px solid;border-radius:20px;border-color:' + BorderColor + ';background-color:white;">'
-                    + '<h3 class="text-center" style="padding-top:4px;padding-bottom:2px;margin:10px;font-weight:bold;border:2px solid;border-color:' + BorderColor +';border-radius:10px;">' + RecipeName + '</h3>';
+                    + '<h3 class="text-center" style="padding-top:4px;padding-bottom:2px;margin:10px;font-weight:bold;border:2px solid;border-color:' + BorderColor + ';border-radius:10px;">' + RecipeName + '</h3>';
                 if (MainCloudFileThumbUrl)
                     RecipeDivHTMLString += '<div class="text-center" style="padding:2px;"><img class="rounded img-fluid" src="' + MainCloudFileThumbUrl + '" style="max-height:400px;"></div>';
                 else if (MainCloudFileUrl)
@@ -212,7 +216,7 @@ function AjaxGetRecipes() {
                 });
                 +'</div >'
                     + '</div>';
-                if (CurrentRecipe.IsMyRecipe === true) {                    
+                if (CurrentRecipe.IsMyRecipe === true) {
                     RecipeDivHTMLString += '<div>'
                         + '<div class="btn-group btn-group-sm btn-group-justified" style="padding:4px;">';
                     if (!isDraft) //Drafts cant be set to anything but secret
@@ -235,8 +239,7 @@ function AjaxGetRecipes() {
                         + '</div >'
                         + '</div >';
                 }
-                else
-                {
+                else {
                     RecipeDivHTMLString += '<div class="col-12"><a class="StopPropagationLink" href="javascript:OnClick_ReportRecipe(' + CurrentRecipe.Id + ');">Report</a></div>';
                     if (CurrentRecipe.IsSaved == true)
                         RecipeDivHTMLString += '<a id="SaveRecipeButton' + CurrentRecipe.Id + '" class="btn btn-sm btn-block btn-primary btn-bordered StopPropagationLink" href="javascript:ToggleSaveRecipe(' + CurrentRecipe.Id + ');"><i class="fa fa-star" style="color:yellow;"></i> Unsave</a>';
@@ -383,12 +386,11 @@ function DeleteRecipeComment(commentId) {
     });
 }
 function EditRecipe(recipeId, SavedByCount) {
-    if (SavedByCount !== 0)
-    {
+    if (SavedByCount !== 0) {
         ShowPopUpModal('This recipe is saved by other users and can no longer be edited');
         return;
     }
-    window.location.href = Config.Urls.RecipeEditor + '?RecipeId=' + recipeId;             
+    window.location.href = Config.Urls.RecipeEditor + '?RecipeId=' + recipeId;
 }
 function EditRecipeComment(commentId) {
     var CommentTextDiv = $('#CommentText' + commentId);
@@ -417,11 +419,10 @@ function FlagRecipe(recipeId, flagName) {
         data: { recipeId: recipeId, flagName: flagName },
         success: function (result) {
             $('#ReportModal').modal('hide');
-            if (result === 'Already Reported')
-            {
+            if (result === 'Already Reported') {
                 ShowPopUpModal("PopUp", "You've already reported this recipe");
                 return
-            }            
+            }
             ShowPopUpModal("PopUp", "Thanks for reporting. The Recipe has been flaged for review");
             $RecipesDiv.isotope('remove', $('#ClickableRecipeDiv' + recipeId)).isotope('layout');
         },
@@ -430,9 +431,9 @@ function FlagRecipe(recipeId, flagName) {
         }
     });
 }
-function GetRecipeById(recipeId) {    
+function GetRecipeById(recipeId) {
     var r = null;
-    $.each(RecipesArray, function (i, Recipe) {        
+    $.each(RecipesArray, function (i, Recipe) {
         if (Recipe.Id === parseInt(recipeId))
             r = Recipe;
     });
@@ -573,8 +574,8 @@ function PreviewRecipe(recipeId) {
                 }
                 else if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainVideo")
                     MainVideoUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
-            });            
-            
+            });
+
             if (MainVideoUrl) {
                 $('#ModalMainRecipeVideo').attr('src', MainVideoUrl);
                 if (MainCloudFileUrl)
@@ -587,15 +588,14 @@ function PreviewRecipe(recipeId) {
                 $('#ModalMainRecipeImg').attr('src', MainCloudFileUrl);
                 $('#ModalMainRecipeImg').fadeIn();
             }
-            else
-            {
+            else {
                 $('#ModalMainRecipeImg').attr('src', Config.Images.OpenSourceCookingImageUrl);
                 $('#ModalMainRecipeImg').fadeIn();
             }
             //Populate SymbolsDiv
             var RecipePreviewerSymbolsDiv = $('#RecipePreviewerSymbolsDiv').empty();
             $.each(RecipeDataTransferObject.DietaryRestrictionDataTransferObjects, function (i, DietaryRestriction) {
-                RecipePreviewerSymbolsDiv.append('<img class="img-fluid zoomImage" onclick="ShowDietaryRestrictionsSymbolLegend($(\'#SymbolsLegendModalSymbolsTable\'));$(\'#SymbolsLegendModal\').modal(\'show\');" style="padding-right:3px;width:56px;height:56px;" src="' + DietaryRestriction.IconUrl + '" />');       
+                RecipePreviewerSymbolsDiv.append('<img class="img-fluid zoomImage" onclick="ShowDietaryRestrictionsSymbolLegend($(\'#SymbolsLegendModalSymbolsTable\'));$(\'#SymbolsLegendModal\').modal(\'show\');" style="padding-right:3px;width:56px;height:56px;" src="' + DietaryRestriction.IconUrl + '" />');
                 RefreshZoomImages();
             });
             $('#RecipePreviewer').modal('show');
@@ -603,7 +603,7 @@ function PreviewRecipe(recipeId) {
         error: function (er) {
             ShowPopUpModal("Error", er);
         }
-    });    
+    });
 }
 function SaveCommentChanges(commentId) {
     var NewText = $('#EditingCommentTextArea' + commentId).val();
@@ -637,12 +637,11 @@ function ToggleSaveRecipe(recipeId) {
         cache: false,
         data: { recipeId: recipeId },
         success: function (IsSaved) {
-            if (IsSaved === 'No AspNetId')            
-                ShowPopUpModal('You must be logged in');            
-            if (IsSaved === true)            
+            if (IsSaved === 'No AspNetId')
+                ShowPopUpModal('You must be logged in');
+            if (IsSaved === true)
                 SaveRecipeButton.html('<i class="fa fa-star" style="color:yellow;"></i> Unsave</a>');
-            else
-            {
+            else {
                 SaveRecipeButton.html("<i class='fa fa-star-o'></i> Save</a>");
                 $('#ClickableRecipeDivBorder' + recipeId).css('border-color', GetRandomColor());
             }
@@ -662,10 +661,26 @@ function RefreshFiltersRecipeOwnerRadios() {
         $('#FiltersMyRecipesRadio').prop('checked', true);
     else
         $('#FiltersBothRecipesRadio').prop('checked', true);
+
+    console.log(GetFilterByKey('Saved').Value);
+    if (GetFilterByKey('Saved').Value === 'NotSaved')
+        $('#FiltersNotSavedRadio').prop('checked', true);
+    else if (GetFilterByKey('Saved').Value === 'Saved')
+        $('#FiltersSavedRadio').prop('checked', true);
+    else
+        $('#FiltersAllSavedRecipesRadio').prop('checked', true);
+}
+function RefreshFiltersRecipeTypesCheckboxes() {
+    if (GetFilterByKey('Drafts').Value === false)
+        $('#FiltersDraftsCheckbox').prop('checked', false);
+    if (GetFilterByKey('Follower').Value === false)
+        $('#FiltersFollowerCheckbox').prop('checked', false);
+    if (GetFilterByKey('PublicRecipes').Value === false)
+        $('#FiltersPublicRecipesCheckbox').prop('checked', false);
 }
 function RefreshFiltersSortingTable() {
     var FiltersSortByTable = $('#FiltersSortByTable');
-    FiltersSortByTable.empty();  
+    FiltersSortByTable.empty();
     $.each(Config.OrderByOptions, function (i, OrderByOption) {
         var trHTMLString = '<tr><td>' + OrderByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
         //Date OrderBy is inverted
@@ -676,7 +691,7 @@ function RefreshFiltersSortingTable() {
         else {
             trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
             trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
-        }        
+        }
         FiltersSortByTable.append(trHTMLString);
     });
     var sortAscending = GetFilterByKey('SortAscending').Value
@@ -685,7 +700,7 @@ function RefreshFiltersSortingTable() {
     var SortingByValue = GetFilterByKey('SortingBy').Value
     if (!SortingByValue)
         SortingByValue = '0';
-    $('.SortByButton').removeClass('btn-info').addClass('btn-light');   
+    $('.SortByButton').removeClass('btn-info').addClass('btn-light');
     $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).removeClass("btn-light").addClass("btn-info");
 }
 function SetRecipeViewableType(viewableTypeName, recipeId) {
@@ -730,7 +745,7 @@ function ShowRecipeSteps() {
         type: "GET",
         cache: false,
         data: { recipeId: ClickedRecipeId },
-        success: function (RecipeSteps) {            
+        success: function (RecipeSteps) {
             $('#ShowRecipeStepsButton').html('Hide Recipe Steps');
             $('#ShowRecipeStepsButton').removeClass('btn-outline-info').addClass('btn-info');
             var RecipeStepsDiv = $('#RecipeStepsDiv');
@@ -757,12 +772,12 @@ function ShowRecipeSteps() {
                     + '</div>'
                     + '</div>'
                     + '<div class="col-12 text-center" style="padding-bottom:6px;">'
-                    + '<div class="row">';                
+                    + '<div class="row">';
                 //Step Photos
                 $.each(RecipeStep.RecipeStepsCloudFileDataTransferObjects, function (i, RecipeStepsCloudFileDataTransferObject) {
                     $('#OptionalPhotoVideoSpan').fadeIn('slow');
                     AppendString = AppendString + '<div class="col-6" style="padding-left:4px;padding-right:4px;"><img src="' + RecipeStepsCloudFileDataTransferObject.Url + '" class="img-fluid zoomImage FullscreenableImg" style="border-radius:28px;max-height:180px;"></div>';
-                });         
+                });
                 AppendString = AppendString + '</div>'
                     + '</div>';
                 RecipeStepsDiv.append(AppendString);
@@ -773,7 +788,7 @@ function ShowRecipeSteps() {
                 });
                 $('#JustAddedStepPhotoTable').removeAttr('id');
                 $('#JustAddedStepIngredientTable').removeAttr('id');
-                $('#OptionalPhotoVideoSpan').removeAttr('id');    
+                $('#OptionalPhotoVideoSpan').removeAttr('id');
                 RecipeStepsDiv.show();
             });
         },
@@ -811,9 +826,9 @@ function ShowRecipeComments() {
         }
     });
 }
-function SwitchSortBy(sortByOptionValue, sortAscending) {    
+function SwitchSortBy(sortByOptionValue, sortAscending) {
     if (sortByOptionValue !== null)
         GetFilterByKey('SortingBy').Value = sortByOptionValue;
-    GetFilterByKey('SortAscending').Value = sortAscending;  
+    GetFilterByKey('SortAscending').Value = sortAscending;
     RefreshFiltersSortingTable();
 }

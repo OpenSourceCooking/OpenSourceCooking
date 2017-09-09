@@ -13,11 +13,17 @@ using LinqKit;
 
 namespace OpenSourceCooking.Controllers.StandardControllers
 {
-    public enum RecipeOwner
+    public enum RecipeOwnerFilter
     {
         Any,
         Mine,
         NotMine
+    }
+    public enum SavedRecipeFilter
+    {
+        Any,
+        Saved,
+        NotSaved
     }
 
     public class RecipesController : Controller
@@ -25,17 +31,19 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public async Task<ActionResult> Index(bool? publicRecipes, int? recipeId, RecipeOwner? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? savedRecipes, string searchText, string sortingBy, bool? sortAscending)
+        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? publicRecipes, int? recipeId, RecipeOwnerFilter? recipeOwner, int? recipesPageIndex, bool? returnJson, SavedRecipeFilter? saved, string searchText, string sortingBy, bool? sortAscending)
         {
             if (!returnJson.HasValue || !returnJson.Value)
             {
                 //Pass default JS params
-                ViewBag.RecipeOwner = recipeOwner ?? RecipeOwner.Any;
+                ViewBag.Drafts = drafts;
+                ViewBag.Follower = follower;
                 ViewBag.PublicRecipes = publicRecipes;
                 ViewBag.RecipeId = recipeId;
+                ViewBag.RecipeOwner = recipeOwner ?? RecipeOwnerFilter.Any;
                 ViewBag.RecipesPageIndex = recipesPageIndex;
                 ViewBag.ReturnJson = returnJson;
-                ViewBag.SavedRecipes = savedRecipes;
+                ViewBag.SavedRecipes = saved ?? SavedRecipeFilter.Any; ;
                 ViewBag.SearchText = searchText;
                 ViewBag.SortingBy = sortingBy;
                 ViewBag.SortAscending = sortAscending;
@@ -51,34 +59,35 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             {
                 switch (recipeOwner)
                 {
-                    case RecipeOwner.Any:
+                    case RecipeOwnerFilter.Any:
                         Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
                         break;
-                    case RecipeOwner.Mine:
+                    case RecipeOwnerFilter.Mine:
                         Predicate = Predicate.And(r => r.CreatorId == AspNetId);
                         break;
-                    case RecipeOwner.NotMine:
+                    case RecipeOwnerFilter.NotMine:
                         Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
                         break;
                 }
 
-                //if (PublicRecipes)
-                //    Predicate = Predicate.And(r => r.ViewableType == "Public");
-                //else
-                //    Predicate = Predicate.And(r => r.ViewableType != "Public");
-                //
-                //
-                //if (SavedRecipes)
-                //    SavedRecipes = savedRecipes.Value;
-                //else
-                //    r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId)
+                switch (saved)
+                {
+                    case SavedRecipeFilter.Saved:
+                        Predicate = Predicate.And(r => r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                        break;
+                    case SavedRecipeFilter.NotSaved:
+                        Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                        break;
+                    default:
+                        break;
+                }
 
-                //if (MyRecipes && !PublicRecipes)
-                //    Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
-                //if (!MyRecipes && !PublicRecipes && SavedRecipes)
-                //    Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-                //if (!MyRecipes && !PublicRecipes && !SavedRecipes)
-                //    Predicate = Predicate.And(r => r.CreatorId == "-1");
+                if (drafts == false)
+                    Predicate = Predicate.And(r => r.CompleteDateUtc != null);
+                if (follower == false)
+                    Predicate = Predicate.And(r => r.ViewableType != "Followers");
+                if (publicRecipes == false)
+                    Predicate = Predicate.And(r => r.ViewableType != "Public");
             }
             else
                 Predicate = Predicate.And(r => r.ViewableType == "Public");
@@ -409,7 +418,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 ViewableType = Recipe.ViewableType,
             }).FirstOrDefaultAsync();
             return Json(RecipeDataTransferObject, JsonRequestBehavior.AllowGet);
-        }        
+        }
         public async Task<JsonResult> AjaxGetRecipeSteps(int recipeId)
         {
             Recipe Recipe = await db.Recipes.FindAsync(recipeId);
