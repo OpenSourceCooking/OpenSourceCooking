@@ -58,7 +58,7 @@ function GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) {
     if (recipeStepsIngredientsDataTransferObject.ToAmount !== null && recipeStepsIngredientsDataTransferObject.ToAmount !== undefined && recipeStepsIngredientsDataTransferObject.ToAmount.length > 0)
         IngredientAmountString = IngredientAmountString + 'to ' + recipeStepsIngredientsDataTransferObject.ToAmount + ' ';
     switch (recipeStepsIngredientsDataTransferObject.MeasurementUnitName) {
-        case "Count":
+        case "Count/Quanity":
             break;
         default:
             IngredientAmountString = IngredientAmountString + recipeStepsIngredientsDataTransferObject.MeasurementUnitName + ' of ';

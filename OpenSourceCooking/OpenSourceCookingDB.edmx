@@ -93,7 +93,7 @@
           <Key>
             <PropertyRef Name="IngredientName" />
           </Key>
-          <Property Name="IngredientName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="IngredientName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="CloudFileId" Type="int" />
           <Property Name="CreateDateUtc" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="CreatorId" Type="nvarchar" MaxLength="128" Nullable="false" />
@@ -189,11 +189,11 @@
             <PropertyRef Name="RecipeId" />
             <PropertyRef Name="StepNumber" />
           </Key>
-          <Property Name="IngredientName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Amount" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IngredientName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MeasurementUnitName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="RecipeId" Type="int" Nullable="false" />
           <Property Name="StepNumber" Type="int" Nullable="false" />
-          <Property Name="Amount" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="MeasurementUnitName" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="ToAmount" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="RecipeViewableTypes">
@@ -855,23 +855,10 @@
             <End Role="CommentVote" EntitySet="CommentVotes" />
           </AssociationSet>
           <EntitySet Name="MeasurementTypes" EntityType="OpenSourceCookingModel.MeasurementType" />
-          <EntitySet Name="RecipeStepsIngredients" EntityType="OpenSourceCookingModel.RecipeStepsIngredient" />
-          <AssociationSet Name="FK_RecipeStepsIngredients_Ingredients" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients">
-            <End Role="Ingredient" EntitySet="Ingredients" />
-            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeStepsIngredients_RecipeSteps" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps">
-            <End Role="RecipeStep" EntitySet="RecipeSteps" />
-            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
-          </AssociationSet>
           <EntitySet Name="MeasurementUnits" EntityType="OpenSourceCookingModel.MeasurementUnit" />
           <AssociationSet Name="FK_RecipeStepsIngredients_MeasurementTypes" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementTypes">
             <End Role="MeasurementType" EntitySet="MeasurementTypes" />
             <End Role="MeasurementUnit" EntitySet="MeasurementUnits" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeStepsIngredients_MeasurementUnits" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementUnits">
-            <End Role="MeasurementUnit" EntitySet="MeasurementUnits" />
-            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
           </AssociationSet>
           <FunctionImport Name="SaveRecipe">
             <Parameter Name="SavedByAspNetUserId" Mode="In" Type="String" />
@@ -914,6 +901,19 @@
           <AssociationSet Name="RecipesDietaryRestrictions" Association="OpenSourceCookingModel.RecipesDietaryRestrictions">
             <End Role="DietaryRestriction" EntitySet="DietaryRestrictions" />
             <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <EntitySet Name="RecipeStepsIngredients" EntityType="OpenSourceCookingModel.RecipeStepsIngredient" />
+          <AssociationSet Name="FK_RecipeStepsIngredients_Ingredients" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients">
+            <End Role="Ingredient" EntitySet="Ingredients" />
+            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeStepsIngredients_MeasurementUnits" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementUnits">
+            <End Role="MeasurementUnit" EntitySet="MeasurementUnits" />
+            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeStepsIngredients_RecipeSteps" Association="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps">
+            <End Role="RecipeStep" EntitySet="RecipeSteps" />
+            <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="RecipeStepsCloudFile">
@@ -1126,8 +1126,8 @@
           <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="EstimatedTimeInSeconds" Type="Int64" Nullable="false" />
           <NavigationProperty Name="RecipeStepsCloudFiles" Relationship="OpenSourceCookingModel.FK_RecipeSteps_CloudFiles_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsCloudFile" />
-          <NavigationProperty Name="RecipeStepsIngredients" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsIngredient" />
           <NavigationProperty Name="Recipe" Relationship="OpenSourceCookingModel.FK_RecipeSteps_RecipeID" FromRole="RecipeStep" ToRole="Recipe" />
+          <NavigationProperty Name="RecipeStepsIngredients" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" FromRole="RecipeStep" ToRole="RecipeStepsIngredient" />
         </EntityType>
         <Association Name="FK_RecipeSteps_CloudFiles_RecipeSteps">
           <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
@@ -1149,7 +1149,7 @@
           <Key>
             <PropertyRef Name="IngredientName" />
           </Key>
-          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="CloudFileId" Type="Int32" />
           <Property Name="CreatorId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="CreateDateUtc" Type="DateTime" Nullable="false" Precision="7" />
@@ -1320,50 +1320,6 @@
           <Property Name="MeasurementTypeName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MeasurementUnits" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementTypes" FromRole="MeasurementType" ToRole="MeasurementUnit" />
         </EntityType>
-        <EntityType Name="RecipeStepsIngredient">
-          <Key>
-            <PropertyRef Name="IngredientName" />
-            <PropertyRef Name="RecipeId" />
-            <PropertyRef Name="StepNumber" />
-          </Key>
-          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="RecipeId" Type="Int32" Nullable="false" />
-          <Property Name="StepNumber" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MeasurementUnitName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ToAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Ingredient" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients" FromRole="RecipeStepsIngredient" ToRole="Ingredient" />
-          <NavigationProperty Name="RecipeStep" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" FromRole="RecipeStepsIngredient" ToRole="RecipeStep" />
-          <NavigationProperty Name="MeasurementUnit" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementUnits" FromRole="RecipeStepsIngredient" ToRole="MeasurementUnit" />
-        </EntityType>
-        <Association Name="FK_RecipeStepsIngredients_Ingredients">
-          <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Ingredient">
-              <PropertyRef Name="IngredientName" />
-            </Principal>
-            <Dependent Role="RecipeStepsIngredient">
-              <PropertyRef Name="IngredientName" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeStepsIngredients_RecipeSteps">
-          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeStep">
-              <PropertyRef Name="RecipeId" />
-              <PropertyRef Name="StepNumber" />
-            </Principal>
-            <Dependent Role="RecipeStepsIngredient">
-              <PropertyRef Name="RecipeId" />
-              <PropertyRef Name="StepNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="MeasurementUnit">
           <Key>
             <PropertyRef Name="MeasurementUnitName" />
@@ -1382,18 +1338,6 @@
             </Principal>
             <Dependent Role="MeasurementUnit">
               <PropertyRef Name="MeasurementTypeName" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeStepsIngredients_MeasurementUnits">
-          <End Type="OpenSourceCookingModel.MeasurementUnit" Role="MeasurementUnit" Multiplicity="1" />
-          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MeasurementUnit">
-              <PropertyRef Name="MeasurementUnitName" />
-            </Principal>
-            <Dependent Role="RecipeStepsIngredient">
-              <PropertyRef Name="MeasurementUnitName" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1529,6 +1473,62 @@
         <Association Name="RecipesDietaryRestrictions">
           <End Type="OpenSourceCookingModel.DietaryRestriction" Role="DietaryRestriction" Multiplicity="*" />
           <End Type="OpenSourceCookingModel.Recipe" Role="Recipe" Multiplicity="*" />
+        </Association>
+        <EntityType Name="RecipeStepsIngredient">
+          <Key>
+            <PropertyRef Name="IngredientName" />
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="StepNumber" />
+          </Key>
+          <Property Name="Amount" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IngredientName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MeasurementUnitName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="StepNumber" Type="Int32" Nullable="false" />
+          <Property Name="ToAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Ingredient" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_Ingredients" FromRole="RecipeStepsIngredient" ToRole="Ingredient" />
+          <NavigationProperty Name="MeasurementUnit" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_MeasurementUnits" FromRole="RecipeStepsIngredient" ToRole="MeasurementUnit" />
+          <NavigationProperty Name="RecipeStep" Relationship="OpenSourceCookingModel.FK_RecipeStepsIngredients_RecipeSteps" FromRole="RecipeStepsIngredient" ToRole="RecipeStep" />
+        </EntityType>
+        <Association Name="FK_RecipeStepsIngredients_Ingredients">
+          <End Type="OpenSourceCookingModel.Ingredient" Role="Ingredient" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ingredient">
+              <PropertyRef Name="IngredientName" />
+            </Principal>
+            <Dependent Role="RecipeStepsIngredient">
+              <PropertyRef Name="IngredientName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeStepsIngredients_MeasurementUnits">
+          <End Type="OpenSourceCookingModel.MeasurementUnit" Role="MeasurementUnit" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasurementUnit">
+              <PropertyRef Name="MeasurementUnitName" />
+            </Principal>
+            <Dependent Role="RecipeStepsIngredient">
+              <PropertyRef Name="MeasurementUnitName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeStepsIngredients_RecipeSteps">
+          <End Type="OpenSourceCookingModel.RecipeStep" Role="RecipeStep" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.RecipeStepsIngredient" Role="RecipeStepsIngredient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeStep">
+              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="StepNumber" />
+            </Principal>
+            <Dependent Role="RecipeStepsIngredient">
+              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="StepNumber" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1699,18 +1699,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RecipeStepsIngredients">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeStepsIngredient">
-              <MappingFragment StoreEntitySet="RecipeStepsIngredients">
-                <ScalarProperty Name="ToAmount" ColumnName="ToAmount" />
-                <ScalarProperty Name="MeasurementUnitName" ColumnName="MeasurementUnitName" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
-                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
-                <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MeasurementUnits">
             <EntityTypeMapping TypeName="OpenSourceCookingModel.MeasurementUnit">
               <MappingFragment StoreEntitySet="MeasurementUnits">
@@ -1762,6 +1750,18 @@
               <ScalarProperty Name="Name" ColumnName="DietaryRestrictionName" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="RecipeStepsIngredients">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.RecipeStepsIngredient">
+              <MappingFragment StoreEntitySet="RecipeStepsIngredients">
+                <ScalarProperty Name="ToAmount" ColumnName="ToAmount" />
+                <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="MeasurementUnitName" ColumnName="MeasurementUnitName" />
+                <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

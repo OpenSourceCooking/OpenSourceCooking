@@ -45,7 +45,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers.Database
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Text,CreatorId,CreateDate,EditDate,ParentCommentId")] Comment comment)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Text,CreatorId,CreateDateUtc,EditDateUtc,ParentCommentId")] Comment comment)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers.Database
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Text,CreatorId,CreateDate,EditDate,ParentCommentId")] Comment comment)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Text,CreatorId,CreateDateUtc,EditDateUtc,ParentCommentId")] Comment comment)
         {
             if (ModelState.IsValid)
             {

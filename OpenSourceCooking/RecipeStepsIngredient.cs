@@ -14,15 +14,15 @@ namespace OpenSourceCooking
     
     public partial class RecipeStepsIngredient
     {
+        public string Amount { get; set; }
         public string IngredientName { get; set; }
+        public string MeasurementUnitName { get; set; }
         public int RecipeId { get; set; }
         public int StepNumber { get; set; }
-        public string Amount { get; set; }
-        public string MeasurementUnitName { get; set; }
         public string ToAmount { get; set; }
     
         public virtual Ingredient Ingredient { get; set; }
-        public virtual RecipeStep RecipeStep { get; set; }
         public virtual MeasurementUnit MeasurementUnit { get; set; }
+        public virtual RecipeStep RecipeStep { get; set; }
     }
 }

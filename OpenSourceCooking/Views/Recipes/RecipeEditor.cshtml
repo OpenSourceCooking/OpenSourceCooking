@@ -175,22 +175,27 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-12 text-center form-group">
-                        <input type="text" class="form-control" placeholder="Ingredient Name" id="IngredientSearch" />
+                    <div class="col-12">
+                        <h5>Ingredient Name</h5>
                     </div>
-                    <div class="col-12 text-center form-group" style="padding-top:4px;">
+                    <div class="col-12 text-center">
+                        <input type="text" class="form-control" placeholder="E.g. egg, milk, sugar, " id="IngredientSearch" />
+                    </div>
+                    <div class="col-12" style="padding-top:10px;">
+                        <h5>Measurement Unit</h5>
                         @Html.DropDownList("MeasurementUnitDropDown", Enumerable.Empty<SelectListItem>(), "Loading...", new { @class = "form-control" })
                     </div>
-                    <div class="col-12 text-center" style="padding-left:0;padding-right:0;">
-                        <h5>Ingredient Amount - Ex: 2.5 or 2 1/2</h5>
+                    <div class="col-12" style="padding-top:10px;">
+                        <h5>Amount</h5>
+                        (Decimal or Fraction) E.g. &nbsp 2 1/2 &nbsp or &nbsp 2.5
                     </div>
-                    <div class="col-5 text-center form-group">
+                    <div class="col-5 text-center">
                         <input type="text" class="form-control" placeholder="Required" id="MeasurementAmount" />
                     </div>
-                    <div class="col-2 text-center form-group">
+                    <div class="col-2 text-center">
                         to
                     </div>
-                    <div class="col-5 text-center form-group">
+                    <div class="col-5 text-center">
                         <input type="text" class="form-control" placeholder="Optional" id="OptionalToAmount" />
                     </div>
                 </div>

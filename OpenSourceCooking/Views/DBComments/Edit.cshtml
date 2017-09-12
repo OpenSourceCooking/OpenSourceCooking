@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Edit";
 }
-<br />
+
 <h2>Edit</h2>
 
 
@@ -34,18 +34,18 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CreateDateUtc, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CreateDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.CreateDateUtc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CreateDateUtc, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EditDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EditDateUtc, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EditDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EditDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EditDateUtc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EditDateUtc, "", new { @class = "text-danger" })
             </div>
         </div>
 

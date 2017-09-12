@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
-<br/>
+
 <h2>Index</h2>
 
 <p>
@@ -18,7 +18,7 @@
             @Html.DisplayNameFor(model => model.CreateDateUtc)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.EditDate)
+            @Html.DisplayNameFor(model => model.EditDateUtc)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.AspNetUser.Email)
@@ -38,7 +38,7 @@
             @Html.DisplayFor(modelItem => item.CreateDateUtc)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.EditDate)
+            @Html.DisplayFor(modelItem => item.EditDateUtc)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.AspNetUser.Email)

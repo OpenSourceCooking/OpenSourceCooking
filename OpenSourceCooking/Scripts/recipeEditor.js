@@ -17,7 +17,25 @@ var EditingRecipeStep = {
     StepNumber: 0,
     Comment: '',
     EstimatedTimeInSeconds: 0,
-    RecipeStepsIngredients: new Array()
+    RecipeStepsIngredients: [
+        {
+            Amount: null,
+            IngredientName: null,
+            MeasurementUnitName: null,
+            RecipeId: null,
+            StepNumber: null,
+            ToAmount: null,
+            RecipeStepsIngredientsIngredientModifiers: [
+                {
+                    Id: null,
+                    IngredientName: null,
+                    ModifierName: null,
+                    RecipeId: null,
+                    StepNumber: null,
+                }
+            ]
+        },
+    ]
 };
 
 var EditingRecipe = {
@@ -26,6 +44,7 @@ var EditingRecipe = {
     CreationStep: 0, //0-NotCreated, 1-Name Saved, 2-ServingSize
     VideoCloudFileId: 0,
 };
+
 
 $(document).ready(function () {
     $('#DescriptionInput').attr('maxlength', MaxRecipeDescriptionLength);
@@ -803,9 +822,9 @@ function UpdateDescription() {
     });
 }
 function UpdateIngredientToStep(RecipeId) {
+    var Amount = $('#MeasurementAmount').val();
     var IngredientName = $('#IngredientSearch').val();
     var MeasurementUnit = $('#MeasurementUnitDropDown').val();
-    var Amount = $('#MeasurementAmount').val();
     var OptionalToAmount = $('#OptionalToAmount').val();
     //Validation
     if (IngredientName === null || IngredientName === undefined || IngredientName.length <= 0) {
@@ -825,12 +844,9 @@ function UpdateIngredientToStep(RecipeId) {
         CurrentTD = $(this);
         if (CurrentTD.hasClass('IngredientNameTD') && CurrentTD.html() == IngredientName) {
             ShowPopUpModal('Validation', 'Ingredient already exist in this step');
-            AlreadyExist = true;
             return;
         }
     });
-    if (AlreadyExist == true)
-        return;
     $.ajax({
         url: Config.AjaxUrls.AjaxValidateAmountsThisShouldBeDoneClientSide,
         type: "GET",
@@ -855,14 +871,16 @@ function UpdateIngredientToStep(RecipeId) {
         }
     });
 }
-function UpdateRecipeStep(RecipeId) { 
-    var RecipeStepsIngredients = new Array();
+function UpdateRecipeStep(RecipeId) {     
+
+    var RecipeStepsIngredientsArray = new Array();
+
     $('#RecipeStepIngredientsTable tr').each(function () {
         var tds = $(this).find("td");
         var RecipeStepIngredient = { 'RecipeId': RecipeId, 'StepNumber': StepNumber, 'IngredientName': $(tds[5]).html(), 'MeasurementUnitName': $(tds[4]).html(), 'Amount': $(tds[2]).html(), 'ToAmount': $(tds[3]).html() };
         if (RecipeStepIngredient.ToAmount === null || RecipeStepIngredient.ToAmount === "null" || RecipeStepIngredient.ToAmount.length <= 0)
             RecipeStepIngredient.ToAmount = undefined;
-        RecipeStepsIngredients.push(RecipeStepIngredient);
+        RecipeStepsIngredientsArray.push(RecipeStepIngredient);
     });
     var Comment = $('#AddStepComment').val();
     var EstimatedTimeInSeconds = $('#EstimatedStepTime').val() * 60;
@@ -880,7 +898,7 @@ function UpdateRecipeStep(RecipeId) {
     EditingRecipeStep.StepNumber = StepNumber;
     EditingRecipeStep.Comment = Comment;
     EditingRecipeStep.EstimatedTimeInSeconds = EstimatedTimeInSeconds;
-    EditingRecipeStep.RecipeStepsIngredients = RecipeStepsIngredients;
+    EditingRecipeStep.RecipeStepsIngredients = RecipeStepsIngredientsArray;
     var Data = JSON.stringify(EditingRecipeStep);
     $.ajax({
         url: Config.AjaxUrls.AjaxUpdateRecipeStep,

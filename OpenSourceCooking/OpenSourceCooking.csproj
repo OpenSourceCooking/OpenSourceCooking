@@ -252,17 +252,17 @@
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\StandardControllers\AccountController.cs" />
+    <Compile Include="Controllers\StandardControllers\Database\DBCommentsController.cs" />
+    <Compile Include="Controllers\StandardControllers\Database\DBRecipeStepsIngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\CommentVotesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBCloudFilesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBCommentVotesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBBugReportsController.cs" />
-    <Compile Include="Controllers\StandardControllers\Database\DBCommentsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBDietaryRestrictionsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBFlagsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBIngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBRecipeFlagsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBRecipesController.cs" />
-    <Compile Include="Controllers\StandardControllers\Database\DBRecipeStepsIngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\BugReportsController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBMeasurementTypesController.cs" />
     <Compile Include="Controllers\StandardControllers\Database\DBMeasurementUnitsController.cs" />
@@ -330,9 +330,6 @@
     <Compile Include="RecipeStepsCloudFile.cs">
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="RecipeStepsIngredient.cs">
-      <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="AzureCloudStorageWrapper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -342,6 +339,9 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\DataTransferObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecipeStepsIngredient.cs">
+      <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="RecipeViewableType.cs">
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
@@ -590,11 +590,6 @@
     <Content Include="Views\DBBugReports\Edit.cshtml" />
     <Content Include="Views\DBBugReports\Index.cshtml" />
     <Content Include="Views\BugReports\Confirmation.cshtml" />
-    <Content Include="Views\DBRecipeStepsIngredients\Create.cshtml" />
-    <Content Include="Views\DBRecipeStepsIngredients\Delete.cshtml" />
-    <Content Include="Views\DBRecipeStepsIngredients\Details.cshtml" />
-    <Content Include="Views\DBRecipeStepsIngredients\Edit.cshtml" />
-    <Content Include="Views\DBRecipeStepsIngredients\Index.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Shared\_JavaScriptConfig.cshtml" />
     <Content Include="Views\PartialViews\Modals\_PopUpModal.cshtml" />
@@ -612,11 +607,6 @@
     <Content Include="Views\DBRecipeCommentVotes\Index.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\DBComments\Create.cshtml" />
-    <Content Include="Views\DBComments\Delete.cshtml" />
-    <Content Include="Views\DBComments\Details.cshtml" />
-    <Content Include="Views\DBComments\Edit.cshtml" />
-    <Content Include="Views\DBComments\Index.cshtml" />
     <Content Include="Views\DBCommentVotes\Create.cshtml" />
     <Content Include="Views\DBCommentVotes\Delete.cshtml" />
     <Content Include="Views\DBCommentVotes\Details.cshtml" />
@@ -666,6 +656,16 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\DBComments\Create.cshtml" />
+    <Content Include="Views\DBComments\Delete.cshtml" />
+    <Content Include="Views\DBComments\Details.cshtml" />
+    <Content Include="Views\DBComments\Edit.cshtml" />
+    <Content Include="Views\DBComments\Index.cshtml" />
+    <Content Include="Views\DBRecipeStepsIngredients\Create.cshtml" />
+    <Content Include="Views\DBRecipeStepsIngredients\Delete.cshtml" />
+    <Content Include="Views\DBRecipeStepsIngredients\Details.cshtml" />
+    <Content Include="Views\DBRecipeStepsIngredients\Edit.cshtml" />
+    <Content Include="Views\DBRecipeStepsIngredients\Index.cshtml" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -549,11 +549,11 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 {
                     NewRecipeStep.RecipeStepsIngredients.Add(new RecipeStepsIngredient()
                     {
-                        RecipeId = RecipeStepsIngredient.RecipeId,
-                        StepNumber = NewStepNumber,
                         Amount = RecipeStepsIngredient.Amount,
                         IngredientName = RecipeStepsIngredient.IngredientName,
                         MeasurementUnitName = RecipeStepsIngredient.MeasurementUnitName,
+                        RecipeId = RecipeStepsIngredient.RecipeId,
+                        StepNumber = NewStepNumber,
                         ToAmount = RecipeStepsIngredient.ToAmount
                     });
                 }
@@ -663,32 +663,32 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             OldRecipeStep.Comment = String.IsNullOrEmpty(recipeStep.Comment) ? null : recipeStep.Comment;
             OldRecipeStep.EstimatedTimeInSeconds = recipeStep.EstimatedTimeInSeconds;
             OldRecipeStep.RecipeStepsIngredients.Clear();
-            foreach (RecipeStepsIngredient RecipeStepsIngredient in recipeStep.RecipeStepsIngredients)
+            foreach (RecipeStepsIngredient UpdatedRecipeStepsIngredient in recipeStep.RecipeStepsIngredients)
             {
                 //Create Ingredient if it doesnt exist
-                Ingredient Ingredient = await db.Ingredients.FindAsync(RecipeStepsIngredient.IngredientName);
+                Ingredient Ingredient = await db.Ingredients.FindAsync(UpdatedRecipeStepsIngredient.IngredientName);
                 if (Ingredient == null)
                 {
                     Ingredient = new Ingredient
                     {
-                        IngredientName = RecipeStepsIngredient.IngredientName,
+                        IngredientName = UpdatedRecipeStepsIngredient.IngredientName,
                         CreatorId = AspNetId,
                         CreateDateUtc = DateTime.UtcNow
                     };
                     db.Ingredients.Add(Ingredient);
                 }
                 //Remove Leading 0s
-                if (RecipeStepsIngredient.Amount != null)
+                if (UpdatedRecipeStepsIngredient.Amount != null)
                 {
-                    RecipeStepsIngredient.Amount = RecipeStepsIngredient.Amount.TrimStart('0');
-                    RecipeStepsIngredient.Amount = RecipeStepsIngredient.Amount.Length > 0 ? RecipeStepsIngredient.Amount : "0";
+                    UpdatedRecipeStepsIngredient.Amount = UpdatedRecipeStepsIngredient.Amount.TrimStart('0');
+                    UpdatedRecipeStepsIngredient.Amount = UpdatedRecipeStepsIngredient.Amount.Length > 0 ? UpdatedRecipeStepsIngredient.Amount : "0";
                 }
-                if (RecipeStepsIngredient.ToAmount != null)
+                if (UpdatedRecipeStepsIngredient.ToAmount != null)
                 {
-                    RecipeStepsIngredient.ToAmount = RecipeStepsIngredient.ToAmount.TrimStart('0');
-                    RecipeStepsIngredient.ToAmount = RecipeStepsIngredient.ToAmount.Length > 0 ? RecipeStepsIngredient.ToAmount : "0";
+                    UpdatedRecipeStepsIngredient.ToAmount = UpdatedRecipeStepsIngredient.ToAmount.TrimStart('0');
+                    UpdatedRecipeStepsIngredient.ToAmount = UpdatedRecipeStepsIngredient.ToAmount.Length > 0 ? UpdatedRecipeStepsIngredient.ToAmount : "0";
                 }
-                OldRecipeStep.RecipeStepsIngredients.Add(RecipeStepsIngredient);
+                OldRecipeStep.RecipeStepsIngredients.Add(UpdatedRecipeStepsIngredient);
             }
             await db.SaveChangesAsync();
             return Json("true", JsonRequestBehavior.AllowGet);
@@ -804,6 +804,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             {
                 try { ToAmount = UtilityFunctionLib.FractionToDouble(amount); }
                 catch (FormatException) { return Json("Amount is not in a valid format", JsonRequestBehavior.AllowGet); }
+            }
+            catch (OverflowException)
+            {
+                return Json("Amount is not in a valid format", JsonRequestBehavior.AllowGet);
             }
             //To validate OptionalAmount we make sure it can convert to a double before saving the string
             if (!String.IsNullOrEmpty(toAmount))
