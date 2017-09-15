@@ -7,7 +7,7 @@
     var ViewBagRecipeId = '@(ViewBag.RecipeId)';
     var ViewBagRecipeOwner = '@(ViewBag.RecipeOwner)';
     var ViewBagRecipesPageIndex = '@(ViewBag.RecipesPageIndex)';
-    var ViewBagSaved = '@(ViewBag.SavedRecipes)';
+    var ViewBagSavedRecipes = '@(ViewBag.SavedRecipes)';
     var ViewBagSearchText = '@(ViewBag.SearchText)';
     var ViewBagSortingBy = '@(ViewBag.SortingBy)';
     var ViewBagSortAscending = '@(ViewBag.SortAscending)';
@@ -35,24 +35,31 @@
                 @if (Request.IsAuthenticated)
                 {
                     <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:10px;">
-                            <h4>Recipe Owner</h4>
+                        <div class="col-lg-6 text-center" style="padding-bottom:4px;">
+                            <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                <label id="FiltersBothRecipesRadio" class="btn btn-sm btn-secondary">
+                                    <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = 0">Both
+                                </label>
+                                <label id="FiltersMyRecipesRadio" class="btn btn-sm btn-secondary">
+                                    <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = 1">My Recipes
+                                </label>
+                                <label id="FiltersNotMyRecipesRadio" class="btn btn-sm btn-secondary">
+                                    <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = 2">Not Mine
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
-                            <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 0" id="FiltersBothRecipesRadio">All
-                        </div>
-                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
-                            <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 1" id="FiltersMyRecipesRadio">My Recipes
-                        </div>
-                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
-                            <input type="radio" name="RecipeOwner" onchange="GetFilterByKey('RecipeOwner').Value = 2" id="FiltersNotMyRecipesRadio">Not My Recipes
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:10px;">
-                            <h4>Recipe Types</h4>
+                        <div class="col-lg-6 text-center" style="padding-bottom:4px;">
+                            <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                <label id="FiltersAllSavedRecipesRadio" class="btn btn-sm btn-secondary">
+                                    <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 0">All
+                                </label>
+                                <label id="FiltersSavedRadio" class="btn btn-sm btn-secondary">
+                                    <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 1">Saved
+                                </label>
+                                <label id="FiltersNotSavedRadio" class="btn btn-sm btn-secondary">
+                                    <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 2">Not Saved
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="row" style="padding-bottom:10px;">
@@ -64,22 +71,6 @@
                         </div>
                         <div class="col-sm-4 text-center">
                             <input id="FiltersPublicRecipesCheckbox" type="checkbox" checked="checked" onchange="GetFilterByKey('PublicRecipes').Value = this.checked">Public
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:10px;">
-                            <h4>Saved Recipes</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
-                            <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 0" id="FiltersAllSavedRecipesRadio">All
-                        </div>
-                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
-                            <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 1" id="FiltersSavedRadio">Saved
-                        </div>
-                        <div class="col-sm-4 text-center" style="padding-bottom:10px;">
-                            <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = 2" id="FiltersNotSavedRadio">Not Saved
                         </div>
                     </div>
                 }

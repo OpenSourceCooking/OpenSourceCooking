@@ -69,7 +69,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
                         break;
                 }
-
                 switch (saved)
                 {
                     case SavedRecipeFilter.Saved:
@@ -81,7 +80,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     default:
                         break;
                 }
-
                 if (drafts == false)
                     Predicate = Predicate.And(r => r.CompleteDateUtc != null);
                 if (follower == false)

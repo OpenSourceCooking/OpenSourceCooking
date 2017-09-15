@@ -46,8 +46,8 @@ $(document).ready(function () {
         GetFilterByKey('RecipeOwner').Value = ViewBagRecipeOwner;
     if (ViewBagRecipesPageIndex)
         RecipesPageIndex = ViewBagRecipesPageIndex;
-    if (ViewBagSaved)
-        GetFilterByKey('Saved').Value = ViewBagSaved;
+    if (ViewBagSavedRecipes)
+        GetFilterByKey('Saved').Value = ViewBagSavedRecipes;
     if (ViewBagSearchText) {
         GetFilterByKey('SearchText').Value = ViewBagSearchText;
         $('#SearchTextInput').val(ViewBagSearchText);
@@ -656,19 +656,18 @@ function ToggleSaveRecipe(recipeId) {
 }
 function RefreshFiltersRecipeOwnerRadios() {
     if (GetFilterByKey('RecipeOwner').Value === 'NotMine')
-        $('#FiltersNotMyRecipesRadio').prop('checked', true);
+        $('#FiltersNotMyRecipesRadio').addClass('active');
     else if (GetFilterByKey('RecipeOwner').Value === 'Mine')
-        $('#FiltersMyRecipesRadio').prop('checked', true);
+        $('#FiltersMyRecipesRadio').addClass('active');
     else
-        $('#FiltersBothRecipesRadio').prop('checked', true);
-
-    console.log(GetFilterByKey('Saved').Value);
+        $('#FiltersBothRecipesRadio').addClass('active');
+    
     if (GetFilterByKey('Saved').Value === 'NotSaved')
-        $('#FiltersNotSavedRadio').prop('checked', true);
+        $('#FiltersNotSavedRadio').addClass('active');
     else if (GetFilterByKey('Saved').Value === 'Saved')
-        $('#FiltersSavedRadio').prop('checked', true);
+        $('#FiltersSavedRadio').addClass('active');
     else
-        $('#FiltersAllSavedRecipesRadio').prop('checked', true);
+        $('#FiltersAllSavedRecipesRadio').addClass('active');
 }
 function RefreshFiltersRecipeTypesCheckboxes() {
     if (GetFilterByKey('Drafts').Value === false)
