@@ -3,6 +3,11 @@
 @media (min-width: 992px) {}
 @media (min-width: 1200px) {}
 
+.no-padding-left-and-right {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .btn-bordered {
     border:1px black solid;
     border-radius:5px;
