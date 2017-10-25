@@ -25,13 +25,14 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? publicRecipes, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? saved, string searchText, string sortingBy, bool? sortAscending)
+        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? following, bool? publicRecipes, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? saved, string searchText, string sortingBy, bool? sortAscending)
         {
             if (!returnJson.HasValue || !returnJson.Value)
             {
                 //Pass default JS params
                 ViewBag.Drafts = drafts;
                 ViewBag.Follower = follower;
+                ViewBag.Following = following;
                 ViewBag.PublicRecipes = publicRecipes;
                 ViewBag.RecipeId = recipeId;
                 ViewBag.RecipeOwner = recipeOwner;

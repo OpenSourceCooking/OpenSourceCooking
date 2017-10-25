@@ -1,21 +1,5 @@
 ﻿@{ViewBag.Title = "Recipes";}
 
-<script>
-    var ViewBagDrafts = '@(ViewBag.Drafts)';
-    var ViewBagFollower = '@(ViewBag.Follower)';
-    var ViewBagPublicRecipes = '@(ViewBag.PublicRecipes)';
-    var ViewBagRecipeId = '@(ViewBag.RecipeId)';
-    var ViewBagRecipeOwner = '@(ViewBag.RecipeOwner)';
-    var ViewBagRecipesPageIndex = '@(ViewBag.RecipesPageIndex)';
-    var ViewBagSavedRecipes = '@(ViewBag.SavedRecipes)';
-    var ViewBagSearchText = '@(ViewBag.SearchText)';
-    var ViewBagSortingBy = '@(ViewBag.SortingBy)';
-    var ViewBagSortAscending = '@(ViewBag.SortAscending)';
-</script>
-@section Scripts{
-    <script src="@Url.Content("~/Scripts/recipeIndex.js")"></script>
-    <script src="@Url.Content("~/Scripts/date-functions.js")"></script>
-}
 <!--Infinite scrolling recipes-->
 <div id="RecipesDiv"></div>
 <div class="row" style="background-color:slategray;border-top:ridge">
@@ -35,94 +19,104 @@
                 @if (Request.IsAuthenticated)
                 {
                     <div class="row">
-                        <div class="col-12">
-                            Recipe Type Filters
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:4px;">
-                            <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                <label id="FiltersBothRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = null">Both
-                                </label>
-                                <label id="FiltersMyRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = true">Mine
-                                </label>
-                                <label id="FiltersNotMyRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Mine
-                                </label>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-12 text-center" style="padding-bottom:10px;">
+                                    <h4>Sorting</h4>
+                                    <table style="margin: auto;" id="FiltersSortByTable">
+                                        <!--Populated by Jquery-->
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:4px;">
-                            <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                <label id="FiltersAllSavedRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = null">Both
-                                </label>
-                                <label id="FiltersSavedRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = true">Saved
-                                </label>
-                                <label id="FiltersNotSavedRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Saved
-                                </label>
+                        <div class="col-lg-6">
+                            <div class="col-12">
+                                My Recipe Filters
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:4px;">
-                            <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                <label id="FiltersAllDraftsRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Drafts" onchange="GetFilterByKey('Drafts').Value = null">Both
-                                </label>
-                                <label id="FiltersDraftsRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Drafts" onchange="GetFilterByKey('Drafts').Value = true">Drafts
-                                </label>
-                                <label id="FiltersNotDraftsRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Drafts" onchange="GetFilterByKey('Drafts').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Drafts
-                                </label>
+                            <div class="col-12 text-center" style="padding-bottom:4px;">
+                                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                    <label id="FiltersBothRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = null">Both
+                                    </label>
+                                    <label id="FiltersMyRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = true">Mine
+                                    </label>
+                                    <label id="FiltersNotMyRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="RecipeOwner" autocomplete="off" onchange="GetFilterByKey('RecipeOwner').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Mine
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:4px;">
-                            <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                <label id="FiltersAllFollowerRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Follower" onchange="GetFilterByKey('Follower').Value = null">Both
-                                </label>
-                                <label id="FiltersFollowerRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Follower" onchange="GetFilterByKey('Follower').Value = true">Follower
-                                </label>
-                                <label id="FiltersNotFollowerRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Follower" onchange="GetFilterByKey('Follower').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Follower
-                                </label>
+                            <div class="col-12 text-center" style="padding-bottom:4px;">
+                                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                    <label id="FiltersAllDraftsRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Drafts" onchange="GetFilterByKey('Drafts').Value = null">Both
+                                    </label>
+                                    <label id="FiltersDraftsRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Drafts" onchange="GetFilterByKey('Drafts').Value = true">Drafts
+                                    </label>
+                                    <label id="FiltersNotDraftsRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Drafts" onchange="GetFilterByKey('Drafts').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Drafts
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center" style="padding-bottom:4px;">
-                            <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                <label id="FiltersAllPublicRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Follower" onchange="GetFilterByKey('PublicRecipes').Value = null">Both
-                                </label>
-                                <label id="FiltersPublicRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Follower" onchange="GetFilterByKey('PublicRecipes').Value = true">Public
-                                </label>
-                                <label id="FiltersNotPublicRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
-                                    <input type="radio" name="Follower" onchange="GetFilterByKey('PublicRecipes').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Public
-                                </label>
+                            <div class="col-12 text-center" style="padding-bottom:4px;">
+                                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                    <label id="FiltersAllFollowingRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Following" onchange="GetFilterByKey('Following').Value = null">Both
+                                    </label>
+                                    <label id="FiltersFollowingRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Following" onchange="GetFilterByKey('Following').Value = true">Following
+                                    </label>
+                                    <label id="FiltersNotFollowingRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Following" onchange="GetFilterByKey('Following').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Following
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                            <div class="col-12 text-center" style="padding-bottom:4px;">
+                                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                    <label id="FiltersAllPublicRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Follower" onchange="GetFilterByKey('PublicRecipes').Value = null">Both
+                                    </label>
+                                    <label id="FiltersPublicRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Follower" onchange="GetFilterByKey('PublicRecipes').Value = true">Public
+                                    </label>
+                                    <label id="FiltersNotPublicRecipesRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Follower" onchange="GetFilterByKey('PublicRecipes').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Public
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                Recipe Type Filters
+                            </div>
+                            <div class="col-12 text-center" style="padding-bottom:4px;">
+                                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                    <label id="FiltersAllSavedRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = null">Both
+                                    </label>
+                                    <label id="FiltersSavedRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = true">Saved
+                                    </label>
+                                    <label id="FiltersNotSavedRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Saved" onchange="GetFilterByKey('Saved').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Saved
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center" style="padding-bottom:4px;">
+                                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                    <label id="FiltersAllFollowerRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Follower" onchange="GetFilterByKey('Follower').Value = null">Both
+                                    </label>
+                                    <label id="FiltersFollowerRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Follower" onchange="GetFilterByKey('Follower').Value = true">Follower
+                                    </label>
+                                    <label id="FiltersNotFollowerRadio" class="btn btn-sm btn-secondary no-padding-left-and-right">
+                                        <input type="radio" name="Follower" onchange="GetFilterByKey('Follower').Value = false"><i class="fa fa-ban" aria-hidden="true"></i> Follower
+                                    </label>
+                                </div>
+                            </div>                           
+                        </div>                       
                     </div>
-                }
-                <div class="row">
-                    <div class="col-12 text-center" style="padding-bottom:10px;">
-                        <h4>Sorting</h4>
-                        <table style="margin: auto;" id="FiltersSortByTable">
-                            <!--Populated by Jquery-->
-                        </table>
-                    </div>
-                </div>
+                }              
             </div>
             <div class="row" style="padding:10px;">
                 <div class="col-6" style="padding-right:5px;">
@@ -252,3 +246,21 @@
 @Html.Partial("~/Views/PartialViews/_FullScreenMediaElementDiv.cshtml"/*, model*/)
 @Html.Partial("~/Views/PartialViews/Modals/_PopUpModal.cshtml"/*, model*/)
 @Html.Partial("~/Views/PartialViews/Modals/_RecipeViewableTypeModal.cshtml"/*, model*/)
+
+<script>
+    var ViewBagDrafts = '@(ViewBag.Drafts)';
+    var ViewBagFollower = '@(ViewBag.Follower)';
+    var ViewBagFollowing = '@(ViewBag.Following)';
+    var ViewBagPublicRecipes = '@(ViewBag.PublicRecipes)';
+    var ViewBagRecipeId = '@(ViewBag.RecipeId)';
+    var ViewBagRecipeOwner = '@(ViewBag.RecipeOwner)';
+    var ViewBagRecipesPageIndex = '@(ViewBag.RecipesPageIndex)';
+    var ViewBagSavedRecipes = '@(ViewBag.SavedRecipes)';
+    var ViewBagSearchText = '@(ViewBag.SearchText)';
+    var ViewBagSortingBy = '@(ViewBag.SortingBy)';
+    var ViewBagSortAscending = '@(ViewBag.SortAscending)';
+</script>
+@section Scripts{
+    <script src="@Url.Content("~/Scripts/recipeIndex.js")"></script>
+    <script src="@Url.Content("~/Scripts/date-functions.js")"></script>
+}

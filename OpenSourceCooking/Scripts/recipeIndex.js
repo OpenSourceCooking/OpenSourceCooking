@@ -38,6 +38,8 @@ $(document).ready(function () {
         GetFilterByKey('Drafts').Value = (ViewBagDrafts.toUpperCase() == 'TRUE');
     if (ViewBagFollower)
         GetFilterByKey('Follower').Value = (ViewBagFollower.toUpperCase() == 'TRUE');
+    if (ViewBagFollowing)
+        GetFilterByKey('Following').Value = (ViewBagFollowing.toUpperCase() == 'TRUE');
     if (ViewBagPublicRecipes)
         GetFilterByKey('PublicRecipes').Value = (ViewBagPublicRecipes.toUpperCase() == 'TRUE');
     if (ViewBagRecipeId)
@@ -684,6 +686,13 @@ function RefreshFilterRadios() {
     else
         $('#FiltersAllFollowerRadio').addClass('active');
 
+    if (GetFilterByKey('Following').Value === true)
+        $('#FiltersFollowingRadio').addClass('active');
+    else if (GetFilterByKey('Following').Value === false)
+        $('#FiltersNotFollowingRadio').addClass('active');
+    else
+        $('#FiltersAllFollowingRadio').addClass('active');
+
     if (GetFilterByKey('PublicRecipes').Value === true)
         $('#FiltersPublicRecipesRadio').addClass('active');
     else if (GetFilterByKey('PublicRecipes').Value === false)
@@ -691,7 +700,6 @@ function RefreshFilterRadios() {
     else
         $('#FiltersAllPublicRecipesRadio').addClass('active');
 }
-
 function RefreshFiltersSortingTable() {
     var FiltersSortByTable = $('#FiltersSortByTable');
     FiltersSortByTable.empty();

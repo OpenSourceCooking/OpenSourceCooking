@@ -34,7 +34,7 @@ function GenerateFiltersQueryString() {
             FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";
     });
     if (FiltersQueryString.length > 0)
-        return FiltersQueryString.slice(0, -1);
+        return FiltersQueryString.slice(0, -1);//Remove last '&' symbol
     return FiltersQueryString;
 }
 function GetEstimatedTimeString(EstimatedTimeInSeconds) {
