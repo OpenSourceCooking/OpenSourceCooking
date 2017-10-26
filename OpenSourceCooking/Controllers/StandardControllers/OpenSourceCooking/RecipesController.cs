@@ -25,23 +25,23 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? following, bool? publicRecipes, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? saved, string searchText, string sortingBy, bool? sortAscending)
+        public async Task<ActionResult> Index(bool? filterDrafts, bool? filterFollower, bool? filterFollowingChefs, bool? filterPublic, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? filterSaved, string filterSearchText, string filterSortingBy, bool? filterSortAscending)
         {
             if (!returnJson.HasValue || !returnJson.Value)
             {
                 //Pass default JS params
-                ViewBag.Drafts = drafts;
-                ViewBag.Follower = follower;
-                ViewBag.Following = following;
-                ViewBag.PublicRecipes = publicRecipes;
+                ViewBag.FilterDrafts = filterDrafts;
+                ViewBag.FilterFollower = filterFollower;
+                ViewBag.FilterFollowingChefs = filterFollowingChefs;
+                ViewBag.FilterPublic = filterPublic;
+                ViewBag.FilterSaved = filterSaved;
+                ViewBag.FilterSearchText = filterSearchText;
+                ViewBag.FilterSortingBy = filterSortingBy;
+                ViewBag.FilterSortAscending = filterSortAscending;
+
                 ViewBag.RecipeId = recipeId;
-                ViewBag.RecipeOwner = recipeOwner;
                 ViewBag.RecipesPageIndex = recipesPageIndex;
                 ViewBag.ReturnJson = returnJson;
-                ViewBag.SavedRecipes = saved;
-                ViewBag.SearchText = searchText;
-                ViewBag.SortingBy = sortingBy;
-                ViewBag.SortAscending = sortAscending;
                 return View();
             }
             if (!recipesPageIndex.HasValue)
@@ -52,39 +52,50 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             string AspNetId = User.Identity.GetUserId();
             if (AspNetId != null)
             {
-                if (recipeOwner == true)
-                    Predicate = Predicate.And(r => r.CreatorId == AspNetId);
-                else if (recipeOwner == false)
-                    Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
-                else
-                    Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
-                if (saved == true)
-                    Predicate = Predicate.And(r => r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-                if (saved == false)
-                    Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-                if (drafts == true)
-                    Predicate = Predicate.And(r => r.CompleteDateUtc == null);
-                if (drafts == false)
+                if (filterDrafts == false)
                     Predicate = Predicate.And(r => r.CompleteDateUtc != null);
-                if (follower == true)
-                    Predicate = Predicate.And(r => r.ViewableType == "Followers");
-                if (follower == false)
+                if (filterFollower == false)
                     Predicate = Predicate.And(r => r.ViewableType != "Followers");
-                if (publicRecipes == true)
-                    Predicate = Predicate.And(r => r.ViewableType == "Public");
-                if (publicRecipes == false)
+                //if (filterFollowingChefs == false)
+                //
+                if (filterPublic == false)
                     Predicate = Predicate.And(r => r.ViewableType != "Public");
+                if (filterSaved == false)
+                    Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+
+                //if (recipeOwner == true)
+                //    Predicate = Predicate.And(r => r.CreatorId == AspNetId);
+                //else if (recipeOwner == false)
+                //    Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
+                //else
+                //    Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
+                //if (filterSaved == true)
+                //    Predicate = Predicate.And(r => r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                //if (filterSaved == false)
+                //    Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                //if (filterDrafts == true)
+                //    Predicate = Predicate.And(r => r.CompleteDateUtc == null);
+                //if (filterDrafts == false)
+                //    Predicate = Predicate.And(r => r.CompleteDateUtc != null);
+                //if (filterFollower == true)
+                //    Predicate = Predicate.And(r => r.ViewableType == "Followers");
+                //if (filterFollower == false)
+                //    Predicate = Predicate.And(r => r.ViewableType != "Followers");
+                //if (filterPublic == true)
+                //    Predicate = Predicate.And(r => r.ViewableType == "Public");
+                //if (filterPublic == false)
+                //    Predicate = Predicate.And(r => r.ViewableType != "Public");
             }
             else
                 Predicate = Predicate.And(r => r.ViewableType == "Public");
             //PredicateBuilder-searchText
-            if (!String.IsNullOrEmpty(searchText))
-                Predicate = Predicate.And(r => r.Name.Contains(searchText));
+            if (!String.IsNullOrEmpty(filterSearchText))
+                Predicate = Predicate.And(r => r.Name.Contains(filterSearchText));
             //Add the where clause
             RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
             //Sort By
-            if (!sortAscending.HasValue || !sortAscending.Value)
-                switch (sortingBy)
+            if (!filterSortAscending.HasValue || !filterSortAscending.Value)
+                switch (filterSortingBy)
                 {
                     case "1":
                         RecipesQuery = RecipesQuery.OrderByDescending(r => r.CompleteDateUtc);
@@ -100,7 +111,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         break;
                 }
             else
-                switch (sortingBy)
+                switch (filterSortingBy)
                 {
                     case "1":
                         RecipesQuery = RecipesQuery.OrderBy(r => r.CompleteDateUtc);

@@ -5,10 +5,10 @@ var RecipesPageIndex = 0;
 
 $(document).ready(function () {
     $('#NavbarSearchButton').click(function (e) {
-        if (ViewBagSearchText) {
+        if (ViewBagFilterSearchText) {
             $('#SearchTextInput').val('')
             $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
-            ViewBagSearchText = null;
+            ViewBagFilterSearchText = null;
             GetFilterByKey('SearchText').Value = null;
             SearchRecipes();
         }
@@ -18,7 +18,7 @@ $(document).ready(function () {
     $('#NavbarFilterButton').click(function (e) { $('#FilterModal').modal('show'); });
     $('#SearchTextInput').on('keydown', function (e) {
         $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
-        ViewBagSearchText = null;
+        ViewBagFilterSearchText = null;
         GetFilterByKey('SearchText').Value = null;
         if (e.which === 13)
             SearchRecipes();
@@ -116,10 +116,6 @@ function SearchRecipes() {
     RecipesPageIndex = null;
     //SearchTextInput
     GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
-    if (GetFilterByKey('RecipeOwner').Value === 'Any')
-        GetFilterByKey('RecipeOwner').Value = null;
-    if (GetFilterByKey('Saved').Value === 'Any')
-        GetFilterByKey('Saved').Value = null;
     var FiltersQueryString = GenerateFiltersQueryString();
     if (FiltersQueryString)
         window.location.href = Config.Urls.RecipesIndex + '?' + GenerateFiltersQueryString();

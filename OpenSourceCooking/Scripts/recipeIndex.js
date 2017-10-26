@@ -34,31 +34,31 @@ $(document).ready(function () {
     RecipeCommentTextArea.keyup(function (event) {
         $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
     });
-    if (ViewBagDrafts)
-        GetFilterByKey('Drafts').Value = (ViewBagDrafts.toUpperCase() == 'TRUE');
-    if (ViewBagFollower)
-        GetFilterByKey('Follower').Value = (ViewBagFollower.toUpperCase() == 'TRUE');
-    if (ViewBagFollowing)
-        GetFilterByKey('Following').Value = (ViewBagFollowing.toUpperCase() == 'TRUE');
-    if (ViewBagPublicRecipes)
-        GetFilterByKey('PublicRecipes').Value = (ViewBagPublicRecipes.toUpperCase() == 'TRUE');
-    if (ViewBagRecipeId)
-        RecipeId = ViewBagRecipeId;
-    if (ViewBagRecipeOwner)
-        GetFilterByKey('RecipeOwner').Value = (ViewBagRecipeOwner.toUpperCase() == 'TRUE');
-    if (ViewBagRecipesPageIndex)
-        RecipesPageIndex = ViewBagRecipesPageIndex;
-    if (ViewBagSavedRecipes)
-        GetFilterByKey('Saved').Value = (ViewBagSavedRecipes.toUpperCase() == 'TRUE');
-    if (ViewBagSearchText) {
-        GetFilterByKey('SearchText').Value = ViewBagSearchText;
-        $('#SearchTextInput').val(ViewBagSearchText);
+    if (ViewBagFilterDrafts)
+        GetFilterByKey('Drafts').Value = (ViewBagFilterDrafts.toUpperCase() == 'TRUE');
+    if (ViewBagFilterFollower)
+        GetFilterByKey('Follower').Value = (ViewBagFilterFollower.toUpperCase() == 'TRUE');
+    if (ViewBagFilterFollowingChefs)
+        GetFilterByKey('FollowingChefs').Value = (ViewBagFilterFollowingChefs.toUpperCase() == 'TRUE');
+    if (ViewBagFilterPublic)
+        GetFilterByKey('Public').Value = (ViewBagFilterPublic.toUpperCase() == 'TRUE');
+    if (ViewBagFilterSaved)
+        GetFilterByKey('Saved').Value = (ViewBagFilterSaved.toUpperCase() == 'TRUE');
+    if (ViewBagFilterSecret)
+        GetFilterByKey('Secret').Value = (ViewBagFilterSecret.toUpperCase() == 'TRUE');
+    if (ViewBagFilterSearchText) {
+        GetFilterByKey('SearchText').Value = ViewBagFilterSearchText;
+        $('#SearchTextInput').val(ViewBagFilterSearchText);
         $('#NavbarSearchButton').removeClass('btn-primary').addClass('btn-danger').html('X');
     }
-    if (ViewBagSortingBy)
-        GetFilterByKey('SortingBy').Value = ViewBagSortingBy;
-    if (ViewBagSortAscending)
-        GetFilterByKey('SortAscending').Value = ViewBagSortAscending;
+    if (ViewBagFilterSortingBy)
+        GetFilterByKey('SortingBy').Value = ViewBagFilterSortingBy;
+    if (ViewBagFilterSortAscending)
+        GetFilterByKey('SortAscending').Value = ViewBagFilterSortAscending;
+    if (ViewBagRecipeId)
+        RecipeId = ViewBagRecipeId;
+    if (ViewBagRecipesPageIndex)
+        RecipesPageIndex = ViewBagRecipesPageIndex;
     RefreshFilterRadios();
     AjaxGetRecipes();
     window.onscroll = function (ev) {
@@ -656,49 +656,35 @@ function ToggleSaveRecipe(recipeId) {
     });
 }
 function RefreshFilterRadios() {
-    console.log(GetFilterByKey('RecipeOwner').Value);
+    if (GetFilterByKey('Drafts').Value === true || GetFilterByKey('Drafts').Value === null)
+        $('#FilterModalDraftsCheckbox').prop('checked', true);
+    else
+        $('#FilterModalDraftsCheckbox').prop('checked', false);
 
-    if (GetFilterByKey('RecipeOwner').Value === true)
-        $('#FiltersMyRecipesRadio').addClass('active');
-    else if (GetFilterByKey('RecipeOwner').Value === false)
-        $('#FiltersNotMyRecipesRadio').addClass('active');  
+    if (GetFilterByKey('Follower').Value === true || GetFilterByKey('Follower').Value === null)
+        $('#FilterModalFollowerCheckbox').prop('checked', true);
     else
-        $('#FiltersBothRecipesRadio').addClass('active');
-    
-    if (GetFilterByKey('Saved').Value === true)
-        $('#FiltersSavedRadio').addClass('active');
-    else if (GetFilterByKey('Saved').Value === false)
-        $('#FiltersNotSavedRadio').addClass('active');
-    else
-        $('#FiltersAllSavedRadio').addClass('active');
+        $('#FilterModalFollowerCheckbox').prop('checked', false);
 
-    if (GetFilterByKey('Drafts').Value === true)
-        $('#FiltersDraftsRadio').addClass('active');
-    else if (GetFilterByKey('Drafts').Value === false)
-        $('#FiltersNotDraftsRadio').addClass('active');
+    if (GetFilterByKey('Public').Value === true || GetFilterByKey('Public').Value === null)
+        $('#FilterModalPublicCheckbox').prop('checked', true);
     else
-        $('#FiltersAllDraftsRadio').addClass('active');
+        $('#FilterModalPublicCheckbox').prop('checked', false);
 
-    if (GetFilterByKey('Follower').Value === true)
-        $('#FiltersFollowerRadio').addClass('active');
-    else if (GetFilterByKey('Follower').Value === false)
-        $('#FiltersNotFollowerRadio').addClass('active');
+    if (GetFilterByKey('Secret').Value === true || GetFilterByKey('Secret').Value === null)
+        $('#FilterModalSecretCheckbox').prop('checked', true);
     else
-        $('#FiltersAllFollowerRadio').addClass('active');
+        $('#FilterModalSecretCheckbox').prop('checked', false);
 
-    if (GetFilterByKey('Following').Value === true)
-        $('#FiltersFollowingRadio').addClass('active');
-    else if (GetFilterByKey('Following').Value === false)
-        $('#FiltersNotFollowingRadio').addClass('active');
+    if (GetFilterByKey('FollowingChefs').Value === true || GetFilterByKey('FollowingChefs').Value === null)
+        $('#FilterModalFollowingChefsCheckbox').prop('checked', true);
     else
-        $('#FiltersAllFollowingRadio').addClass('active');
+        $('#FilterModalFollowingChefsCheckbox').prop('checked', false);
 
-    if (GetFilterByKey('PublicRecipes').Value === true)
-        $('#FiltersPublicRecipesRadio').addClass('active');
-    else if (GetFilterByKey('PublicRecipes').Value === false)
-        $('#FiltersNotPublicRecipesRadio').addClass('active');
+    if (GetFilterByKey('Saved').Value === true || GetFilterByKey('Saved').Value === null)
+        $('#FilterModalSavedCheckbox').prop('checked', true);
     else
-        $('#FiltersAllPublicRecipesRadio').addClass('active');
+        $('#FilterModalSavedCheckbox').prop('checked', false);
 }
 function RefreshFiltersSortingTable() {
     var FiltersSortByTable = $('#FiltersSortByTable');
