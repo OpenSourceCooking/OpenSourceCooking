@@ -24,6 +24,10 @@
             //Flags Controller
             AjaxGetFlags: '@Url.Action("AjaxGetFlags", "Flags")',
 
+            //FollowingChefsController
+            AjaxFollowRecipeChef: '@Url.Action("AjaxFollowRecipeChef", "FollowingChefs")',
+            AjaxUnfollowRecipeChef: '@Url.Action("AjaxUnfollowRecipeChef", "FollowingChefs")',
+
             //Ingredients Controller
             AjaxIngredientsAutoComplete: '@Url.Action("AjaxIngredientsAutoComplete", "Ingredients")',
 
@@ -61,7 +65,8 @@
             { Key: 'Drafts', Value: null },
             { Key: 'Follower', Value: null },
             { Key: 'FollowingChefs', Value: null },
-            { Key: 'Public', Value: null },
+            { Key: 'MyRecipes', Value: null },
+            { Key: 'MyPublic', Value: null },
             { Key: 'Saved', Value: null },
             { Key: 'Secret', Value: null },
             { Key: 'SearchText', Value: null },

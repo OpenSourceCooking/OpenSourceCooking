@@ -32,7 +32,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             await db.SaveChangesAsync();
             AspNetUser AspNetUser = await db.AspNetUsers.FindAsync(AspNetId);
             //Dont send an email notification if commenting on your own recipe and make sure notifications are enabled
-            if(AspNetUser.Id != Recipe.CreatorId && AspNetUser.UserSetting.IsRecipeCommentEmailNotificationEnabled)
+            if(AspNetUser.Id != Recipe.CreatorId && AspNetUser.Chef.IsRecipeCommentEmailNotificationEnabled)
             {
                 string BaseURL = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
                 IdentityMessage IdentityMessage = new IdentityMessage

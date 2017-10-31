@@ -40,8 +40,10 @@ $(document).ready(function () {
         GetFilterByKey('Follower').Value = (ViewBagFilterFollower.toUpperCase() == 'TRUE');
     if (ViewBagFilterFollowingChefs)
         GetFilterByKey('FollowingChefs').Value = (ViewBagFilterFollowingChefs.toUpperCase() == 'TRUE');
-    if (ViewBagFilterPublic)
-        GetFilterByKey('Public').Value = (ViewBagFilterPublic.toUpperCase() == 'TRUE');
+    if (ViewBagFilterMyPublic)
+        GetFilterByKey('MyPublic').Value = (ViewBagFilterMyPublic.toUpperCase() == 'TRUE');
+    if (ViewBagFilterMyRecipes)
+        GetFilterByKey('MyRecipes').Value = (ViewBagFilterMyPublic.toUpperCase() == 'TRUE');
     if (ViewBagFilterSaved)
         GetFilterByKey('Saved').Value = (ViewBagFilterSaved.toUpperCase() == 'TRUE');
     if (ViewBagFilterSecret)
@@ -184,38 +186,6 @@ function AjaxGetRecipes() {
                 RecipeDivHTMLString += '<div style="padding:4px;">'
                     + '<div style="display:none;" id="CompleteDateUtcDiv' + CurrentRecipe.Id + '">' + CurrentRecipe.CompleteDateUtc + '</div>'
                     + '<h6 style="padding:4px;font-weight:bold;">Chef ' + CurrentRecipe.CreatorName + '</h6>'
-                    + '<div class="text-right">';
-                $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
-                    if (FiltersKeyValue.Key === 'SortingBy') {
-                        //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
-                        switch (FiltersKeyValue.Value) {
-                            case 0:
-                                {
-                                    //RecipeDivHTMLString += 'Edited ' + CurrentRecipe.LastEditDateUtc;
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    //if (CurrentRecipe.CompleteDateUtc === null)
-                                    //    RecipeDivHTMLString += 'Created ' + CurrentRecipe.LastEditDateUtc;
-                                    //else
-                                    //    RecipeDivHTMLString += 'Created ' + CurrentRecipe.CompleteDateUtc;
-                                    break;
-                                }
-                            case 2:
-                                {
-                                    //RecipeName always shows
-                                    break;
-                                }
-                            case 3:
-                                {
-                                    //Chef Name always shows
-                                    break;
-                                }
-                        }
-                    }
-                });
-                +'</div >'
                     + '</div>';
                 if (CurrentRecipe.IsMyRecipe === true) {
                     RecipeDivHTMLString += '<div>'
@@ -412,6 +382,12 @@ function EditRecipeComment(commentId) {
 //        document.documentElement.clientHeight
 //    );
 //}
+function FilterModalCheckboxChanged(Checkbox, FilterKey) {
+    if (Checkbox.is(':checked'))
+        GetFilterByKey(FilterKey).Value = null;
+    else
+        GetFilterByKey(FilterKey).Value = false;
+}
 function FlagRecipe(recipeId, flagName) {
     $.ajax({
         url: Config.AjaxUrls.AjaxCreateRecipeFlag,
@@ -549,20 +525,66 @@ function PreviewRecipe(recipeId) {
         type: "GET",
         cache: false,
         data: { recipeId: recipeId },
-        success: function (RecipeDataTransferObject) {
+        success: function (RecipeDataTransferObject){
             HideRecipeSteps();
             HideRecipeComments();
             $('#ModalMainRecipeVideo').hide();
             $('#ModalMainRecipeImg').hide();
-
             //Populate the Recipe Previewer
             $('#ModalRecipeHeader').text(RecipeDataTransferObject.Name);
-            $('#ModalCreatorName').text('Chef ' + RecipeDataTransferObject.CreatorName);
+            var ModalFollowChefButton = $('#ModalFollowChefButton');
+            SwitchFollowChefButton(ModalFollowChefButton, RecipeDataTransferObject.IsFollowingChef );
+            ModalFollowChefButton.off();
+            ModalFollowChefButton.on("click", function () {
+                ModalFollowChefButton.hide();
+                if (ModalFollowChefButton.hasClass('btn-success'))
+                {
+                    $.ajax({
+                        url: Config.AjaxUrls.AjaxFollowRecipeChef,
+                        type: "GET",
+                        cache: false,
+                        data: { recipeId: recipeId },
+                        success: function (response) {
+                            if (response === 'You can not follow yourself')
+                            {
+                                ShowPopUpModal('Validation', response);
+                                ModalFollowChefButton.fadeIn();
+                            }
+                            else
+                            {
+                                SwitchFollowChefButton(ModalFollowChefButton, true);
+                                ModalFollowChefButton.fadeIn();
+                            }
+                        },
+                        error: function (er) {
+                            ShowPopUpModal("Error", er);
+                        }
+                    });
+                }
+                else
+                {
+                    $.ajax({
+                        url: Config.AjaxUrls.AjaxUnfollowRecipeChef,
+                        type: "GET",
+                        cache: false,
+                        data: { recipeId: recipeId },
+                        success: function (bool) {
+                            if (bool)
+                            {
+                                SwitchFollowChefButton(ModalFollowChefButton, false);
+                                ModalFollowChefButton.fadeIn();
+                            }                               
+                        },
+                        error: function (er) {
+                            ShowPopUpModal("Error", er);
+                        }
+                    });
+                }
+            });
             $('#ModalCompleteDateUtc').text('Created ' + ConvertJSONDateToString(RecipeDataTransferObject.CompleteDateUtc));
             $('#ModalEditDate').text('Edited ' + ConvertJSONDateToString(RecipeDataTransferObject.LastEditDateUtc));
             $('#ModalRecipeDescriptionSpan').text(RecipeDataTransferObject.Description);
             $('#RecipePreviewerEstMinutes').text(GetEstimatedTimeString(RecipeDataTransferObject.EstimatedTimeInSeconds));
-
             //Populate Photo & Video
             var MainCloudFileUrl = null;
             var MainCloudFileThumbUrl = null;
@@ -576,7 +598,6 @@ function PreviewRecipe(recipeId) {
                 else if (RecipeCloudFileDataTransferObject.RecipeCloudFileTypeName === "MainVideo")
                     MainVideoUrl = RecipeCloudFileDataTransferObject.CloudFileDataTransferObject.Url;
             });
-
             if (MainVideoUrl) {
                 $('#ModalMainRecipeVideo').attr('src', MainVideoUrl);
                 if (MainCloudFileUrl)
@@ -666,7 +687,15 @@ function RefreshFilterRadios() {
     else
         $('#FilterModalFollowerCheckbox').prop('checked', false);
 
-    if (GetFilterByKey('Public').Value === true || GetFilterByKey('Public').Value === null)
+    //if (GetFilterByKey('MyPublic').Value === null)
+    //    $('#FilterModalMyPublicBoth').prop('checked', true);
+    //else if (GetFilterByKey('MyPublic').Value === false)
+    //    $('#FilterModalMyPublicMine').prop('checked', true);  
+    //else if (GetFilterByKey('MyPublic').Value === true)
+    //    $('#FilterModalMyPublicNotMine').prop('checked', true);
+         
+
+    if (GetFilterByKey('MyPublic').Value === true || GetFilterByKey('MyPublic').Value === null)
         $('#FilterModalPublicCheckbox').prop('checked', true);
     else
         $('#FilterModalPublicCheckbox').prop('checked', false);
@@ -685,6 +714,13 @@ function RefreshFilterRadios() {
         $('#FilterModalSavedCheckbox').prop('checked', true);
     else
         $('#FilterModalSavedCheckbox').prop('checked', false);
+}
+function SwitchFollowChefButton(ModalFollowChefButton, IsFollowed)
+{
+    if (IsFollowed)
+        ModalFollowChefButton.html('Unfollow Chef').removeClass('btn-success').addClass('btn-danger');
+    else
+        ModalFollowChefButton.html('Follow Chef').removeClass('btn-danger').addClass('btn-success');
 }
 function RefreshFiltersSortingTable() {
     var FiltersSortByTable = $('#FiltersSortByTable');

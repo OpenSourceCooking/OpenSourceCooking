@@ -133,10 +133,12 @@ namespace OpenSourceCooking.Models
         public ICollection<SavedRecipeDataTransferObject> SavedRecipeDataTransferObjects { get { return savedRecipeDataTransferObjects; } set { savedRecipeDataTransferObjects = value; } }
 
         //Extra Properties
+        bool isFollowingChef;
         bool isMyRecipe;
         bool isSaved;
 
         public long EstimatedTimeInSeconds { get { return RecipeStepDataTransferObjects == null ? 0 : RecipeStepDataTransferObjects.Sum(x => x.EstimatedTimeInSeconds); } }
+        public bool IsFollowingChef { get { return isFollowingChef; } set { isFollowingChef = value; } }
         public bool IsMyRecipe { get { return isMyRecipe; } set { isMyRecipe = value; } }
         public bool IsSaved { get { return isSaved; } set { isSaved = value; } }
         public int SavedByCount { get { return savedRecipeDataTransferObjects == null ? 0 : savedRecipeDataTransferObjects.Count(); } }

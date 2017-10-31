@@ -12,11 +12,13 @@ namespace OpenSourceCooking
     using System;
     using System.Collections.Generic;
     
-    public partial class UserSetting
+    public partial class FollowingChef
     {
         public string AspNetUserId { get; set; }
-        public bool IsRecipeCommentEmailNotificationEnabled { get; set; }
+        public string FollowingChefId { get; set; }
+        public System.DateTime CreateDate { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
+        public virtual Chef Chef { get; set; }
+        public virtual Chef Chef1 { get; set; }
     }
 }

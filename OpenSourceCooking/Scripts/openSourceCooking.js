@@ -6,7 +6,7 @@ var RecipesPageIndex = 0;
 $(document).ready(function () {
     $('#NavbarSearchButton').click(function (e) {
         if (ViewBagFilterSearchText) {
-            $('#SearchTextInput').val('')
+            $('#SearchTextInput').val('');
             $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
             ViewBagFilterSearchText = null;
             GetFilterByKey('SearchText').Value = null;
@@ -29,9 +29,9 @@ $(document).ready(function () {
 });
 function GenerateFiltersQueryString() {
     var FiltersQueryString = '';
-    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
+    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {       
         if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
-            FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";
+            FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";        
     });
     if (FiltersQueryString.length > 0)
         return FiltersQueryString.slice(0, -1);//Remove last '&' symbol
@@ -67,16 +67,6 @@ function GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) {
     IngredientAmountString = IngredientAmountString + recipeStepsIngredientsDataTransferObject.IngredientName;
     return IngredientAmountString;
 }
-//function GetQueryStringValueByKey() {
-//    var vars = [], hash;
-//    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-//    for (var i = 0; i < hashes.length; i++) {
-//        hash = hashes[i].split('=');
-//        vars.push(hash[0]);
-//        vars[hash[0]] = hash[1];
-//    }
-//    return vars;
-//}
 function GetRandomColor() {
     var RandomColor = Colors[Math.floor(Math.random() * Colors.length)];
     while (CurrentRandomColor === RandomColor) //Prevent same colors next to ea other                    

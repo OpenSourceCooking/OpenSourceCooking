@@ -33,6 +33,13 @@
           <Property Name="Message" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ReportingAspNetUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
+        <EntityType Name="Chefs">
+          <Key>
+            <PropertyRef Name="AspNetUserId" />
+          </Key>
+          <Property Name="AspNetUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="CloudFiles">
           <Key>
             <PropertyRef Name="Id" />
@@ -88,6 +95,15 @@
             <PropertyRef Name="FlagName" />
           </Key>
           <Property Name="FlagName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FollowingChefs">
+          <Key>
+            <PropertyRef Name="AspNetUserId" />
+            <PropertyRef Name="FollowingChefId" />
+          </Key>
+          <Property Name="AspNetUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FollowingChefId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Ingredients">
           <Key>
@@ -211,13 +227,6 @@
           <Property Name="RecipeId" Type="int" Nullable="false" />
           <Property Name="SavedDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
-        <EntityType Name="UserSettings">
-          <Key>
-            <PropertyRef Name="AspNetUserId" />
-          </Key>
-          <Property Name="AspNetUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="bit" Nullable="false" />
-        </EntityType>
         <Association Name="FK_BugReports_AspNetUsers">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="BugReports" Type="Self.BugReports" Multiplicity="*" />
@@ -279,6 +288,32 @@
             </Principal>
             <Dependent Role="Comments1">
               <PropertyRef Name="ParentCommentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FollowingChefs_Chefs">
+          <End Role="Chefs" Type="Self.Chefs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FollowingChefs" Type="Self.FollowingChefs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chefs">
+              <PropertyRef Name="AspNetUserId" />
+            </Principal>
+            <Dependent Role="FollowingChefs">
+              <PropertyRef Name="AspNetUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FollowingChefs_FollowingChef">
+          <End Role="Chefs" Type="Self.Chefs" Multiplicity="1" />
+          <End Role="FollowingChefs" Type="Self.FollowingChefs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chefs">
+              <PropertyRef Name="AspNetUserId" />
+            </Principal>
+            <Dependent Role="FollowingChefs">
+              <PropertyRef Name="FollowingChefId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -610,12 +645,12 @@
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="UserSettings" Type="Self.UserSettings" Multiplicity="0..1" />
+          <End Role="Chefs" Type="Self.Chefs" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="UserSettings">
+            <Dependent Role="Chefs">
               <PropertyRef Name="AspNetUserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -623,6 +658,7 @@
         <EntityContainer Name="OpenSourceCookingModelStoreContainer">
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BugReports" EntityType="Self.BugReports" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Chefs" EntityType="Self.Chefs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CloudFiles" EntityType="Self.CloudFiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CloudFilesThumbnails" EntityType="Self.CloudFilesThumbnails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CloudFileTypes" EntityType="Self.CloudFileTypes" Schema="dbo" store:Type="Tables" />
@@ -630,6 +666,7 @@
           <EntitySet Name="CommentVotes" EntityType="Self.CommentVotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DietaryRestrictions" EntityType="Self.DietaryRestrictions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Flags" EntityType="Self.Flags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FollowingChefs" EntityType="Self.FollowingChefs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ingredients" EntityType="Self.Ingredients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MeasurementTypes" EntityType="Self.MeasurementTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MeasurementUnits" EntityType="Self.MeasurementUnits" Schema="dbo" store:Type="Tables" />
@@ -643,7 +680,6 @@
           <EntitySet Name="RecipeStepsIngredients" EntityType="Self.RecipeStepsIngredients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RecipeViewableTypes" EntityType="Self.RecipeViewableTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SavedRecipes" EntityType="Self.SavedRecipes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserSettings" EntityType="Self.UserSettings" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BugReports_AspNetUsers" Association="Self.FK_BugReports_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="BugReports" EntitySet="BugReports" />
@@ -663,6 +699,14 @@
           <AssociationSet Name="FK_Comments_Comments" Association="Self.FK_Comments_Comments">
             <End Role="Comments" EntitySet="Comments" />
             <End Role="Comments1" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FollowingChefs_Chefs" Association="Self.FK_FollowingChefs_Chefs">
+            <End Role="Chefs" EntitySet="Chefs" />
+            <End Role="FollowingChefs" EntitySet="FollowingChefs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FollowingChefs_FollowingChef" Association="Self.FK_FollowingChefs_FollowingChef">
+            <End Role="Chefs" EntitySet="Chefs" />
+            <End Role="FollowingChefs" EntitySet="FollowingChefs" />
           </AssociationSet>
           <AssociationSet Name="FK_Ingredients_ASPNetUsers" Association="Self.FK_Ingredients_ASPNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -766,7 +810,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_UserSettings_AspNetUsers" Association="Self.FK_UserSettings_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="UserSettings" EntitySet="UserSettings" />
+            <End Role="Chefs" EntitySet="Chefs" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -779,14 +823,9 @@
           <EntitySet Name="Flags" EntityType="OpenSourceCookingModel.Flag" />
           <EntitySet Name="CommentVotes" EntityType="OpenSourceCookingModel.CommentVote" />
           <EntitySet Name="AspNetUsers" EntityType="OpenSourceCookingModel.AspNetUser" />
-          <EntitySet Name="UserSettings" EntityType="OpenSourceCookingModel.UserSetting" />
           <AssociationSet Name="FK_RecipeCommentVotes_AspNetUsers" Association="OpenSourceCookingModel.FK_RecipeCommentVotes_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="CommentVote" EntitySet="CommentVotes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserSettings_AspNetUsers" Association="OpenSourceCookingModel.FK_UserSettings_AspNetUsers">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="UserSetting" EntitySet="UserSettings" />
           </AssociationSet>
           <EntitySet Name="DietaryRestrictions" EntityType="OpenSourceCookingModel.DietaryRestriction" />
           <EntitySet Name="CloudFileTypes" EntityType="OpenSourceCookingModel.CloudFileType" />
@@ -915,6 +954,20 @@
             <End Role="RecipeStep" EntitySet="RecipeSteps" />
             <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
           </AssociationSet>
+          <EntitySet Name="Chefs" EntityType="OpenSourceCookingModel.Chef" />
+          <EntitySet Name="FollowingChefs" EntityType="OpenSourceCookingModel.FollowingChef" />
+          <AssociationSet Name="FK_UserSettings_AspNetUsers" Association="OpenSourceCookingModel.FK_UserSettings_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Chef" EntitySet="Chefs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FollowingChefs_Chefs" Association="OpenSourceCookingModel.FK_FollowingChefs_Chefs">
+            <End Role="Chef" EntitySet="Chefs" />
+            <End Role="FollowingChef" EntitySet="FollowingChefs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FollowingChefs_FollowingChef" Association="OpenSourceCookingModel.FK_FollowingChefs_FollowingChef">
+            <End Role="Chef" EntitySet="Chefs" />
+            <End Role="FollowingChef" EntitySet="FollowingChefs" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="RecipeStepsCloudFile">
           <Key>
@@ -971,7 +1024,6 @@
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CommentVotes" Relationship="OpenSourceCookingModel.FK_RecipeCommentVotes_AspNetUsers" FromRole="AspNetUser" ToRole="CommentVote" />
-          <NavigationProperty Name="UserSetting" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="AspNetUser" ToRole="UserSetting" />
           <NavigationProperty Name="CloudFiles" Relationship="OpenSourceCookingModel.FK_CloudFiles_ASPNetUsers" FromRole="AspNetUser" ToRole="CloudFile" />
           <NavigationProperty Name="BugReports" Relationship="OpenSourceCookingModel.FK_BugReports_AspNetUsers" FromRole="AspNetUser" ToRole="BugReport" />
           <NavigationProperty Name="Ingredients" Relationship="OpenSourceCookingModel.FK_Ingredients_ASPNetUsers" FromRole="AspNetUser" ToRole="Ingredient" />
@@ -979,14 +1031,7 @@
           <NavigationProperty Name="Comments" Relationship="OpenSourceCookingModel.FK_Comments_ASPNetUsers" FromRole="AspNetUser" ToRole="Comment" />
           <NavigationProperty Name="SavedRecipes" Relationship="OpenSourceCookingModel.FK_SavedRecipes_AspNetUsers" FromRole="AspNetUser" ToRole="SavedRecipe" />
           <NavigationProperty Name="Recipes" Relationship="OpenSourceCookingModel.FK_Recipes_ASPNetUsers" FromRole="AspNetUser" ToRole="Recipe" />
-        </EntityType>
-        <EntityType Name="UserSetting">
-          <Key>
-            <PropertyRef Name="AspNetUserId" />
-          </Key>
-          <Property Name="AspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="UserSetting" ToRole="AspNetUser" />
+          <NavigationProperty Name="Chef" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="AspNetUser" ToRole="Chef" />
         </EntityType>
         <Association Name="FK_RecipeCommentVotes_AspNetUsers">
           <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
@@ -997,20 +1042,6 @@
             </Principal>
             <Dependent Role="CommentVote">
               <PropertyRef Name="VoterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserSettings_AspNetUsers">
-          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="OpenSourceCookingModel.UserSetting" Role="UserSetting" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserSetting">
-              <PropertyRef Name="AspNetUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1530,6 +1561,67 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Chef">
+          <Key>
+            <PropertyRef Name="AspNetUserId" />
+          </Key>
+          <Property Name="AspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="Chef" ToRole="AspNetUser" />
+          <NavigationProperty Name="FollowingChefs" Relationship="OpenSourceCookingModel.FK_FollowingChefs_Chefs" FromRole="Chef" ToRole="FollowingChef" />
+          <NavigationProperty Name="FollowingChefs1" Relationship="OpenSourceCookingModel.FK_FollowingChefs_FollowingChef" FromRole="Chef" ToRole="FollowingChef" />
+        </EntityType>
+        <EntityType Name="FollowingChef">
+          <Key>
+            <PropertyRef Name="AspNetUserId" />
+            <PropertyRef Name="FollowingChefId" />
+          </Key>
+          <Property Name="AspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FollowingChefId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Chef" Relationship="OpenSourceCookingModel.FK_FollowingChefs_Chefs" FromRole="FollowingChef" ToRole="Chef" />
+          <NavigationProperty Name="Chef1" Relationship="OpenSourceCookingModel.FK_FollowingChefs_FollowingChef" FromRole="FollowingChef" ToRole="Chef" />
+        </EntityType>
+        <Association Name="FK_UserSettings_AspNetUsers">
+          <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.Chef" Role="Chef" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chef">
+              <PropertyRef Name="AspNetUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FollowingChefs_Chefs">
+          <End Type="OpenSourceCookingModel.Chef" Role="Chef" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="OpenSourceCookingModel.FollowingChef" Role="FollowingChef" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chef">
+              <PropertyRef Name="AspNetUserId" />
+            </Principal>
+            <Dependent Role="FollowingChef">
+              <PropertyRef Name="AspNetUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FollowingChefs_FollowingChef">
+          <End Type="OpenSourceCookingModel.Chef" Role="Chef" Multiplicity="1" />
+          <End Type="OpenSourceCookingModel.FollowingChef" Role="FollowingChef" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chef">
+              <PropertyRef Name="AspNetUserId" />
+            </Principal>
+            <Dependent Role="FollowingChef">
+              <PropertyRef Name="FollowingChefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1584,14 +1676,6 @@
                 <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserSettings">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.UserSetting">
-              <MappingFragment StoreEntitySet="UserSettings">
-                <ScalarProperty Name="IsRecipeCommentEmailNotificationEnabled" ColumnName="IsRecipeCommentEmailNotificationEnabled" />
-                <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1759,6 +1843,23 @@
                 <ScalarProperty Name="MeasurementUnitName" ColumnName="MeasurementUnitName" />
                 <ScalarProperty Name="IngredientName" ColumnName="IngredientName" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Chefs">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.Chef">
+              <MappingFragment StoreEntitySet="Chefs">
+                <ScalarProperty Name="IsRecipeCommentEmailNotificationEnabled" ColumnName="IsRecipeCommentEmailNotificationEnabled" />
+                <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FollowingChefs">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.FollowingChef">
+              <MappingFragment StoreEntitySet="FollowingChefs">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="FollowingChefId" ColumnName="FollowingChefId" />
+                <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

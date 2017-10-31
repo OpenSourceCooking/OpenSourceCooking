@@ -236,6 +236,9 @@
     <Compile Include="BugReport.cs">
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Chef.cs">
+      <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="CloudFile.cs">
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
@@ -274,6 +277,7 @@
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\CommentsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\DietaryRestrictionsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\FlagsController.cs" />
+    <Compile Include="Controllers\StandardControllers\OpenSourceCooking\FollowingChefsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\IngredientsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\RecipeFlagsController.cs" />
     <Compile Include="Controllers\StandardControllers\OpenSourceCooking\RecipesController.cs" />
@@ -284,6 +288,9 @@
     </Compile>
     <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Flag.cs">
+      <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FollowingChef.cs">
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
@@ -349,9 +356,6 @@
       <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="UserSetting.cs">
-      <DependentUpon>OpenSourceCookingDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="UtilityFunctionLib.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -674,6 +678,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\APIControllers\" />
+    <Folder Include="Views\FollowingChefs\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
