@@ -13,6 +13,9 @@ var ShowingRecipeSteps = false;
 var ShowingRecipeComments = false;
 
 $(document).ready(function () {
+    $(".SortByDropDown").select2({
+        minimumResultsForSearch: Infinity
+    });
     $RecipesDiv = $('#RecipesDiv');
     // layout Isotope after each image loads
     $RecipesDiv.imagesLoaded().progress(function () {
@@ -56,7 +59,7 @@ $(document).ready(function () {
     if (ViewBagFilterSortingBy)
         GetFilterByKey('SortingBy').Value = ViewBagFilterSortingBy;
     if (ViewBagFilterSortAscending)
-        GetFilterByKey('SortAscending').Value = ViewBagFilterSortAscending;
+        GetFilterByKey('SortAscending').Value = (ViewBagFilterSortAscending.toUpperCase() == 'TRUE');
     if (ViewBagRecipeId)
         RecipeId = ViewBagRecipeId;
     if (ViewBagRecipesPageIndex)
@@ -78,7 +81,38 @@ $(document).ready(function () {
     $('#SetRecipeViewableTypeSecret').on('click', function (e) {
         SetRecipeViewableType('Secret', ClickedRecipeId);
     });
-    RefreshFiltersSortingTable();
+    $('#SortByDropDown').change(function () {
+        GetFilterByKey('SortingBy').Value = $(this).val();
+    });
+    if (GetFilterByKey('SortingBy').Value === null)
+        $("#SortByDropDown").select2("val", '0');
+    else
+        $("#SortByDropDown").select2("val", GetFilterByKey('SortingBy').Value);
+    if (GetFilterByKey('SortAscending').Value === true)
+    {
+        $("#SortAscendingRadioLabel").addClass('active');
+        $("#SortAscendingRadioButton").prop("checked", true);
+    }      
+    else
+    {
+        $("#SortDescendingRadioLabel").addClass('active');
+        $("#SortDescendingRadioButton").prop("checked", true);
+    }
+    $('#SortAscendingRadioLabel').click(function () {
+        $("#SortDescendingRadioLabel").removeClass('active');
+        $("#SortDescendingRadioButton").prop("checked", false);
+        $(this).prop("checked", true);
+        $("#SortAscendingRadioLabel").addClass('active');
+        GetFilterByKey('SortAscending').Value = true;
+    });
+    $('#SortDescendingRadioLabel').click(function () {
+        $("#SortAscendingRadioLabel").removeClass('active');
+        $("#SortAscendingRadioButton").prop("checked", false);
+        $(this).prop("checked", true);
+        $("#SortDescendingRadioLabel").addClass('active');
+        GetFilterByKey('SortAscending').Value = null;
+    });
+      
     if (RecipeId)//This should be last
         PreviewRecipe(RecipeId);
 });
@@ -722,31 +756,6 @@ function SwitchFollowChefButton(ModalFollowChefButton, IsFollowed)
     else
         ModalFollowChefButton.html('Follow Chef').removeClass('btn-danger').addClass('btn-success');
 }
-function RefreshFiltersSortingTable() {
-    var FiltersSortByTable = $('#FiltersSortByTable');
-    FiltersSortByTable.empty();
-    $.each(Config.OrderByOptions, function (i, OrderByOption) {
-        var trHTMLString = '<tr><td>' + OrderByOption.Key + '</td><td><div class="btn-group btn-group-sm" style="padding-bottom:4px;width:100%;">';
-        //Date OrderBy is inverted
-        if (OrderByOption.Key === 'Create Date' || OrderByOption.Key === 'Edit Date') {
-            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
-            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
-        }
-        else {
-            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonTRUE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px; padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',true);"><i class="fa fa-arrow-down" aria-hidden="true"></i></button>';
-            trHTMLString += '<button class="SortByButton btn btn-bordered" id="SortByButtonFALSE' + OrderByOption.Value.toString().toUpperCase() + '" style="padding-top:4px;padding-bottom:2px;" onclick="SwitchSortBy(' + OrderByOption.Value + ',false);"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div></td></tr>';
-        }
-        FiltersSortByTable.append(trHTMLString);
-    });
-    var sortAscending = GetFilterByKey('SortAscending').Value
-    if (!sortAscending)
-        sortAscending = 'FALSE';
-    var SortingByValue = GetFilterByKey('SortingBy').Value
-    if (!SortingByValue)
-        SortingByValue = '0';
-    $('.SortByButton').removeClass('btn-info').addClass('btn-light');
-    $('#SortByButton' + sortAscending.toString().toUpperCase() + SortingByValue.toString().toUpperCase()).removeClass("btn-light").addClass("btn-info");
-}
 function SetRecipeViewableType(viewableTypeName, recipeId) {
     $.ajax({
         url: Config.AjaxUrls.AjaxUpdateViewableType,
@@ -869,10 +878,4 @@ function ShowRecipeComments() {
             ShowPopUpModal("Error", er);
         }
     });
-}
-function SwitchSortBy(sortByOptionValue, sortAscending) {
-    if (sortByOptionValue !== null)
-        GetFilterByKey('SortingBy').Value = sortByOptionValue;
-    GetFilterByKey('SortAscending').Value = sortAscending;
-    RefreshFiltersSortingTable();
 }

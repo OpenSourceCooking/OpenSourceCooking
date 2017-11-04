@@ -8,7 +8,7 @@
 <!--MODALS                 MODALS                  MODALS                    MODALS                 MODALS                MODALS              MODALS-->
 <!--Search Modal-->
 <div class="modal" id="FilterModal" tabindex="-1" role="dialog" aria-labelledby="FilterModal">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <!--Header-->
             <div class="modal-header text-center">
@@ -17,13 +17,26 @@
             <!--Body-->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12" style="padding-bottom:10px;">
+                        <h5>Sorting</h5>
                         <div class="row">
-                            <div class="col-12 text-center" style="padding-bottom:10px;">
-                                <h4>Sorting</h4>
-                                <table style="margin: auto;" id="FiltersSortByTable">
-                                    <!--Populated by Jquery-->
-                                </table>
+                            <div class="col-8">
+                                <select id="SortByDropDown" class="SortByDropDown" style="width:100%;">
+                                    <option value="3">Chef Name</option>
+                                    <option value="1">Create Date</option>
+                                    <option value="0">Edit Date</option>
+                                    <option value="2">Recipe Name</option>
+                                </select>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="btn-group btn-group-sm" data-toggle="buttons">
+                                    <label id="SortAscendingRadioLabel" class="btn btn-sm btn-primary">
+                                        <input type="radio" name="SortAscendingRadio" id="SortAscendingRadioButton" autocomplete="off" checked> <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                    </label>
+                                    <label id="SortDescendingRadioLabel" class="btn btn-sm btn-primary">
+                                        <input type="radio" name="SortAscendingRadio" id="SortDescendingRadioButton" autocomplete="off"> <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -31,54 +44,46 @@
                 @if (Request.IsAuthenticated)
                 {
                     <div class="row">
-                        <div class="col-12 text-center">
-                            <h4>My Recipe Filters</h4>
-                        </div>
-                        <!--
-                        <div class="col-12 text-center" style="padding:0;">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-sm btn-secondary active">
-                                    <input type="radio" id="FilterModalMyPublicBoth" name="FilterModalPublic" autocomplete="off" onchange="GetFilterByKey('MyRecipes').Value = null;"> Both
-                                </label>
-                                <label class="btn btn-sm btn-secondary">
-                                    <input type="radio" id="FilterModalMyPublicMine" name="FilterModalPublic" autocomplete="off" onchange=" GetFilterByKey('MyRecipes').Value = null;"> My Recipes
-                                </label>
-                                <label class="btn btn-sm btn-secondary">
-                                    <input type="radio" id="FilterModalMyPublicNotMine" name="FilterModalPublic" autocomplete="off" onchange=" GetFilterByKey('MyRecipes').Value = null;"> <i class="fa fa-ban"></i> My Recipes
-                                </label>
-                            </div>
-                        </div>
-                        -->
                         <div class="col-12">
+                            <h5 class="">My Recipe Filters</h5>
                             <table class="table">
                                 <tr>
-                                    <td>Drafts</td>
+                                    <td>My Drafts</td>
                                     <td><input id="FilterModalDraftsCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Drafts')" /></td>
                                 </tr>
                                 <tr>
-                                    <td>Follower</td>
+                                    <td>My Follower</td>
                                     <td><input id="FilterModalFollowerCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Follower')" /></td>
                                 </tr>
-                                @*
-                                    <tr>
-                                        <td>Following Chefs</td>
-                                        <td><input id="FilterModalFollowingChefsCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'FollowingChefs')" /></td>
-                                    </tr>
-                                *@
                                 <tr>
-                                    <td>Public</td>
+                                    <td>My Public</td>
                                     <td><input id="FilterModalPublicCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'MyPublic')" /></td>
                                 </tr>
                                 <tr>
-                                    <td>Saved</td>
-                                    <td><input id="FilterModalSavedCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Saved')" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Secret</td>
+                                    <td>My Secret</td>
                                     <td><input id="FilterModalSecretCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Secret')" /></td>
                                 </tr>
                             </table>
                         </div>
+                        <!--
+                        <div class="col-12">
+                            <h5 class=""><i class="fa fa-ban"></i> My Recipe Filters</h5>
+                            <table class="table">
+                                <tr>
+                                    <td>Following Chefs</td>
+                                    <td><input id="" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'')" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Public</td>
+                                    <td><input id="" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'')" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Saved</td>
+                                    <td><input id="" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'')" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                        -->
                     </div>
                 }
             </div>

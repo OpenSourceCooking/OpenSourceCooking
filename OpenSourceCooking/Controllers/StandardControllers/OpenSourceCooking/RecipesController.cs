@@ -53,8 +53,8 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 Predicate = Predicate.Or(x => (x.ViewableType != "Secret" && x.CreatorId == AspNetId));
 
                 //My Recipe Filters
-                if (drafts == false)
-                    Predicate = Predicate.And(x => x.CompleteDateUtc != null);
+           
+
                 if (follower == false)
                     Predicate = Predicate.And(x => x.ViewableType != "Followers");
                 //if (FollowingChefs == false)
@@ -66,8 +66,13 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     Predicate = Predicate.And(x => (x.ViewableType != "Public" || x.CreatorId != AspNetId));
                 if (saved == false)
                     Predicate = Predicate.And(x => !x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-                if (secret == false)
+                if (secret == false && drafts == false)                
                     Predicate = Predicate.And(x => x.ViewableType != "Secret");
+                else if ((secret == null || secret == null) && drafts == false)
+                    Predicate = Predicate.And(x => x.CompleteDateUtc != null);
+                else if (secret == false && (drafts == null || drafts == true))
+                    Predicate = Predicate.And(x => (x.ViewableType != "Secret" || x.CompleteDateUtc == null));
+
             }
                 
 
@@ -109,7 +114,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 Predicate = Predicate.And(r => r.Name.Contains(searchText));
             //Add the where clause
             RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
-            //Sort By
+            //Sort By (Dates are inversed)
             if (!sortAscending.HasValue || !sortAscending.Value)
                 switch (sortingBy)
                 {
@@ -117,10 +122,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         RecipesQuery = RecipesQuery.OrderByDescending(r => r.CompleteDateUtc);
                         break;
                     case "2":
-                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.Name);
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.Name);
                         break;
                     case "3":
-                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.AspNetUser.UserName);
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.AspNetUser.UserName);
                         break;
                     default:
                         RecipesQuery = RecipesQuery.OrderByDescending(r => r.LastEditDateUtc);
@@ -133,10 +138,10 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                         RecipesQuery = RecipesQuery.OrderBy(r => r.CompleteDateUtc);
                         break;
                     case "2":
-                        RecipesQuery = RecipesQuery.OrderBy(r => r.Name);
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.Name);
                         break;
                     case "3":
-                        RecipesQuery = RecipesQuery.OrderBy(r => r.AspNetUser.UserName);
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.AspNetUser.UserName);
                         break;
                     default:
                         RecipesQuery = RecipesQuery.OrderBy(r => r.LastEditDateUtc);

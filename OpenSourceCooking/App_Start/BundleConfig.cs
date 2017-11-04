@@ -25,11 +25,12 @@ namespace OpenSourceCooking
             bundles.Add(new ScriptBundle("~/bundles/OpenSourceCooking").Include(
                 "~/Scripts/isotope.pkgd.min.js",
                 "~/Scripts/imagesloaded.pkgd.min.js",//Used with Isotope
+                "~/Scripts/select2.min.js",
                 "~/Scripts/openSourceCooking.js"
                 //"~/Scripts/PhotoSwipe/photoswipe.min.js",
                 //"~/Scripts/PhotoSwipe/photoswipe-ui-default.min.js"
                 ));
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/Content/CssBundle").Include(
                 "~/Content/tether/tether.min.css",
                 "~/Content/bootstrap-grid.min.css",
                 "~/Content/bootstrap-reboot.min.css",
@@ -37,6 +38,7 @@ namespace OpenSourceCooking
                 "~/Content/themes/base/jquery-ui.min.css",
                 "~/Content/font-awesome.min.css",
                 "~/Content/range-slider.css",
+                "~/Content/css/select2.min.css",
                 //"~/Content/PhotoSwipe/photoswipe.css",
                 //"~/Content/PhotoSwipe/DefaultSkin/default-skin.css",
                 "~/Content/Site.css"));
