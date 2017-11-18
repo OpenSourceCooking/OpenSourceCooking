@@ -33,6 +33,7 @@ function GenerateFiltersQueryString() {
         if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
             FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";        
     });
+    console.log('Filter String =' + FiltersQueryString);
     if (FiltersQueryString.length > 0)
         return FiltersQueryString.slice(0, -1);//Remove last '&' symbol
     return FiltersQueryString;

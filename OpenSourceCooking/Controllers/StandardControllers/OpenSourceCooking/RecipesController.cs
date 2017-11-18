@@ -18,7 +18,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? followingChefs, bool? myRecipes, bool? myPublic, bool? secret, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? saved, string searchText, string sortingBy, bool? sortAscending)
+        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? followingChefs, bool? myRecipes, bool? myPublic, bool? publicRecipes, bool? secret, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? saved, string searchText, string sortingBy, bool? sortAscending)
         {
             if (!returnJson.HasValue || !returnJson.Value)
             {
@@ -28,6 +28,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 ViewBag.FilterFollowingChefs = followingChefs;
                 ViewBag.FilterMyRecipes = myRecipes;
                 ViewBag.FilterMyPublic = myPublic;
+                ViewBag.FilterPublicRecipes = publicRecipes;
                 ViewBag.FilterSaved = saved;
                 ViewBag.FilterSecret = secret;
                 ViewBag.FilterSearchText = searchText;
@@ -51,10 +52,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 Predicate = Predicate.Or(x => (x.CompleteDateUtc == null && x.CreatorId == AspNetId));
                 Predicate = Predicate.Or(x => (x.ViewableType != "Followers" && x.CreatorId == AspNetId));
                 Predicate = Predicate.Or(x => (x.ViewableType != "Secret" && x.CreatorId == AspNetId));
-
-                //My Recipe Filters
-           
-
+                
                 if (follower == false)
                     Predicate = Predicate.And(x => x.ViewableType != "Followers");
                 //if (FollowingChefs == false)
@@ -62,57 +60,26 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 //    List<int> FollowingChefIds = db.
                 //    Predicate = Predicate.And(x =>  .Select(s => s.AspNetUserId).Contains(AspNetId));
                 //}
-                if (myPublic == false)
-                    Predicate = Predicate.And(x => (x.ViewableType != "Public" || x.CreatorId != AspNetId));
+                if (myPublic == false && publicRecipes == false)
+                    Predicate = Predicate.And(x => (x.ViewableType != "Public" || x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId)));
+                else if (myPublic == null && publicRecipes == false)
+                    Predicate = Predicate.And(x => (x.ViewableType != "Public" || x.CreatorId == AspNetId) || x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                else if (myPublic == false && publicRecipes == null)
+                    Predicate = Predicate.And(x => (x.ViewableType == "Public" && x.CreatorId != AspNetId));
+
+
                 if (saved == false)
                     Predicate = Predicate.And(x => !x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+
                 if (secret == false && drafts == false)                
                     Predicate = Predicate.And(x => x.ViewableType != "Secret");
                 else if ((secret == null || secret == null) && drafts == false)
                     Predicate = Predicate.And(x => x.CompleteDateUtc != null);
                 else if (secret == false && (drafts == null || drafts == true))
                     Predicate = Predicate.And(x => (x.ViewableType != "Secret" || x.CompleteDateUtc == null));
-
             }
-                
-
-           
-            //if (filterFollowingChefs == false)
-            //
-            //if (filterSaved == false)
-            //    Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-
-
-            /*
-            if (recipeOwner == true)
-                Predicate = Predicate.And(r => r.CreatorId == AspNetId);
-            else if (recipeOwner == false)
-                Predicate = Predicate.And(r => r.CreatorId != AspNetId && r.ViewableType == "Public");
-            else
-                Predicate = Predicate.And(r => r.CreatorId == AspNetId || r.ViewableType == "Public"); //Grabs all public and all of the current users recipes
-            if (filterSaved == true)
-                Predicate = Predicate.And(r => r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-            if (filterSaved == false)
-                Predicate = Predicate.And(r => !r.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-            if (filterDrafts == true)
-                Predicate = Predicate.And(r => r.CompleteDateUtc == null);
-            if (filterDrafts == false)
-                Predicate = Predicate.And(r => r.CompleteDateUtc != null);
-            if (filterFollower == true)
-                Predicate = Predicate.And(r => r.ViewableType == "Followers");
-            if (filterFollower == false)
-                Predicate = Predicate.And(r => r.ViewableType != "Followers");
-            if (filterPublic == true)
-                Predicate = Predicate.And(r => r.ViewableType == "Public");
-            if (filterPublic == false)
-                Predicate = Predicate.And(r => r.ViewableType != "Public");
-                */
-
-
-            //PredicateBuilder-searchText
             if (!String.IsNullOrEmpty(searchText))
                 Predicate = Predicate.And(r => r.Name.Contains(searchText));
-            //Add the where clause
             RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
             //Sort By (Dates are inversed)
             if (!sortAscending.HasValue || !sortAscending.Value)

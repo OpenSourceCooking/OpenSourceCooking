@@ -45,6 +45,8 @@ $(document).ready(function () {
         GetFilterByKey('FollowingChefs').Value = (ViewBagFilterFollowingChefs.toUpperCase() == 'TRUE');
     if (ViewBagFilterMyPublic)
         GetFilterByKey('MyPublic').Value = (ViewBagFilterMyPublic.toUpperCase() == 'TRUE');
+    if (ViewBagFilterPublicRecipes)
+        GetFilterByKey('PublicRecipes').Value = (ViewBagFilterPublicRecipes.toUpperCase() == 'TRUE');
     if (ViewBagFilterMyRecipes)
         GetFilterByKey('MyRecipes').Value = (ViewBagFilterMyPublic.toUpperCase() == 'TRUE');
     if (ViewBagFilterSaved)
@@ -719,20 +721,17 @@ function RefreshFilterRadios() {
     if (GetFilterByKey('Follower').Value === true || GetFilterByKey('Follower').Value === null)
         $('#FilterModalFollowerCheckbox').prop('checked', true);
     else
-        $('#FilterModalFollowerCheckbox').prop('checked', false);
-
-    //if (GetFilterByKey('MyPublic').Value === null)
-    //    $('#FilterModalMyPublicBoth').prop('checked', true);
-    //else if (GetFilterByKey('MyPublic').Value === false)
-    //    $('#FilterModalMyPublicMine').prop('checked', true);  
-    //else if (GetFilterByKey('MyPublic').Value === true)
-    //    $('#FilterModalMyPublicNotMine').prop('checked', true);
-         
+        $('#FilterModalFollowerCheckbox').prop('checked', false);         
 
     if (GetFilterByKey('MyPublic').Value === true || GetFilterByKey('MyPublic').Value === null)
         $('#FilterModalPublicCheckbox').prop('checked', true);
     else
         $('#FilterModalPublicCheckbox').prop('checked', false);
+
+    if (GetFilterByKey('PublicRecipes').Value === true || GetFilterByKey('PublicRecipes').Value === null)
+        $('#FilterModalPublicRecipesCheckbox').prop('checked', true);
+    else
+        $('#FilterModalPublicRecipesCheckbox').prop('checked', false);
 
     if (GetFilterByKey('Secret').Value === true || GetFilterByKey('Secret').Value === null)
         $('#FilterModalSecretCheckbox').prop('checked', true);

@@ -1,6 +1,4 @@
-﻿using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Net;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 

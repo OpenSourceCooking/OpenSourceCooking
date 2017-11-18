@@ -17,10 +17,12 @@
             <!--Body-->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-12" style="padding-bottom:10px;">
+                    <div class="col-xl-2">
                         <h5>Sorting</h5>
+                    </div>
+                    <div class="col-xl-10 text-center" style="padding-bottom:10px;">                       
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-8 text-center">
                                 <select id="SortByDropDown" class="SortByDropDown" style="width:100%;">
                                     <option value="3">Chef Name</option>
                                     <option value="1">Create Date</option>
@@ -44,7 +46,7 @@
                 @if (Request.IsAuthenticated)
                 {
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-sm-6">
                             <h5 class="">My Recipe Filters</h5>
                             <table class="table">
                                 <tr>
@@ -65,25 +67,23 @@
                                 </tr>
                             </table>
                         </div>
-                        <!--
-                        <div class="col-12">
+                        <div class="col-sm-6">
                             <h5 class=""><i class="fa fa-ban"></i> My Recipe Filters</h5>
                             <table class="table">
                                 <tr>
                                     <td>Following Chefs</td>
-                                    <td><input id="" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'')" /></td>
+                                    <td><input id="FilterModalFollowingChefsCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'FollowingChefs')" /></td>
                                 </tr>
                                 <tr>
                                     <td>Public</td>
-                                    <td><input id="" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'')" /></td>
+                                    <td><input id="FilterModalPublicRecipesCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'PublicRecipes')" /></td>
                                 </tr>
                                 <tr>
                                     <td>Saved</td>
-                                    <td><input id="" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'')" /></td>
+                                    <td><input id="FilterModalSavedCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Saved')" /></td>
                                 </tr>
                             </table>
                         </div>
-                        -->
                     </div>
                 }
             </div>
@@ -221,6 +221,7 @@
     var ViewBagFilterFollower = '@(ViewBag.FilterFollower)';
     var ViewBagFilterFollowingChefs = '@(ViewBag.FilterFollowingChefs)';
     var ViewBagFilterMyPublic = '@(ViewBag.FilterMyPublic)';
+    var ViewBagFilterPublicRecipes = '@(ViewBag.FilterPublicRecipes)';
     var ViewBagFilterMyRecipes = '@(ViewBag.FilterMyRecipes)';
     var ViewBagFilterSaved = '@(ViewBag.FilterSaved)';
     var ViewBagFilterSecret = '@(ViewBag.FilterSecret)';
