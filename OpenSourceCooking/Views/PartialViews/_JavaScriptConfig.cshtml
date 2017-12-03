@@ -1,4 +1,13 @@
-﻿<script type="text/javascript">
+﻿@if (ViewBag.RecipeFilterModel != null)
+{
+    <script>var ViewBagRecipeFilterModel = @(Html.Raw(Json.Encode(ViewBag.RecipeFilterModel)));</script>
+}
+else
+{
+    //Minimum model needed for the nav bar recipe search textbox
+    <script>var ViewBagRecipeFilterModel = { SearchText: null };</script>
+}
+<script type="text/javascript">
     //This is done so constant variables can be in a central location and Javascript functions
     //with Razor Syntax cannot be collapsed by visual studio for some dumb reason.
     var Config = {
@@ -39,6 +48,7 @@
             AjaxDeleteImageCloudFile: '@Url.Action("AjaxDeleteImageCloudFile", "Recipes")',
             AjaxDeleteVideoCloudFile: '@Url.Action("AjaxDeleteVideoCloudFile", "Recipes")',
             AjaxGetRecipe: '@Url.Action("AjaxGetRecipe", "Recipes")',
+            AjaxGetRecipes:  '@Url.Action("AjaxGetRecipes", "Recipes")',
             AjaxGetRecipeStep: '@Url.Action("AjaxGetRecipeStep", "Recipes")',
             AjaxGetRecipeSteps: '@Url.Action("AjaxGetRecipeSteps", "Recipes")',
             AjaxGetRecipeStepsIngredients: '@Url.Action("AjaxGetRecipeStepsIngredients", "Recipes")',
@@ -60,20 +70,6 @@
             //Recipe Flags Controller
             AjaxCreateRecipeFlag: '@Url.Action("AjaxCreateRecipeFlag", "RecipeFlags")'
         },
-        FiltersKeyValueList:[
-            //All Filters MUST start with a null value
-            { Key: 'Drafts', Value: null },
-            { Key: 'Follower', Value: null },
-            { Key: 'FollowingChefs', Value: null },
-            { Key: 'MyRecipes', Value: null },
-            { Key: 'MyPublic', Value: null },
-            { Key: 'PublicRecipes', Value: null },
-            { Key: 'Saved', Value: null },
-            { Key: 'Secret', Value: null },
-            { Key: 'SearchText', Value: null },
-            { Key: 'SortingBy', Value: null }, //0-LastEditDateUtc, 1-CompleteDateUtc, 2-RecipeName, 3-Username
-            { Key: 'SortAscending', Value: null }
-        ],
         Icons:
         {
             ErrorIconUrl: '/Content/Images/Icons/Error.png',
@@ -86,13 +82,6 @@
             AddVideoImageUrl: '/Content/Images/AddVideo.svg',
             OpenSourceCookingImageUrl: '/Content/Images/OpenSourceCooking4096x2160.png'
         },
-
-        //OrderByOptions : [
-        //    { Key: 'Create Date', Value: 1 },
-        //    { Key: 'Edit Date', Value: 0 },
-        //    { Key: 'Name', Value: 2 },
-        //    { Key: 'Chef Name', Value: 3 }
-        //],
         Urls:
         {
             RecipeEditor: window.location.protocol + '//' + window.location.host +'/Recipes/RecipeEditor',

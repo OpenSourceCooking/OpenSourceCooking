@@ -2,25 +2,25 @@
 
 <!--Infinite scrolling recipes-->
 <div id="RecipesDiv"></div>
-<div class="row" style="background-color:slategray;border-top:ridge">
+<div class="row" style="background-color:slategray;border-top:ridge;">
     <div class="col-12 text-center" style="color:white; font-size:24px; font-weight:bold; padding:100px;" id="NoMoreDiv"> Loading...</div>
 </div>
 <!--MODALS                 MODALS                  MODALS                    MODALS                 MODALS                MODALS              MODALS-->
-<!--Search Modal-->
+<!--Filter Modal-->
 <div class="modal" id="FilterModal" tabindex="-1" role="dialog" aria-labelledby="FilterModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <!--Header-->
-            <div class="modal-header text-center">
+            <div class="modal-header" style="padding-bottom:0;">
                 <h4>Optional Filters</h4>
             </div>
             <!--Body-->
-            <div class="modal-body">
+            <div class="modal-body" style="padding-bottom:0;">
                 <div class="row">
                     <div class="col-xl-2">
                         <h5>Sorting</h5>
                     </div>
-                    <div class="col-xl-10 text-center" style="padding-bottom:10px;">                       
+                    <div class="col-xl-10 text-center" style="padding-bottom:10px;">
                         <div class="row">
                             <div class="col-8 text-center">
                                 <select id="SortByDropDown" class="SortByDropDown" style="width:100%;">
@@ -30,7 +30,7 @@
                                     <option value="2">Recipe Name</option>
                                 </select>
                             </div>
-                            <div class="col-4 text-center">
+                            <div class="col-4 text-right">
                                 <div class="btn-group btn-group-sm" data-toggle="buttons">
                                     <label id="SortAscendingRadioLabel" class="btn btn-sm btn-primary">
                                         <input type="radio" name="SortAscendingRadio" id="SortAscendingRadioButton" autocomplete="off" checked> <i class="fa fa-arrow-up" aria-hidden="true"></i>
@@ -46,53 +46,92 @@
                 @if (Request.IsAuthenticated)
                 {
                     <div class="row">
-                        <div class="col-sm-6">
-                            <h5 class="">My Recipe Filters</h5>
-                            <table class="table">
-                                <tr>
-                                    <td>My Drafts</td>
-                                    <td><input id="FilterModalDraftsCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Drafts')" /></td>
-                                </tr>
-                                <tr>
-                                    <td>My Follower</td>
-                                    <td><input id="FilterModalFollowerCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Follower')" /></td>
-                                </tr>
-                                <tr>
-                                    <td>My Public</td>
-                                    <td><input id="FilterModalPublicCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'MyPublic')" /></td>
-                                </tr>
-                                <tr>
-                                    <td>My Secret</td>
-                                    <td><input id="FilterModalSecretCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Secret')" /></td>
-                                </tr>
-                            </table>
+                        <div class="col-sm-4">
+                            <h5 class="">Following Chefs</h5>
                         </div>
-                        <div class="col-sm-6">
-                            <h5 class=""><i class="fa fa-ban"></i> My Recipe Filters</h5>
-                            <table class="table">
-                                <tr>
-                                    <td>Following Chefs</td>
-                                    <td><input id="FilterModalFollowingChefsCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'FollowingChefs')" /></td>
+                        <div class="col-sm-8">                       
+                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
+                                <label id="FollowingChefsFilterBoth" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right">
+                                    <input type="radio" name="FollowingChefs" autocomplete="off">Both
+                                </label>
+                                <label id="FollowingChefsFilterMine" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right">
+                                    <input type="radio" name="FollowingChefs" autocomplete="off">Yes
+                                </label>
+                                <label id="FollowingChefsFilterNotMine" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right">
+                                    <input type="radio" name="FollowingChefs" autocomplete="off">No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="RecipeFiltersRecipeOwnerRow" class="row" style="padding-top:8px;">
+                        <div class="col-sm-4">
+                            <h5>Recipe Owner</h5>
+                        </div>
+                        <div class="col-sm-8">                            
+                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
+                                <label id="RecipeOwnerFilterBoth" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right">
+                                    <input type="radio" name="RecipeOwner" autocomplete="off">Both
+                                </label>
+                                <label id="RecipeOwnerFilterMine" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right">
+                                    <input type="radio" name="RecipeOwner" autocomplete="off">Mine
+                                </label>
+                                <label id="RecipeOwnerFilterNotMine" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right">
+                                    <input type="radio" name="RecipeOwner" autocomplete="off">Not Mine
+                                </label>
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="row"  style="padding-top:8px;">
+                        <div class="col-sm-4">
+                            <h5>Saved Recipes</h5>
+                        </div>
+                        <div class="col-sm-8">                          
+                            <div class="btn-group btn-group-justified btn-group-sm" data-toggle="buttons">
+                                <label id="SavedFilterBoth" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right" onclick="ViewBagRecipeFilterModel.Saved = null">
+                                    <input type="radio" name="Saved" autocomplete="off">Both
+                                </label>
+                                <label id="SavedFilterMine" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right" onclick="ViewBagRecipeFilterModel.Saved = true">
+                                    <input type="radio" name="Saved" autocomplete="off">Yes
+                                </label>
+                                <label id="SavedFilterNotMine" class="RecipeFilterRadioButton btn btn-sm btn-primary no-padding-left-and-right" onclick="ViewBagRecipeFilterModel.Saved = false">
+                                    <input type="radio" name="Saved" autocomplete="off">No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:8px;">
+                        <div class="col-sm-4">
+                            <h5>Viewable Types</h5>
+                        </div>
+                        <div class="col-sm-8">                      
+                            <table class="table table-sm">
+                                <tr id="RecipeViewableTypeTableDraftsRow">
+                                    <td>Drafts</td>
+                                    <td align="right"><input id="RecipeViewableTypeTableDraftsCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Drafts = $(this).is(':checked')" /></td>
                                 </tr>
-                                <tr>
+                                <tr id="RecipeViewableTypeTableFollowerRow">
+                                    <td>Follower</td>
+                                    <td align="right"><input id="RecipeViewableTypeTableFollowerCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Follower = $(this).is(':checked')" /></td>
+                                </tr>
+                                <tr id="RecipeViewableTypeTablePublicRow">
                                     <td>Public</td>
-                                    <td><input id="FilterModalPublicRecipesCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'PublicRecipes')" /></td>
+                                    <td align="right"><input id="RecipeViewableTypeTablePublicCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Public = $(this).is(':checked')" /></td>
                                 </tr>
-                                <tr>
-                                    <td>Saved</td>
-                                    <td><input id="FilterModalSavedCheckbox" type="checkbox" onchange="FilterModalCheckboxChanged($(this),'Saved')" /></td>
+                                <tr id="RecipeViewableTypeTableSecretRow">
+                                    <td>Secret</td>
+                                    <td align="right"><input id="RecipeViewableTypeTableSecretCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Secret = $(this).is(':checked')" /></td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 }
             </div>
-            <div class="row" style="padding:10px;">
+            <div class="row" style="padding:8px;">
                 <div class="col-6" style="padding-right:5px;">
-                    <button type="button" class="btn btn-danger btn-block btn-bordered" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Clear Filters</button>
+                    <button type="button" class="btn btn-danger btn-block btn-bordered" onclick="OnClick_FilterModalClearButton()" id="FilterModalFilterButton">Reset Filters</button>
                 </div>
                 <div class="col-6" style="padding-left:5px;">
-                    <button type="button" class="btn btn-primary btn-block btn-bordered" onclick="SearchRecipes()" id="FilterModalFilterButton">Apply</button>
+                    <button type="button" class="btn btn-success btn-block btn-bordered" onclick="SearchRecipes()" id="FilterModalFilterButton">Apply</button>
                 </div>
             </div>
         </div>
@@ -207,7 +246,7 @@
                 <span style="color:red;">Abusing the report function will result with an account ban and all report flags deleted. Don't be a troll.</span>
             </div>
             <div class="modal-body" id="ReportModalBody">
-            </div>
+            </div>RecipeFilterModel 
         </div>
     </div>
 </div>
@@ -216,23 +255,7 @@
 @Html.Partial("~/Views/PartialViews/Modals/_PopUpModal.cshtml"/*, model*/)
 @Html.Partial("~/Views/PartialViews/Modals/_RecipeViewableTypeModal.cshtml"/*, model*/)
 
-<script>
-    var ViewBagFilterDrafts = '@(ViewBag.FilterDrafts)';
-    var ViewBagFilterFollower = '@(ViewBag.FilterFollower)';
-    var ViewBagFilterFollowingChefs = '@(ViewBag.FilterFollowingChefs)';
-    var ViewBagFilterMyPublic = '@(ViewBag.FilterMyPublic)';
-    var ViewBagFilterPublicRecipes = '@(ViewBag.FilterPublicRecipes)';
-    var ViewBagFilterMyRecipes = '@(ViewBag.FilterMyRecipes)';
-    var ViewBagFilterSaved = '@(ViewBag.FilterSaved)';
-    var ViewBagFilterSecret = '@(ViewBag.FilterSecret)';
-    var ViewBagFilterSearchText = '@(ViewBag.FilterSearchText)';
-    var ViewBagFilterSortingBy = '@(ViewBag.FilterSortingBy)';
-    var ViewBagFilterSortAscending = '@(ViewBag.FilterSortAscending)';
 
-    var ViewBagRecipeId = '@(ViewBag.RecipeId)';
-    var ViewBagRecipeOwner = '@(ViewBag.RecipeOwner)';
-    var ViewBagRecipesPageIndex = '@(ViewBag.RecipesPageIndex)';
-</script>
 @section Scripts{
     <script src="@Url.Content("~/Scripts/recipeIndex.js")"></script>
     <script src="@Url.Content("~/Scripts/date-functions.js")"></script>

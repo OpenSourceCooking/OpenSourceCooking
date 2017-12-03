@@ -307,6 +307,7 @@
     <Compile Include="Models\ApplicationGroupManager.cs" />
     <Compile Include="Models\ApplicationGroupStore.cs" />
     <Compile Include="Models\GroupStoreBase.cs" />
+    <Compile Include="Models\RecipeFilterModel.cs" />
     <Compile Include="OpenSourceCookingDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

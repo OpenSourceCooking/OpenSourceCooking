@@ -1,15 +1,13 @@
 ﻿//Global Variables - These should be moved to the JavascriptConfig.cshtml
 var Colors = /*Pastels*/["#E3FBE9", "#F3F8F4", "#F1FEED", "#E7FFDF", "#F2FFEA", "#FFFFE3", "#FCFCE9", "#EEEEFF", "#ECF4FF", "#F9FDFF", "#E6FCFF", "#F2FFFE", "#CFFEF0", "#EAFFEF", "#FFECFF", "#F4D2F4", "#F9EEFF", "#F5EEFD", "#EFEDFC", "#EAF1FB", "#DBF0F7", "#FFECEC", "#FFEEFB", "#FFECF5", "#FFEEFD", "#FDF2FF", "#FAECFF", "#F1ECFF" /*,Bold&Bright "#66ffff", "#6666ff", "#ff66ff", "#ff6666", "#ffff66", "#66ff66", "#ffb366", "#cccccc"*/];
 var CurrentRandomColor = null;
-var RecipesPageIndex = 0;
 
 $(document).ready(function () {
     $('#NavbarSearchButton').click(function (e) {
-        if (ViewBagFilterSearchText) {
+        if (ViewBagRecipeFilterModel.SearchText) {
             $('#SearchTextInput').val('');
             $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
-            ViewBagFilterSearchText = null;
-            GetFilterByKey('SearchText').Value = null;
+            ViewBagRecipeFilterModel.SearchText = null;
             SearchRecipes();
         }
         else
@@ -18,8 +16,7 @@ $(document).ready(function () {
     $('#NavbarFilterButton').click(function (e) { $('#FilterModal').modal('show'); });
     $('#SearchTextInput').on('keydown', function (e) {
         $('#NavbarSearchButton').removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-search" aria-hidden="true">');
-        ViewBagFilterSearchText = null;
-        GetFilterByKey('SearchText').Value = null;
+        ViewBagRecipeFilterModel.SearchText = null;
         if (e.which === 13)
             SearchRecipes();
     });
@@ -27,31 +24,22 @@ $(document).ready(function () {
     $('.UploadVideoButton').attr('src', Config.Images.AddVideoImageUrl);
     RefreshZoomImages();
 });
-function GenerateFiltersQueryString() {
-    var FiltersQueryString = '';
-    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {       
-        if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
-            FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";        
-    });
-    console.log('Filter String =' + FiltersQueryString);
-    if (FiltersQueryString.length > 0)
-        return FiltersQueryString.slice(0, -1);//Remove last '&' symbol
-    return FiltersQueryString;
-}
+//function GenerateFiltersQueryString() {
+//    var FiltersQueryString = '';
+//    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {       
+//        if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
+//            FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";        
+//    });
+//    if (FiltersQueryString.length > 0)
+//        return FiltersQueryString.slice(0, -1);//Remove last '&' symbol
+//    return FiltersQueryString;
+//}
 function GetEstimatedTimeString(EstimatedTimeInSeconds) {
     EstimatedTimeInSeconds = EstimatedTimeInSeconds / 60;//Convert Sec to Min
     if (EstimatedTimeInSeconds > 59)
         return parseFloat((EstimatedTimeInSeconds / 60).toFixed(2)).toString() + " Hr(s)";
     else
         return parseFloat(EstimatedTimeInSeconds.toFixed(2)).toString() + " Min(s)";
-}
-function GetFilterByKey(Key) {
-    KeyValue = null;
-    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
-        if (FiltersKeyValue.Key === Key)
-            KeyValue = FiltersKeyValue;
-    });
-    return KeyValue;
 }
 function GetIngredientAmountString(recipeStepsIngredientsDataTransferObject) {
     var IngredientAmountString = recipeStepsIngredientsDataTransferObject.Amount + ' ';
@@ -104,14 +92,9 @@ function RefreshZoomImages() {
     $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
 }
 function SearchRecipes() {
-    RecipesPageIndex = null;
-    //SearchTextInput
-    GetFilterByKey('SearchText').Value = $('#SearchTextInput').val();
-    var FiltersQueryString = GenerateFiltersQueryString();
-    if (FiltersQueryString)
-        window.location.href = Config.Urls.RecipesIndex + '?' + GenerateFiltersQueryString();
-    else
-        window.location.href = Config.Urls.RecipesIndex;
+    ViewBagRecipeFilterModel.RecipesPageIndex = null;
+    ViewBagRecipeFilterModel.SearchText = $('#SearchTextInput').val();  
+    window.location.href = Config.Urls.RecipesIndex + '?' + $.param(ViewBagRecipeFilterModel);
 }
 function SetSrcFromLocalFile(file, HTMLElement) {
     var URL = window.URL.createObjectURL(file);

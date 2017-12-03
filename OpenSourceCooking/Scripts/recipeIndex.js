@@ -13,15 +13,11 @@ var ShowingRecipeSteps = false;
 var ShowingRecipeComments = false;
 
 $(document).ready(function () {
-    $(".SortByDropDown").select2({
-        minimumResultsForSearch: Infinity
-    });
+    //Isotope
     $RecipesDiv = $('#RecipesDiv');
-    // layout Isotope after each image loads
     $RecipesDiv.imagesLoaded().progress(function () {
         $RecipesDiv.isotope('layout');
     });
-    // init
     $RecipesDiv.isotope({
         // options
         itemSelector: '.box',
@@ -34,39 +30,10 @@ $(document).ready(function () {
     var RecipeCommentTextArea = $('#RecipeCommentTextArea');
     RecipeCommentTextArea.attr('maxlength', MaxRecipeCommentLength);
     $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength);
-    RecipeCommentTextArea.keyup(function (event) {
-        $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
-    });
-    if (ViewBagFilterDrafts)
-        GetFilterByKey('Drafts').Value = (ViewBagFilterDrafts.toUpperCase() == 'TRUE');
-    if (ViewBagFilterFollower)
-        GetFilterByKey('Follower').Value = (ViewBagFilterFollower.toUpperCase() == 'TRUE');
-    if (ViewBagFilterFollowingChefs)
-        GetFilterByKey('FollowingChefs').Value = (ViewBagFilterFollowingChefs.toUpperCase() == 'TRUE');
-    if (ViewBagFilterMyPublic)
-        GetFilterByKey('MyPublic').Value = (ViewBagFilterMyPublic.toUpperCase() == 'TRUE');
-    if (ViewBagFilterPublicRecipes)
-        GetFilterByKey('PublicRecipes').Value = (ViewBagFilterPublicRecipes.toUpperCase() == 'TRUE');
-    if (ViewBagFilterMyRecipes)
-        GetFilterByKey('MyRecipes').Value = (ViewBagFilterMyPublic.toUpperCase() == 'TRUE');
-    if (ViewBagFilterSaved)
-        GetFilterByKey('Saved').Value = (ViewBagFilterSaved.toUpperCase() == 'TRUE');
-    if (ViewBagFilterSecret)
-        GetFilterByKey('Secret').Value = (ViewBagFilterSecret.toUpperCase() == 'TRUE');
-    if (ViewBagFilterSearchText) {
-        GetFilterByKey('SearchText').Value = ViewBagFilterSearchText;
-        $('#SearchTextInput').val(ViewBagFilterSearchText);
+    if (ViewBagRecipeFilterModel.SearchText) {
+        $('#SearchTextInput').val(ViewBagRecipeFilterModel.SearchText);
         $('#NavbarSearchButton').removeClass('btn-primary').addClass('btn-danger').html('X');
-    }
-    if (ViewBagFilterSortingBy)
-        GetFilterByKey('SortingBy').Value = ViewBagFilterSortingBy;
-    if (ViewBagFilterSortAscending)
-        GetFilterByKey('SortAscending').Value = (ViewBagFilterSortAscending.toUpperCase() == 'TRUE');
-    if (ViewBagRecipeId)
-        RecipeId = ViewBagRecipeId;
-    if (ViewBagRecipesPageIndex)
-        RecipesPageIndex = ViewBagRecipesPageIndex;
-    RefreshFilterRadios();
+    }    
     AjaxGetRecipes();
     window.onscroll = function (ev) {
         if (window.innerHeight + window.pageYOffset + 20 >= document.body.offsetHeight) {
@@ -74,6 +41,9 @@ $(document).ready(function () {
             AjaxGetRecipes();
         }
     };
+    RecipeCommentTextArea.keyup(function (event) {
+        $('#RecipeCommentCharactersLeftSpan').text(MaxRecipeCommentLength - RecipeCommentTextArea.val().length);
+    });
     $('#SetRecipeViewableTypePublic').on('click', function (e) {
         SetRecipeViewableType('Public', ClickedRecipeId);
     });
@@ -83,14 +53,8 @@ $(document).ready(function () {
     $('#SetRecipeViewableTypeSecret').on('click', function (e) {
         SetRecipeViewableType('Secret', ClickedRecipeId);
     });
-    $('#SortByDropDown').change(function () {
-        GetFilterByKey('SortingBy').Value = $(this).val();
-    });
-    if (GetFilterByKey('SortingBy').Value === null)
-        $("#SortByDropDown").select2("val", '0');
-    else
-        $("#SortByDropDown").select2("val", GetFilterByKey('SortingBy').Value);
-    if (GetFilterByKey('SortAscending').Value === true)
+
+    if (ViewBagRecipeFilterModel.SortAscending === true)
     {
         $("#SortAscendingRadioLabel").addClass('active');
         $("#SortAscendingRadioButton").prop("checked", true);
@@ -105,16 +69,58 @@ $(document).ready(function () {
         $("#SortDescendingRadioButton").prop("checked", false);
         $(this).prop("checked", true);
         $("#SortAscendingRadioLabel").addClass('active');
-        GetFilterByKey('SortAscending').Value = true;
+        ViewBagRecipeFilterModel.SortAscending = true;
     });
     $('#SortDescendingRadioLabel').click(function () {
         $("#SortAscendingRadioLabel").removeClass('active');
         $("#SortAscendingRadioButton").prop("checked", false);
         $(this).prop("checked", true);
         $("#SortDescendingRadioLabel").addClass('active');
-        GetFilterByKey('SortAscending').Value = null;
+        ViewBagRecipeFilterModel.SortAscending = null;
     });
-      
+
+    //Recipe Filters Model Logic
+    $(".SortByDropDown").select2({ minimumResultsForSearch: Infinity });
+    $('#SortByDropDown').change(function () {
+        if ($(this).val() === '0')
+            ViewBagRecipeFilterModel.SortingBy = null;
+        else
+            ViewBagRecipeFilterModel.SortingBy = $(this).val();
+    });
+    if (ViewBagRecipeFilterModel.SortingBy === null)
+        $("#SortByDropDown").select2("val", '0');
+    else
+        $("#SortByDropDown").select2("val", ViewBagRecipeFilterModel.SortingBy);
+
+    //OnClick_RecipeOwnerFilter
+    $('#RecipeOwnerFilterBoth').on('click', function (e) {
+        ViewBagRecipeFilterModel.MyRecipes = null;
+        RefreshFiltersModalControls();
+    });
+    $('#RecipeOwnerFilterMine').on('click', function (e) {
+        ViewBagRecipeFilterModel.MyRecipes = true;
+        RefreshFiltersModalControls();
+    });
+    $('#RecipeOwnerFilterNotMine').on('click', function (e) {
+        ViewBagRecipeFilterModel.MyRecipes = false;
+        RefreshFiltersModalControls();
+    });
+
+    //OnClick_FollowingChefsFilter
+    $('#FollowingChefsFilterBoth').on('click', function (e) {
+        ViewBagRecipeFilterModel.FollowingChefs = null;
+        RefreshFiltersModalControls();
+    });
+    $('#FollowingChefsFilterMine').on('click', function (e) {
+        ViewBagRecipeFilterModel.FollowingChefs = true;
+        RefreshFiltersModalControls();
+    });
+    $('#FollowingChefsFilterNotMine').on('click', function (e) {
+        ViewBagRecipeFilterModel.FollowingChefs = false;
+        RefreshFiltersModalControls();
+    });
+
+    RefreshFiltersModalControls();
     if (RecipeId)//This should be last
         PreviewRecipe(RecipeId);
 });
@@ -162,13 +168,13 @@ function AjaxGetRecipes() {
     if (IsGettingRecipes)
         return;
     IsGettingRecipes = true;
-    ajax = new XMLHttpRequest();
-    ajax.upload.addEventListener("progress", AjaxGetRecipesProgressHandler, false);
-    ajax.addEventListener("load", AjaxGetRecipesCompleteHandler, false);
-    ajax.open("GET", "/Recipes?ReturnJson=true&recipesPageIndex=" + RecipesPageIndex + "&" + GenerateFiltersQueryString() + "&R=" + new Date().getTime()); //This R param is in place to prevent caching in the ajax call
-    ajax.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            var Recipes = JSON.parse(this.responseText);
+    $.ajax({
+        url: Config.AjaxUrls.AjaxGetRecipes,
+        type: "GET",
+        cache: false,
+        data: ViewBagRecipeFilterModel,
+        success: function (Recipes) {
+            console.log('Got Recipes');
             if (Recipes.length === 0)
                 $('#NoMoreDiv').text('No more recipes');
             if (Recipes === "Unauthorized") {
@@ -261,44 +267,42 @@ function AjaxGetRecipes() {
                 $('#RecipesDiv').append($items).isotope('appended', $items);
                 PopulateSymbolsDiv($('#SymbolsDiv' + CurrentRecipe.Id), CurrentRecipe.DietaryRestrictionDataTransferObjects, false);
             }
+
+
+
+            $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
+            $('.ClickableRecipeDiv').off();
+            $('.ClickableRecipeDiv').on('click', function (e) {
+                ClickedRecipeId = $(this).closest('.ClickableRecipeDiv').attr('id').split("ClickableRecipeDiv").pop();
+                PreviewRecipe(ClickedRecipeId);
+                e.stopPropagation();
+            });
+            $('.StopPropagationLink').off();
+            $('.StopPropagationLink').on('click', function (e) {
+                e.stopPropagation();
+            });
+            $('.PublicOrsecretButton').off();
+            $('.PublicOrsecretButton').on('click', function (e) {
+                ClickedViewableTypeButton = $(this);
+                ClickedRecipeId = $(this).closest('.ClickableRecipeDiv').attr('id').split("ClickableRecipeDiv").pop();
+                $('#RecipeViewableTypeModalHeader').text('Should ' + GetRecipeById(ClickedRecipeId).Name + ' be public or secret?');
+                $('#RecipeViewableTypeModal').modal('show');
+                e.stopPropagation();
+            });
+            //Add RecipesDiv to Isotope layout after each image loads
+            $('#RecipesDiv').imagesLoaded().progress(function () {
+                $('#RecipesDiv').isotope('layout');
+            });
+            IsGettingRecipes = false;
+        },
+        error: function (er) {
+            IsGettingRecipes = false;
+            ShowPopUpModal("Error", er);
         }
-        else {
-            $('#NoMoreDiv').text('No more recipes');
-        }
-        $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
-        $('.ClickableRecipeDiv').off();
-        $('.ClickableRecipeDiv').on('click', function (e) {
-            ClickedRecipeId = $(this).closest('.ClickableRecipeDiv').attr('id').split("ClickableRecipeDiv").pop();
-            PreviewRecipe(ClickedRecipeId);
-            e.stopPropagation();
-        });
-        $('.StopPropagationLink').off();
-        $('.StopPropagationLink').on('click', function (e) {
-            e.stopPropagation();
-        });
-        $('.PublicOrsecretButton').off();
-        $('.PublicOrsecretButton').on('click', function (e) {
-            ClickedViewableTypeButton = $(this);
-            ClickedRecipeId = $(this).closest('.ClickableRecipeDiv').attr('id').split("ClickableRecipeDiv").pop();
-            $('#RecipeViewableTypeModalHeader').text('Should ' + GetRecipeById(ClickedRecipeId).Name + ' be public or secret?');
-            $('#RecipeViewableTypeModal').modal('show');
-            e.stopPropagation();
-        });
-        //Add RecipesDiv to Isotope layout after each image loads
-        $('#RecipesDiv').imagesLoaded().progress(function () {
-            $('#RecipesDiv').isotope('layout');
-        });
-    };
-    ajax.send(null);
-    RecipesPageIndex++;
-}
-function AjaxGetRecipesCompleteHandler() {
-    $('#pleaseWaitDialog').modal('hide');
-    IsGettingRecipes = false;
-}
-function AjaxGetRecipesProgressHandler(event) {
-    var percent = event.loaded / event.total * 100;
-    $('#UploadProgressBar').attr('style', 'width: ' + Math.round(percent) + '%');
+    });
+
+
+    ViewBagRecipeFilterModel.RecipesPageIndex++;
 }
 function CancelEditingComment(commentId, CurrentText) {
     var CommentTextDiv = $('#CommentText' + commentId);
@@ -418,12 +422,7 @@ function EditRecipeComment(commentId) {
 //        document.documentElement.clientHeight
 //    );
 //}
-function FilterModalCheckboxChanged(Checkbox, FilterKey) {
-    if (Checkbox.is(':checked'))
-        GetFilterByKey(FilterKey).Value = null;
-    else
-        GetFilterByKey(FilterKey).Value = false;
-}
+
 function FlagRecipe(recipeId, flagName) {
     $.ajax({
         url: Config.AjaxUrls.AjaxCreateRecipeFlag,
@@ -468,9 +467,9 @@ function HideRecipeSteps() {
     $('#RecipeStepsDiv').empty();
 }
 function OnClick_FilterModalClearButton() {
-    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {
-        FiltersKeyValue.Value = null;
-    });
+    for (var Property in ViewBagRecipeFilterModel) {
+        ViewBagRecipeFilterModel[Property] = null;
+    }
     SearchRecipes();
 }
 function OnClick_ReportRecipe(recipeId) {
@@ -712,41 +711,93 @@ function ToggleSaveRecipe(recipeId) {
         }
     });
 }
-function RefreshFilterRadios() {
-    if (GetFilterByKey('Drafts').Value === true || GetFilterByKey('Drafts').Value === null)
-        $('#FilterModalDraftsCheckbox').prop('checked', true);
-    else
-        $('#FilterModalDraftsCheckbox').prop('checked', false);
+function RefreshFiltersModalControls() {
+    $('.RecipeFilterRadioButton').removeClass('active');
 
-    if (GetFilterByKey('Follower').Value === true || GetFilterByKey('Follower').Value === null)
-        $('#FilterModalFollowerCheckbox').prop('checked', true);
+    //If FollowingChefs disaple the recipe owner filter
+    if (ViewBagRecipeFilterModel.FollowingChefs == true) {
+        ViewBagRecipeFilterModel.MyRecipes = null;
+        $('#RecipeFiltersRecipeOwnerRow').fadeOut();
+    }
     else
-        $('#FilterModalFollowerCheckbox').prop('checked', false);         
+        $('#RecipeFiltersRecipeOwnerRow').fadeIn();
 
-    if (GetFilterByKey('MyPublic').Value === true || GetFilterByKey('MyPublic').Value === null)
-        $('#FilterModalPublicCheckbox').prop('checked', true);
+    //If filters prevent seeing your own recipes, hide the Drafts and Secret options
+    if (ViewBagRecipeFilterModel.MyRecipes === false || ViewBagRecipeFilterModel.FollowingChefs == true)
+    {
+        $('#RecipeViewableTypeTableDraftsRow').fadeOut();
+        $('#RecipeViewableTypeTableSecretRow').fadeOut();
+    }
     else
-        $('#FilterModalPublicCheckbox').prop('checked', false);
+    {
+        $('#RecipeViewableTypeTableDraftsRow').fadeIn();
+        $('#RecipeViewableTypeTableSecretRow').fadeIn();
+    }
 
-    if (GetFilterByKey('PublicRecipes').Value === true || GetFilterByKey('PublicRecipes').Value === null)
-        $('#FilterModalPublicRecipesCheckbox').prop('checked', true);
+    //Initialize Recipe Owner Button  
+    if (ViewBagRecipeFilterModel.MyRecipes == null)
+        $('#RecipeOwnerFilterBoth').addClass('active');
+    else if (ViewBagRecipeFilterModel.MyRecipes === true)
+        $('#RecipeOwnerFilterMine').addClass('active');
     else
-        $('#FilterModalPublicRecipesCheckbox').prop('checked', false);
+        $('#RecipeOwnerFilterNotMine').addClass('active');
 
-    if (GetFilterByKey('Secret').Value === true || GetFilterByKey('Secret').Value === null)
-        $('#FilterModalSecretCheckbox').prop('checked', true);
+    //Initialize Saved Recipe Button
+    if (ViewBagRecipeFilterModel.Saved == null)
+        $('#SavedFilterBoth').addClass('active');
+    else if (ViewBagRecipeFilterModel.Saved === true)
+        $('#SavedFilterMine').addClass('active');
     else
-        $('#FilterModalSecretCheckbox').prop('checked', false);
+        $('#SavedFilterNotMine').addClass('active');
 
-    if (GetFilterByKey('FollowingChefs').Value === true || GetFilterByKey('FollowingChefs').Value === null)
-        $('#FilterModalFollowingChefsCheckbox').prop('checked', true);
+    //Initialize FollowingChefs Recipe Button
+    if (ViewBagRecipeFilterModel.FollowingChefs == null)
+        $('#FollowingChefsFilterBoth').addClass('active');
+    else if (ViewBagRecipeFilterModel.FollowingChefs === true)
+        $('#FollowingChefsFilterMine').addClass('active');
     else
+        $('#FollowingChefsFilterNotMine').addClass('active');
+
+
+    if (ViewBagRecipeFilterModel.Drafts === false)
+        $('#RecipeViewableTypeTableDraftsCheckbox').prop('checked', false);
+    else
+        $('#RecipeViewableTypeTableDraftsCheckbox').prop('checked', true);
+
+    if (ViewBagRecipeFilterModel.Follower === false)
+        $('#RecipeViewableTypeTableFollowerCheckbox').prop('checked', false);
+    else
+        $('#RecipeViewableTypeTableFollowerCheckbox').prop('checked', true);         
+
+    if (ViewBagRecipeFilterModel.Public === false)
+        $('#RecipeViewableTypeTablePublicCheckbox').prop('checked', false);
+    else
+        $('#RecipeViewableTypeTablePublicCheckbox').prop('checked', true);
+
+    if (ViewBagRecipeFilterModel.Secret === false)
+        $('#RecipeViewableTypeTableSecretCheckbox').prop('checked', false);
+    else
+        $('#RecipeViewableTypeTableSecretCheckbox').prop('checked', true);
+
+    if (ViewBagRecipeFilterModel.FollowingChefs === false)
         $('#FilterModalFollowingChefsCheckbox').prop('checked', false);
-
-    if (GetFilterByKey('Saved').Value === true || GetFilterByKey('Saved').Value === null)
-        $('#FilterModalSavedCheckbox').prop('checked', true);
     else
+        $('#FilterModalFollowingChefsCheckbox').prop('checked', true);  
+
+    if (ViewBagRecipeFilterModel.NotFollowingChefs === false)
+        $('#FilterModalNotFollowingChefsCheckbox').prop('checked', false);
+    else
+        $('#FilterModalNotFollowingChefsCheckbox').prop('checked', true);
+
+    if (ViewBagRecipeFilterModel.PublicRecipes === false)
+        $('#FilterModalPublicRecipesCheckbox').prop('checked', false);
+    else
+        $('#FilterModalPublicRecipesCheckbox').prop('checked', true);
+
+    if (ViewBagRecipeFilterModel.Saved === false)
         $('#FilterModalSavedCheckbox').prop('checked', false);
+    else
+        $('#FilterModalSavedCheckbox').prop('checked', true);
 }
 function SwitchFollowChefButton(ModalFollowChefButton, IsFollowed)
 {

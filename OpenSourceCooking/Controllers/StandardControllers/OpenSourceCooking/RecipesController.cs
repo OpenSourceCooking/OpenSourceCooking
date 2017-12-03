@@ -18,152 +18,11 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         OpenSourceCookingEntities db = new OpenSourceCookingEntities();
         const int PageSize = 24;
 
-        public async Task<ActionResult> Index(bool? drafts, bool? follower, bool? followingChefs, bool? myRecipes, bool? myPublic, bool? publicRecipes, bool? secret, int? recipeId, bool? recipeOwner, int? recipesPageIndex, bool? returnJson, bool? saved, string searchText, string sortingBy, bool? sortAscending)
+        public ActionResult Index(RecipeFilterModel recipeFilterModel)
         {
-            if (!returnJson.HasValue || !returnJson.Value)
-            {
-                //Pass default JS params
-                ViewBag.FilterDrafts = drafts;
-                ViewBag.FilterFollower = follower;
-                ViewBag.FilterFollowingChefs = followingChefs;
-                ViewBag.FilterMyRecipes = myRecipes;
-                ViewBag.FilterMyPublic = myPublic;
-                ViewBag.FilterPublicRecipes = publicRecipes;
-                ViewBag.FilterSaved = saved;
-                ViewBag.FilterSecret = secret;
-                ViewBag.FilterSearchText = searchText;
-                ViewBag.FilterSortingBy = sortingBy;
-                ViewBag.FilterSortAscending = sortAscending;
-
-                ViewBag.RecipeId = recipeId;
-                ViewBag.RecipesPageIndex = recipesPageIndex;
-                ViewBag.ReturnJson = returnJson;
-                return View();
-            }
-            if (!recipesPageIndex.HasValue)
-                recipesPageIndex = 0;
-            //Build Where clause with PredicateBuilder
-            string AspNetId = User.Identity.GetUserId();
-            var Predicate = PredicateBuilder.New<Recipe>(true);
-            IQueryable<Recipe> RecipesQuery = db.Recipes;
-            Predicate = Predicate.And(x => x.ViewableType == "Public");
-            if (AspNetId != null)
-            {
-                Predicate = Predicate.Or(x => (x.CompleteDateUtc == null && x.CreatorId == AspNetId));
-                Predicate = Predicate.Or(x => (x.ViewableType != "Followers" && x.CreatorId == AspNetId));
-                Predicate = Predicate.Or(x => (x.ViewableType != "Secret" && x.CreatorId == AspNetId));
-                
-                if (follower == false)
-                    Predicate = Predicate.And(x => x.ViewableType != "Followers");
-                //if (FollowingChefs == false)
-                //{
-                //    List<int> FollowingChefIds = db.
-                //    Predicate = Predicate.And(x =>  .Select(s => s.AspNetUserId).Contains(AspNetId));
-                //}
-                if (myPublic == false && publicRecipes == false)
-                    Predicate = Predicate.And(x => (x.ViewableType != "Public" || x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId)));
-                else if (myPublic == null && publicRecipes == false)
-                    Predicate = Predicate.And(x => (x.ViewableType != "Public" || x.CreatorId == AspNetId) || x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-                else if (myPublic == false && publicRecipes == null)
-                    Predicate = Predicate.And(x => (x.ViewableType == "Public" && x.CreatorId != AspNetId));
-
-
-                if (saved == false)
-                    Predicate = Predicate.And(x => !x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
-
-                if (secret == false && drafts == false)                
-                    Predicate = Predicate.And(x => x.ViewableType != "Secret");
-                else if ((secret == null || secret == null) && drafts == false)
-                    Predicate = Predicate.And(x => x.CompleteDateUtc != null);
-                else if (secret == false && (drafts == null || drafts == true))
-                    Predicate = Predicate.And(x => (x.ViewableType != "Secret" || x.CompleteDateUtc == null));
-            }
-            if (!String.IsNullOrEmpty(searchText))
-                Predicate = Predicate.And(r => r.Name.Contains(searchText));
-            RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
-            //Sort By (Dates are inversed)
-            if (!sortAscending.HasValue || !sortAscending.Value)
-                switch (sortingBy)
-                {
-                    case "1":
-                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.CompleteDateUtc);
-                        break;
-                    case "2":
-                        RecipesQuery = RecipesQuery.OrderBy(r => r.Name);
-                        break;
-                    case "3":
-                        RecipesQuery = RecipesQuery.OrderBy(r => r.AspNetUser.UserName);
-                        break;
-                    default:
-                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.LastEditDateUtc);
-                        break;
-                }
-            else
-                switch (sortingBy)
-                {
-                    case "1":
-                        RecipesQuery = RecipesQuery.OrderBy(r => r.CompleteDateUtc);
-                        break;
-                    case "2":
-                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.Name);
-                        break;
-                    case "3":
-                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.AspNetUser.UserName);
-                        break;
-                    default:
-                        RecipesQuery = RecipesQuery.OrderBy(r => r.LastEditDateUtc);
-                        break;
-                }
-            List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipesPageIndex.Value * PageSize).Take(PageSize).Select(Recipe => new RecipeDataTransferObject()
-            {
-                Id = Recipe.Id,
-                CompleteDateUtc = Recipe.CompleteDateUtc,
-                CreationStep = Recipe.CreationStep,
-                Description = Recipe.Description ?? "",
-                CreatorName = Recipe.AspNetUser.UserName,
-                IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
-                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
-                LastEditDateUtc = Recipe.LastEditDateUtc,
-                Name = Recipe.Name,
-                ServingSize = Recipe.ServingSize,
-                ViewableType = Recipe.ViewableType,
-                DietaryRestrictionDataTransferObjects = Recipe.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
-                {
-                    Name = x.Name,
-                    IconUrl = x.IconUrl
-                }).ToList(),
-                RecipeCloudFileDataTransferObjects = Recipe.RecipeCloudFiles.Select(x => new RecipeCloudFileDataTransferObject
-                {
-                    CloudFileId = x.CloudFileId,
-                    RecipeCloudFileTypeName = x.RecipeCloudFileTypeName,
-                    RecipeId = x.RecipeId,
-                    CloudFileDataTransferObject = x.CloudFile == null ? null : new CloudFileDataTransferObject()
-                    {
-                        CreatorId = x.CloudFile.CreatorId,
-                        FileExtension = x.CloudFile.FileExtension,
-                        Id = x.CloudFile.Id,
-                        Url = x.CloudFile.Url,
-                        CloudFileThumbnailsDataTransferObject = x.CloudFile.CloudFilesThumbnail == null ? null : new CloudFileThumbnailsDataTransferObject
-                        {
-                            CloudFileId = x.CloudFile.CloudFilesThumbnail.CloudFileId,
-                            FileExtension = x.CloudFile.CloudFilesThumbnail.FileExtension,
-                            Url = x.CloudFile.CloudFilesThumbnail.Url
-                        }
-                    }
-                }).ToList(),
-                RecipeStepDataTransferObjects = Recipe.RecipeSteps.Select(x => new RecipeStepDataTransferObject
-                {
-                    Comment = x.Comment,
-                    StepNumber = x.StepNumber,
-                    EstimatedTimeInSeconds = x.EstimatedTimeInSeconds
-                }).ToList(),
-                SavedRecipeDataTransferObjects = Recipe.SavedRecipes.Select(x => new SavedRecipeDataTransferObject
-                {
-                    RecipeId = x.RecipeId,
-                    SavedDate = x.SavedDate
-                }).ToList(),
-            }).ToListAsync();
-            return Json(Recipes, JsonRequestBehavior.AllowGet);
+            //Pass default JS params
+            ViewBag.RecipeFilterModel = recipeFilterModel;
+            return View();
         }
 
         protected override void Dispose(bool disposing)
@@ -405,6 +264,138 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 ViewableType = Recipe.ViewableType,
             }).FirstOrDefaultAsync();
             return Json(RecipeDataTransferObject, JsonRequestBehavior.AllowGet);
+        }
+        public async Task<JsonResult> AjaxGetRecipes(RecipeFilterModel recipeFilterModel)
+        {
+            if (!recipeFilterModel.RecipesPageIndex.HasValue)
+                recipeFilterModel.RecipesPageIndex = 0;
+            //Build Where clause with PredicateBuilder
+            string AspNetId = User.Identity.GetUserId();
+            var Predicate = PredicateBuilder.New<Recipe>(true);
+            IQueryable<Recipe> RecipesQuery = db.Recipes;
+            if (AspNetId != null)
+            {
+                IQueryable<string> FollowingChefIds = db.FollowingChefs.Where(x => x.AspNetUserId == AspNetId).Select(x => x.FollowingChefId);
+                //FollowingChefs
+                if (recipeFilterModel.FollowingChefs == true)                
+                    Predicate = Predicate.And(x => FollowingChefIds.Contains(x.CreatorId));                
+                else if (recipeFilterModel.FollowingChefs == false)                
+                    Predicate = Predicate.And(x =>! FollowingChefIds.Contains(x.CreatorId));               
+
+                //MyRecipes
+                if (recipeFilterModel.MyRecipes == null)                
+                    Predicate = Predicate.And(x => (x.ViewableType == "Public" || x.CreatorId == AspNetId || FollowingChefIds.Contains(x.CreatorId)));
+                else if (recipeFilterModel.MyRecipes == true)
+                    Predicate = Predicate.And(x => x.CreatorId == AspNetId);
+                else if (recipeFilterModel.MyRecipes == false)                
+                    Predicate = Predicate.And(x => ((x.CreatorId != AspNetId && x.ViewableType == "Public") || FollowingChefIds.Contains(x.CreatorId)));
+
+                //Saved
+                if (recipeFilterModel.Saved == true)
+                    Predicate = Predicate.And(x => x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+                else if (recipeFilterModel.Saved == false)
+                    Predicate = Predicate.And(x => !x.SavedRecipes.Select(s => s.AspNetUserId).Contains(AspNetId));
+
+                //Drafts
+                if (recipeFilterModel.Drafts == false)
+                    Predicate = Predicate.And(x => x.CompleteDateUtc != null);
+                //Follower
+                if (recipeFilterModel.Follower == false)
+                    Predicate = Predicate.And(x => x.ViewableType != "Followers");
+                //Public
+                if (recipeFilterModel.Public == false)
+                    Predicate = Predicate.And(x => x.ViewableType != "Public");
+                //Secret
+                if (recipeFilterModel.Secret == false)
+                    Predicate = Predicate.And(x => x.ViewableType != "Secret");
+
+            }
+            if (!String.IsNullOrEmpty(recipeFilterModel.SearchText))
+                Predicate = Predicate.And(r => r.Name.Contains(recipeFilterModel.SearchText));
+            RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
+            //Sort By (Dates are inversed)
+            if (!recipeFilterModel.SortAscending.HasValue || !recipeFilterModel.SortAscending.Value)
+                switch (recipeFilterModel.SortingBy)
+                {
+                    case "1":
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.CompleteDateUtc);
+                        break;
+                    case "2":
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.Name);
+                        break;
+                    case "3":
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.AspNetUser.UserName);
+                        break;
+                    default:
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.LastEditDateUtc);
+                        break;
+                }
+            else
+                switch (recipeFilterModel.SortingBy)
+                {
+                    case "1":
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.CompleteDateUtc);
+                        break;
+                    case "2":
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.Name);
+                        break;
+                    case "3":
+                        RecipesQuery = RecipesQuery.OrderByDescending(r => r.AspNetUser.UserName);
+                        break;
+                    default:
+                        RecipesQuery = RecipesQuery.OrderBy(r => r.LastEditDateUtc);
+                        break;
+                }
+            List<RecipeDataTransferObject> Recipes = await RecipesQuery.Skip(recipeFilterModel.RecipesPageIndex.Value * PageSize).Take(PageSize).Select(Recipe => new RecipeDataTransferObject()
+            {
+                Id = Recipe.Id,
+                CompleteDateUtc = Recipe.CompleteDateUtc,
+                CreationStep = Recipe.CreationStep,
+                Description = Recipe.Description ?? "",
+                CreatorName = Recipe.AspNetUser.UserName,
+                IsMyRecipe = Recipe.AspNetUser.Id == AspNetId ? true : false,
+                IsSaved = Recipe.SavedRecipes.Where(x => x.AspNetUserId == AspNetId).FirstOrDefault() == null ? false : true,
+                LastEditDateUtc = Recipe.LastEditDateUtc,
+                Name = Recipe.Name,
+                ServingSize = Recipe.ServingSize,
+                ViewableType = Recipe.ViewableType,
+                DietaryRestrictionDataTransferObjects = Recipe.DietaryRestrictions.Select(x => new DietaryRestrictionDataTransferObject
+                {
+                    Name = x.Name,
+                    IconUrl = x.IconUrl
+                }).ToList(),
+                RecipeCloudFileDataTransferObjects = Recipe.RecipeCloudFiles.Select(x => new RecipeCloudFileDataTransferObject
+                {
+                    CloudFileId = x.CloudFileId,
+                    RecipeCloudFileTypeName = x.RecipeCloudFileTypeName,
+                    RecipeId = x.RecipeId,
+                    CloudFileDataTransferObject = x.CloudFile == null ? null : new CloudFileDataTransferObject()
+                    {
+                        CreatorId = x.CloudFile.CreatorId,
+                        FileExtension = x.CloudFile.FileExtension,
+                        Id = x.CloudFile.Id,
+                        Url = x.CloudFile.Url,
+                        CloudFileThumbnailsDataTransferObject = x.CloudFile.CloudFilesThumbnail == null ? null : new CloudFileThumbnailsDataTransferObject
+                        {
+                            CloudFileId = x.CloudFile.CloudFilesThumbnail.CloudFileId,
+                            FileExtension = x.CloudFile.CloudFilesThumbnail.FileExtension,
+                            Url = x.CloudFile.CloudFilesThumbnail.Url
+                        }
+                    }
+                }).ToList(),
+                RecipeStepDataTransferObjects = Recipe.RecipeSteps.Select(x => new RecipeStepDataTransferObject
+                {
+                    Comment = x.Comment,
+                    StepNumber = x.StepNumber,
+                    EstimatedTimeInSeconds = x.EstimatedTimeInSeconds
+                }).ToList(),
+                SavedRecipeDataTransferObjects = Recipe.SavedRecipes.Select(x => new SavedRecipeDataTransferObject
+                {
+                    RecipeId = x.RecipeId,
+                    SavedDate = x.SavedDate
+                }).ToList(),
+            }).ToListAsync();
+            return Json(Recipes, JsonRequestBehavior.AllowGet);
         }
         public async Task<JsonResult> AjaxGetRecipeSteps(int recipeId)
         {
