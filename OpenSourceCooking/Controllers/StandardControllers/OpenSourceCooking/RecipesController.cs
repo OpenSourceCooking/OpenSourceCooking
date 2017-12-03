@@ -20,7 +20,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
 
         public ActionResult Index(RecipeFilterModel recipeFilterModel)
         {
-            //Pass default JS params
             ViewBag.RecipeFilterModel = recipeFilterModel;
             return View();
         }

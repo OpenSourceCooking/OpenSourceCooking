@@ -141,6 +141,7 @@ namespace OpenSourceCooking.Models
         public bool IsFollowingChef { get { return isFollowingChef; } set { isFollowingChef = value; } }
         public bool IsMyRecipe { get { return isMyRecipe; } set { isMyRecipe = value; } }
         public bool IsSaved { get { return isSaved; } set { isSaved = value; } }
+        public int NumberofSteps { get { return RecipeStepDataTransferObjects == null ? 0 : RecipeStepDataTransferObjects.Count(); } }
         public int SavedByCount { get { return savedRecipeDataTransferObjects == null ? 0 : savedRecipeDataTransferObjects.Count(); } }
 
     }

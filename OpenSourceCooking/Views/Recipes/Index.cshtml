@@ -15,8 +15,8 @@
                 <h4>Optional Filters</h4>
             </div>
             <!--Body-->
-            <div class="modal-body" style="padding-bottom:0;">
-                <div class="row">
+            <div class="modal-body" style="padding-bottom:0;padding-top:0;">
+                <div class="row" style="padding-top:8px;">
                     <div class="col-xl-2">
                         <h5>Sorting</h5>
                     </div>
@@ -42,10 +42,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>            
                 @if (Request.IsAuthenticated)
                 {
-                    <div class="row">
+                    <div class="row" style="padding-top:8px;">
                         <div class="col-sm-4">
                             <h5 class="">Following Chefs</h5>
                         </div>
@@ -100,31 +100,100 @@
                         </div>
                     </div>
                     <div class="row" style="padding-top:8px;">
-                        <div class="col-sm-4">
+                        <div class="col-5">
                             <h5>Viewable Types</h5>
                         </div>
-                        <div class="col-sm-8">                      
+                        <div class="col-7 text-right" style="padding-left:0;">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-sm" onclick="OnClick_ViewableTypesFiltersSelectAll()">Select All</button>
+                                <button class="btn btn-sm" onclick="OnClick_ViewableTypesFiltersUnselectAll()">Unselect All</button>
+                            </div>
+                        </div>
+                        <div class="col-12" style="padding-left:10%;">                      
                             <table class="table table-sm">
                                 <tr id="RecipeViewableTypeTableDraftsRow">
                                     <td>Drafts</td>
-                                    <td align="right"><input id="RecipeViewableTypeTableDraftsCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Drafts = $(this).is(':checked')" /></td>
+                                    <td align="right"><input id="RecipeViewableTypeTableDraftsCheckbox" class="ViewableTypesFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Drafts = $(this).is(':checked')" /></td>
                                 </tr>
                                 <tr id="RecipeViewableTypeTableFollowerRow">
                                     <td>Follower</td>
-                                    <td align="right"><input id="RecipeViewableTypeTableFollowerCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Follower = $(this).is(':checked')" /></td>
+                                    <td align="right"><input id="RecipeViewableTypeTableFollowerCheckbox" class="ViewableTypesFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Follower = $(this).is(':checked')" /></td>
                                 </tr>
                                 <tr id="RecipeViewableTypeTablePublicRow">
                                     <td>Public</td>
-                                    <td align="right"><input id="RecipeViewableTypeTablePublicCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Public = $(this).is(':checked')" /></td>
+                                    <td align="right"><input id="RecipeViewableTypeTablePublicCheckbox"  class="ViewableTypesFilterCheckbox"type="checkbox" onchange="ViewBagRecipeFilterModel.Public = $(this).is(':checked')" /></td>
                                 </tr>
                                 <tr id="RecipeViewableTypeTableSecretRow">
                                     <td>Secret</td>
-                                    <td align="right"><input id="RecipeViewableTypeTableSecretCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.Secret = $(this).is(':checked')" /></td>
+                                    <td align="right"><input id="RecipeViewableTypeTableSecretCheckbox"  class="ViewableTypesFilterCheckbox"type="checkbox" onchange="ViewBagRecipeFilterModel.Secret = $(this).is(':checked')" /></td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 }
+                <div class="row">
+                    <div class="col-5">
+                        <h5>What To Display</h5>
+                    </div>
+                    <div class="col-7 text-right" style="padding-left:0;">
+                       <div class="btn-group btn-group-sm">
+                           <button class="btn btn-sm" onclick="OnClick_DisplayFiltersSelectAll()">Select All</button>
+                           <button class="btn btn-sm" onclick="OnClick_DisplayFiltersUnselectAll()">Unselect All</button>
+                       </div>
+                    </div>
+                    <div class="col-12" style="padding-left:10%;">
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Recipe Id</td>
+                                <td align="right"><input id="RecipeDisplayIdCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayId = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Create Date</td>
+                                <td align="right"><input id="RecipeDisplayCompleteDateCheckbox"  class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayCompleteDateUtc = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Creator</td>
+                                <td align="right"><input id="RecipeDisplayCreatorCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayCreator = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td align="right"><input id="RecipeDisplayDescriptionCheckbox"  class="DisplayFilterCheckbox"type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayDescription = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>DietaryRestrictions</td>
+                                <td align="right"><input id="RecipeDisplayDietaryRestrictionsCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayDietaryRestrictions = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Image</td>
+                                <td align="right"><input id="RecipeDisplayImageCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayImage = $(this).is(':checked')" /></td>
+                            </tr>                      
+                            <tr>
+                                <td>Edit Date</td>
+                                <td align="right"><input id="RecipeDisplayEditDateCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayLastEditDateUtc = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Recipe Name</td>
+                                <td align="right"><input id="RecipeDisplayNameCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayName = $(this).is(':checked')" /></td>
+                            </tr>                        
+                            <tr>
+                                <td>Number Of Steps</td>
+                                <td align="right"><input id="RecipeDisplayNumberOfStepsCheckbox"  class="DisplayFilterCheckbox"type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayNumberOfSteps = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Saved By Count</td>
+                                <td align="right"><input id="RecipeDisplayDisplaySavedByCountCheckbox"  class="DisplayFilterCheckbox"type="checkbox" onchange="ViewBagRecipeFilterModel.DisplaySavedByCount = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Servings</td>
+                                <td align="right"><input id="RecipeDisplayServingsCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayServingSize = $(this).is(':checked')" /></td>
+                            </tr>
+                            <tr>
+                                <td>Time To Make</td>
+                                <td align="right"><input id="RecipeDisplayTimeToMakeCheckbox" class="DisplayFilterCheckbox" type="checkbox" onchange="ViewBagRecipeFilterModel.DisplayTimeToMake = $(this).is(':checked')" /></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="row" style="padding:8px;">
                 <div class="col-6" style="padding-right:5px;">

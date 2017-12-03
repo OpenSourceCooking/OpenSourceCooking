@@ -92,9 +92,13 @@ function RefreshZoomImages() {
     $('.zoomImage').hover(function () { $(this).addClass('imageZoomed'); }, function () { $(this).removeClass('imageZoomed'); });
 }
 function SearchRecipes() {
-    ViewBagRecipeFilterModel.RecipesPageIndex = null;
-    ViewBagRecipeFilterModel.SearchText = $('#SearchTextInput').val();  
-    window.location.href = Config.Urls.RecipesIndex + '?' + $.param(ViewBagRecipeFilterModel);
+    if (ViewBagRecipeFilterModel !== null) {        
+        ViewBagRecipeFilterModel.RecipesPageIndex = null;
+        ViewBagRecipeFilterModel.SearchText = $('#SearchTextInput').val();
+        window.location.href = Config.Urls.RecipesIndex + '?' + $.param(ViewBagRecipeFilterModel);
+    }
+    else
+        window.location.href = Config.Urls.RecipesIndex;
 }
 function SetSrcFromLocalFile(file, HTMLElement) {
     var URL = window.URL.createObjectURL(file);
