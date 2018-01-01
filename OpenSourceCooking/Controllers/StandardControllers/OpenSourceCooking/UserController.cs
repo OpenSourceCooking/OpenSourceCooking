@@ -6,19 +6,23 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace OpenSourceCooking.Controllers.StandardControllers
 {
-    [Authorize(Roles = "Admin")]
-    public class UsersAdminController : Controller
+    public class UsersController : Controller
     {
-        public UsersAdminController() { }
-        public UsersAdminController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        OpenSourceCookingEntities db = new OpenSourceCookingEntities();
+
+        public UsersController() { }
+        public UsersController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
         }
         ApplicationUserManager _userManager;
+        ApplicationGroupManager _groupManager;
+        ApplicationRoleManager _roleManager;
         public ApplicationUserManager UserManager
         {
             get
@@ -30,8 +34,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 _userManager = value;
             }
         }
-        // Add the Group Manager (NOTE: only access through the public property, not by the instance variable!)
-        ApplicationGroupManager _groupManager;
         public ApplicationGroupManager GroupManager
         {
             get
@@ -43,7 +45,6 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 _groupManager = value;
             }
         }
-        ApplicationRoleManager _roleManager;
         public ApplicationRoleManager RoleManager
         {
             get
@@ -55,11 +56,14 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             {
                 _roleManager = value;
             }
-        }        
+        }
+
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Index()
         {
             return View(await UserManager.Users.ToListAsync());
         }
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Details(string id)
         {
             if (id == null)            
@@ -70,6 +74,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             ViewBag.GroupNames = userGroups.Select(u => u.Name).ToList();
             return View(user);
         }
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             // Show a list of available groups:
@@ -78,6 +83,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Create(RegisterViewModel userViewModel, params string[] selectedGroups)
         {
             if (ModelState.IsValid)
@@ -100,6 +106,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             ViewBag.Groups = new SelectList(await RoleManager.Roles.ToListAsync(), "Id", "Name");
             return View();
         }
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id)
         {
             if (id == null)            
@@ -129,6 +136,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit([Bind(Include = "Email,Id")] EditUserViewModel editUser, params string[] selectedGroups)
         {
             if (ModelState.IsValid)
@@ -148,6 +156,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
             ModelState.AddModelError("", "Something failed.");
             return View();
         }
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
             if (id == null)            
@@ -159,6 +168,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
         }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             if (ModelState.IsValid)
@@ -179,6 +189,17 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 }
                 return RedirectToAction("Index");
             }
+            return View();
+        }
+
+        [Authorize]
+        public async Task<ActionResult> UserSettings()
+        {
+            string AspNetId = User.Identity.GetUserId();
+            ViewBag.Chef = await db.Chefs.Where(x => x.AspNetUserId == AspNetId).Select(x=> new ChefModel {
+                AspNetUserName = x.AspNetUser.UserName,
+                IsEmailNotificationEnabled = x.IsEmailNotificationEnabled
+            }).FirstAsync();
             return View();
         }
     }

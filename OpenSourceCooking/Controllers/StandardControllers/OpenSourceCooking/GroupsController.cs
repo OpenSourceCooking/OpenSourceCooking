@@ -10,7 +10,7 @@ using System.Web.Mvc;
 namespace OpenSourceCooking.Controllers.StandardControllers
 {
     [Authorize(Roles = "Admin")]
-    public class GroupsAdminController : Controller
+    public class GroupsController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
         ApplicationGroupManager _groupManager;

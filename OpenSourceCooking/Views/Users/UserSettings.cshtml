@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "UserSettings";
+}
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6" style="padding-bottom:18px;">
+            <h2 id="ChefNameHeader"></h2>
+            <h5>@Html.ActionLink("Change your password", "ChangePassword", "Manage")</h5>
+            <table class="table">
+                <tr>
+                    <td id="EmailNotificationsTd">Email Notifications</td>
+                    <td><input id="IsEmailNotificationEnabledCheckbox" type="checkbox" /></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <h5>Chef Photo</h5>
+            <img type="image" class="UploadPhotoButton rounded mx-auto img-fluid" style="width:80%;" id="ProfilePicUploadButton" />
+        </div>
+    </div>
+</div>
+
+<script>
+    var ViewBagChef = @(Html.Raw(Json.Encode(ViewBag.Chef)));
+    $(document).ready(function () {
+        $('#ChefNameHeader').text(ViewBagChef.AspNetUserName);
+        if (ViewBagChef.IsEmailNotificationEnabled)
+        {
+            $('#EmailNotificationsTd').css({ 'color': '#28a745', 'font-weight': 'bold' });
+            $('#IsEmailNotificationEnabledCheckbox').prop("checked", true);
+        }
+        $('#IsEmailNotificationEnabledCheckbox').change(function () {
+            var isChecked = $(this).is(":checked");
+            $(this).hide();
+            $.ajax({
+                url: Config.AjaxUrls.AjaxUpdateIsEmailNotificationEnabled,
+                type: "GET",
+                cache: false,
+                data: { isEmailNotificationEnabled: isChecked },
+                success: function (success) {
+                    if (isChecked) 
+                        $('#EmailNotificationsTd').css({ 'color': '#28a745', 'font-weight': 'bold' });
+                    else
+                        $('#EmailNotificationsTd').css({ 'color': 'black', 'font-weight': 'normal' });
+                    $('#IsEmailNotificationEnabledCheckbox').fadeIn();
+                },
+                error: function (er) {
+                    ShowPopUpModal("Error", er);
+                }
+            });
+        });
+    });
+</script>

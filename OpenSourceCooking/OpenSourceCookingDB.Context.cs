@@ -47,8 +47,8 @@ namespace OpenSourceCooking
         public virtual DbSet<SavedRecipe> SavedRecipes { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeStepsIngredient> RecipeStepsIngredients { get; set; }
-        public virtual DbSet<Chef> Chefs { get; set; }
         public virtual DbSet<FollowingChef> FollowingChefs { get; set; }
+        public virtual DbSet<Chef> Chefs { get; set; }
     
         public virtual int SaveRecipe(string savedByAspNetUserId, Nullable<int> recipeId)
         {

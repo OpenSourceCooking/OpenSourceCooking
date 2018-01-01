@@ -38,7 +38,7 @@
             <PropertyRef Name="AspNetUserId" />
           </Key>
           <Property Name="AspNetUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="IsEmailNotificationEnabled" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CloudFiles">
           <Key>
@@ -954,8 +954,8 @@
             <End Role="RecipeStep" EntitySet="RecipeSteps" />
             <End Role="RecipeStepsIngredient" EntitySet="RecipeStepsIngredients" />
           </AssociationSet>
-          <EntitySet Name="Chefs" EntityType="OpenSourceCookingModel.Chef" />
           <EntitySet Name="FollowingChefs" EntityType="OpenSourceCookingModel.FollowingChef" />
+          <EntitySet Name="Chefs" EntityType="OpenSourceCookingModel.Chef" />
           <AssociationSet Name="FK_UserSettings_AspNetUsers" Association="OpenSourceCookingModel.FK_UserSettings_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="Chef" EntitySet="Chefs" />
@@ -1561,16 +1561,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Chef">
-          <Key>
-            <PropertyRef Name="AspNetUserId" />
-          </Key>
-          <Property Name="AspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="IsRecipeCommentEmailNotificationEnabled" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="Chef" ToRole="AspNetUser" />
-          <NavigationProperty Name="FollowingChefs" Relationship="OpenSourceCookingModel.FK_FollowingChefs_Chefs" FromRole="Chef" ToRole="FollowingChef" />
-          <NavigationProperty Name="FollowingChefs1" Relationship="OpenSourceCookingModel.FK_FollowingChefs_FollowingChef" FromRole="Chef" ToRole="FollowingChef" />
-        </EntityType>
         <EntityType Name="FollowingChef">
           <Key>
             <PropertyRef Name="AspNetUserId" />
@@ -1581,6 +1571,16 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
           <NavigationProperty Name="Chef" Relationship="OpenSourceCookingModel.FK_FollowingChefs_Chefs" FromRole="FollowingChef" ToRole="Chef" />
           <NavigationProperty Name="Chef1" Relationship="OpenSourceCookingModel.FK_FollowingChefs_FollowingChef" FromRole="FollowingChef" ToRole="Chef" />
+          </EntityType>
+        <EntityType Name="Chef">
+          <Key>
+            <PropertyRef Name="AspNetUserId" />
+          </Key>
+          <Property Name="AspNetUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsEmailNotificationEnabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="OpenSourceCookingModel.FK_UserSettings_AspNetUsers" FromRole="Chef" ToRole="AspNetUser" />
+          <NavigationProperty Name="FollowingChefs" Relationship="OpenSourceCookingModel.FK_FollowingChefs_Chefs" FromRole="Chef" ToRole="FollowingChef" />
+          <NavigationProperty Name="FollowingChefs1" Relationship="OpenSourceCookingModel.FK_FollowingChefs_FollowingChef" FromRole="Chef" ToRole="FollowingChef" />
         </EntityType>
         <Association Name="FK_UserSettings_AspNetUsers">
           <End Type="OpenSourceCookingModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
@@ -1846,19 +1846,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Chefs">
-            <EntityTypeMapping TypeName="OpenSourceCookingModel.Chef">
-              <MappingFragment StoreEntitySet="Chefs">
-                <ScalarProperty Name="IsRecipeCommentEmailNotificationEnabled" ColumnName="IsRecipeCommentEmailNotificationEnabled" />
-                <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="FollowingChefs">
             <EntityTypeMapping TypeName="OpenSourceCookingModel.FollowingChef">
               <MappingFragment StoreEntitySet="FollowingChefs">
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="FollowingChefId" ColumnName="FollowingChefId" />
+                <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Chefs">
+            <EntityTypeMapping TypeName="OpenSourceCookingModel.Chef">
+              <MappingFragment StoreEntitySet="Chefs">
+                <ScalarProperty Name="IsEmailNotificationEnabled" ColumnName="IsEmailNotificationEnabled" />
                 <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
               </MappingFragment>
             </EntityTypeMapping>

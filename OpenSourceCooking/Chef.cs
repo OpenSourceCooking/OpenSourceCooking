@@ -22,7 +22,7 @@ namespace OpenSourceCooking
         }
     
         public string AspNetUserId { get; set; }
-        public bool IsRecipeCommentEmailNotificationEnabled { get; set; }
+        public bool IsEmailNotificationEnabled { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

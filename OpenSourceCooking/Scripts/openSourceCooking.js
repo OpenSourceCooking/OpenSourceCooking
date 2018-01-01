@@ -24,16 +24,7 @@ $(document).ready(function () {
     $('.UploadVideoButton').attr('src', Config.Images.AddVideoImageUrl);
     RefreshZoomImages();
 });
-//function GenerateFiltersQueryString() {
-//    var FiltersQueryString = '';
-//    $.each(Config.FiltersKeyValueList, function (i, FiltersKeyValue) {       
-//        if (FiltersKeyValue.Value !== null && FiltersKeyValue.Value !== '')
-//            FiltersQueryString += FiltersKeyValue.Key + "=" + FiltersKeyValue.Value + "&";        
-//    });
-//    if (FiltersQueryString.length > 0)
-//        return FiltersQueryString.slice(0, -1);//Remove last '&' symbol
-//    return FiltersQueryString;
-//}
+
 function GetEstimatedTimeString(EstimatedTimeInSeconds) {
     EstimatedTimeInSeconds = EstimatedTimeInSeconds / 60;//Convert Sec to Min
     if (EstimatedTimeInSeconds > 59)

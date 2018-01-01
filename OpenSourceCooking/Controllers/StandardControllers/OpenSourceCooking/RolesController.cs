@@ -11,12 +11,12 @@ using System.Collections.Generic;
 namespace OpenSourceCooking.Controllers.StandardControllers
 {
     [Authorize(Roles = "Admin")]
-    public class RolesAdminController : Controller
+    public class RolesController : Controller
     {
-        public RolesAdminController()
+        public RolesController()
         {
         }
-        public RolesAdminController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        public RolesController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;

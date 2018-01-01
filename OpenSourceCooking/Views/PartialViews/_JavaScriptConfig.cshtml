@@ -7,12 +7,15 @@ else
     //Minimum model needed for the nav bar recipe search textbox
     <script>var ViewBagRecipeFilterModel = { SearchText: null };</script>
 }
-<script type="text/javascript">
+    <script type="text/javascript">
     //This is done so constant variables can be in a central location and Javascript functions
     //with Razor Syntax cannot be collapsed by visual studio for some dumb reason.
     var Config = {
         AjaxUrls:
         {
+            //ChefsController
+            AjaxUpdateIsEmailNotificationEnabled: '@Url.Action("AjaxUpdateIsEmailNotificationEnabled", "Chefs")',
+
             //Comments Controller
             AjaxCreateRecipeComment: '@Url.Action("AjaxCreateRecipeComment", "Comments")',
             AjaxDeleteComment: '@Url.Action("AjaxDeleteComment", "Comments")',
@@ -89,4 +92,4 @@ else
             RecipesIndex: '@Url.Action("Index", "Recipes")'
         }
     };
-</script>
+    </script>

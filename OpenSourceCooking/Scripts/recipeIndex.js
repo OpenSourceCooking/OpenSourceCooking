@@ -250,7 +250,7 @@ function AjaxGetRecipes() {
                 if (ViewBagRecipeFilterModel.DisplayLastEditDateUtc)
                     RecipeDivHTMLString += '<div class="text-center">Edited ' + CurrentRecipe.LastEditDateUtc + '</div>';
                 if (ViewBagRecipeFilterModel.DisplayNumberOfSteps)
-                    RecipeDivHTMLString += '<div class="text-center">Chef ' + CurrentRecipe.NumberofSteps + '</div>';
+                    RecipeDivHTMLString += '<div class="text-center">Chef ' + CurrentRecipe.NumberOfSteps + '</div>';
                 if (ViewBagRecipeFilterModel.DisplaySavedByCount)
                     RecipeDivHTMLString += '<div class="text-center">Saved By ' + CurrentRecipe.SavedByCount + ' Users</div>';
                 if (ViewBagRecipeFilterModel.DisplayServingSize)
