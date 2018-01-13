@@ -460,7 +460,7 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                     MeasurementUnitName = s.MeasurementUnitName,
                     Amount = s.Amount,
                     ToAmount = s.ToAmount
-                }).ToListAsync();
+                }).OrderBy(x=>x.IngredientName).ToListAsync();
             return Json(RecipeStepsIngredientsDataTransferObjects, JsonRequestBehavior.AllowGet);
         }
         public async Task<JsonResult> AjaxGetUnits()

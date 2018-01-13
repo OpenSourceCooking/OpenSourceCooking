@@ -587,9 +587,25 @@ function PreviewRecipe(recipeId) {
         type: "GET",
         cache: false,
         data: { recipeId: recipeId },
-        success: function (RecipeStepsIngredientsDataTransferObjects) {
+        success: function (RecipeStepsIngredientsDataTransferObjects) {        
+            //Sum Ingredients that share the same unit of measurement. Conversions
+            var SummedRecipeStepsIngredientsDataTransferObjects = [];
             $.each(RecipeStepsIngredientsDataTransferObjects, function (i, RecipeStepsIngredientsDataTransferObject) {
-                $('#RecipePreviewerIngredientSummaryList').append('<li>' + GetIngredientAmountString(RecipeStepsIngredientsDataTransferObject) + '</li>');
+                var WasSummed = false;
+                $.each(SummedRecipeStepsIngredientsDataTransferObjects, function (i, SummedRecipeStepsIngredientsDataTransferObject) {
+                    if (SummedRecipeStepsIngredientsDataTransferObject.IngredientName === RecipeStepsIngredientsDataTransferObject.IngredientName && SummedRecipeStepsIngredientsDataTransferObject.MeasurementUnitName === RecipeStepsIngredientsDataTransferObject.MeasurementUnitName) {
+                        console.log('Same Name');
+                        SummedRecipeStepsIngredientsDataTransferObject.Amount = parseInt(SummedRecipeStepsIngredientsDataTransferObject.Amount) + parseInt(RecipeStepsIngredientsDataTransferObject.Amount);
+                        SummedRecipeStepsIngredientsDataTransferObject.ToAmount = parseInt(SummedRecipeStepsIngredientsDataTransferObject.ToAmount) + parseInt(RecipeStepsIngredientsDataTransferObject.ToAmount);
+                        WasSummed = true;
+                    }
+                });
+                if (WasSummed === false)
+                    SummedRecipeStepsIngredientsDataTransferObjects.push(RecipeStepsIngredientsDataTransferObject);
+            });
+
+            $.each(SummedRecipeStepsIngredientsDataTransferObjects, function (i, SummedRecipeStepsIngredientsDataTransferObject) {
+                $('#RecipePreviewerIngredientSummaryList').append('<li>' + GetIngredientAmountString(SummedRecipeStepsIngredientsDataTransferObject) + '</li>');
             });
         },
         error: function (er) {

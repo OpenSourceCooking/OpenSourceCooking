@@ -641,11 +641,11 @@
     <Content Include="Views\RolesAdmin\Details.cshtml" />
     <Content Include="Views\RolesAdmin\Edit.cshtml" />
     <Content Include="Views\RolesAdmin\Index.cshtml" />
-    <Content Include="Views\UsersAdmin\Create.cshtml" />
-    <Content Include="Views\UsersAdmin\Delete.cshtml" />
-    <Content Include="Views\UsersAdmin\Details.cshtml" />
-    <Content Include="Views\UsersAdmin\Edit.cshtml" />
-    <Content Include="Views\UsersAdmin\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\BugReports\Create.cshtml" />
     <Content Include="Views\BugReports\Delete.cshtml" />
     <Content Include="Views\BugReports\Details.cshtml" />
@@ -658,10 +658,10 @@
     <Content Include="Views\DBBugReports\Index.cshtml" />
     <Content Include="Views\BugReports\Confirmation.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
-    <Content Include="Views\PartialViews\_JavaScriptConfig.cshtml" />
-    <Content Include="Views\PartialViews\Modals\_PopUpModal.cshtml" />
-    <Content Include="Views\PartialViews\Modals\_RecipeViewableTypeModal.cshtml" />
-    <Content Include="Views\PartialViews\_FullScreenMediaElementDiv.cshtml" />
+    <Content Include="Views\Shared\PartialViews\_JavaScriptConfig.cshtml" />
+    <Content Include="Views\Shared\PartialViews\Modals\_PopUpModal.cshtml" />
+    <Content Include="Views\Shared\PartialViews\Modals\_RecipeViewableTypeModal.cshtml" />
+    <Content Include="Views\Shared\PartialViews\_FullScreenMediaElementDiv.cshtml" />
     <Content Include="Views\DBRecipeComments\Create.cshtml" />
     <Content Include="Views\DBRecipeComments\Delete.cshtml" />
     <Content Include="Views\DBRecipeComments\Details.cshtml" />
@@ -743,6 +743,7 @@
     <Folder Include="Controllers\APIControllers\" />
     <Folder Include="Views\Chefs\" />
     <Folder Include="Views\FollowingChefs\" />
+    <Folder Include="Views\UsersAdmin\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
