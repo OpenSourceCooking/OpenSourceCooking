@@ -636,11 +636,11 @@
     <Content Include="Views\GroupsAdmin\Details.cshtml" />
     <Content Include="Views\GroupsAdmin\Edit.cshtml" />
     <Content Include="Views\GroupsAdmin\Index.cshtml" />
-    <Content Include="Views\RolesAdmin\Create.cshtml" />
-    <Content Include="Views\RolesAdmin\Delete.cshtml" />
-    <Content Include="Views\RolesAdmin\Details.cshtml" />
-    <Content Include="Views\RolesAdmin\Edit.cshtml" />
-    <Content Include="Views\RolesAdmin\Index.cshtml" />
+    <Content Include="Views\Roles\Create.cshtml" />
+    <Content Include="Views\Roles\Delete.cshtml" />
+    <Content Include="Views\Roles\Details.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
