@@ -307,8 +307,9 @@ namespace OpenSourceCooking.Controllers.StandardControllers
                 //Secret
                 if (recipeFilterModel.Secret == false)
                     Predicate = Predicate.And(x => x.ViewableType != "Secret");
-
             }
+            else
+                Predicate = Predicate.And(x => (x.ViewableType == "Public"));
             if (!String.IsNullOrEmpty(recipeFilterModel.SearchText))
                 Predicate = Predicate.And(r => r.Name.Contains(recipeFilterModel.SearchText));
             RecipesQuery = RecipesQuery.AsExpandable().Where(Predicate);
